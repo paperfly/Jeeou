@@ -5,18 +5,18 @@
     android:layout_height="match_parent"
     tools:context="com.paperfly.instantjio.ContactsFragment">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@id/android:list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <TextView
-        android:id="@id/android:empty"
-        android:gravity="center"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/no_contacts"
-        android:fontFamily="sans-serif-light"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        style="@style/ContactListView"/>
+
+    <!--<TextView android:id="@id/android:empty"-->
+              <!--android:gravity="center"-->
+              <!--android:layout_width="match_parent"-->
+              <!--android:layout_height="match_parent"-->
+              <!--android:text="@string/no_contacts"-->
+              <!--android:fontFamily="sans-serif-light"-->
+              <!--android:textAppearance="?android:attr/textAppearanceLarge"/>-->
 
 </FrameLayout>

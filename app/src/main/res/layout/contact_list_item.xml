@@ -6,14 +6,15 @@
 
     <QuickContactBadge
         android:id="@android:id/icon"
-        android:layout_width="?android:listPreferredItemHeight"
-        android:layout_height="?android:listPreferredItemHeight"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_width="?android:attr/listPreferredItemHeight"
         android:scaleType="centerCrop"
+        style="@style/quickContactBadgeStyle"
         android:src="@drawable/ic_action_person"/>
 
     <TextView android:id="@android:id/text2"
-              android:paddingLeft="16dp"
-              android:paddingRight="16dp"
+              android:paddingLeft="@dimen/listview_item_padding"
+              android:paddingRight="@dimen/listview_item_padding"
               android:layout_width="match_parent"
               android:layout_height="26dp"
               android:layout_toRightOf="@android:id/icon"
@@ -23,12 +24,12 @@
               android:singleLine="true"
               android:ellipsize="marquee"
               android:visibility="gone"
-              android:text="Matches Other Field"
+              android:text="@string/search_match_other"
               android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <TextView android:id="@android:id/text1"
-              android:paddingLeft="16dp"
-              android:paddingRight="16dp"
+              android:paddingLeft="@dimen/listview_item_padding"
+              android:paddingRight="@dimen/listview_item_padding"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_above="@android:id/text2"

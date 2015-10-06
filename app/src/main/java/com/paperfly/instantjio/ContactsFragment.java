@@ -1,72 +1,37 @@
 package com.paperfly.instantjio;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.TextAppearanceSpan;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.provider.ContactsContract;
-import android.widget.ListView;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.AlphabetIndexer;
 import android.widget.QuickContactBadge;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.paperfly.instantjio.util.ImageLoader;
 import com.paperfly.instantjio.util.Utils;
 
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
-// * {@link /ContactsFragment./OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ContactsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ContactsFragment extends ListFragment implements
-        AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-
-//    private OnFragmentInteractionListener mListener;
-
+public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     // Defines a tag for identifying log entries
     private static final String TAG = "ContactsFragment";
 
@@ -75,12 +40,12 @@ public class ContactsFragment extends ListFragment implements
             "com.paperfly.instantjio.SELECTED_ITEM";
 
     private ContactsAdapter mAdapter; // The main query adapter
-    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
+//    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
     private String mSearchTerm; // Stores the current search query term
 
     // Contact selected listener that allows the activity holding this fragment to be notified of
     // a contact being selected
-    private OnContactsInteractionListener mOnContactSelectedListener;
+//    private OnContactsInteractionListener mOnContactSelectedListener;
 
     // Stores the previously selected search item so that on a configuration change the same item
     // can be reselected again
@@ -96,15 +61,8 @@ public class ContactsFragment extends ListFragment implements
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
     private boolean mIsSearchResultView = false;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-     * @return A new instance of fragment ContactsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+    private RecyclerView mContactListView;
+
     public static ContactsFragment newInstance() {
         ContactsFragment fragment = new ContactsFragment();
         Bundle args = new Bundle();
@@ -117,9 +75,7 @@ public class ContactsFragment extends ListFragment implements
     /**
      * Fragments require an empty constructor.
      */
-    public ContactsFragment() {
-        // Required empty public constructor
-    }
+    public ContactsFragment() {}
 
     /**
      * In platform versions prior to Android 3.0, the ActionBar and SearchView are not supported,
@@ -129,47 +85,41 @@ public class ContactsFragment extends ListFragment implements
      * results. This method sets the search query and also a boolean that tracks if this Fragment
      * should be displayed as a search result view or not.
      *
-     * @param query The contacts search query.
+//     * @param query The contacts search query.
      */
-    public void setSearchQuery(String query) {
-        if (TextUtils.isEmpty(query)) {
-            mIsSearchResultView = false;
-        } else {
-            mSearchTerm = query;
-            mIsSearchResultView = true;
-        }
-    }
+//    public void setSearchQuery(String query) {
+//        if (TextUtils.isEmpty(query)) {
+//            mIsSearchResultView = false;
+//        } else {
+//            mSearchTerm = query;
+//            mIsSearchResultView = true;
+//        }
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
 
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
         // corresponding resource size-qualified directory.
 //        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
-        mIsTwoPaneLayout = false;
 
         // Let this fragment contribute menu items
-        setHasOptionsMenu(true);
-
-        // Create the main contacts adapter
-        mAdapter = new ContactsAdapter(getActivity());
-
-        if (savedInstanceState != null) {
-            // If we're restoring state after this fragment was recreated then
-            // retrieve previous search term and previously selected search
-            // result.
-            mSearchTerm = savedInstanceState.getString(SearchManager.QUERY);
-            mPreviouslySelectedSearchItem =
-                    savedInstanceState.getInt(STATE_PREVIOUSLY_SELECTED_KEY, 0);
-        }
+//        setHasOptionsMenu(true);
+//
+//        // Create the main contacts adapter
+//        mAdapter = new ContactsAdapter(getActivity());
+//
+//        if (savedInstanceState != null) {
+//            // If we're restoring state after this fragment was recreated then
+//            // retrieve previous search term and previously selected search
+//            // result.
+//            mSearchTerm = savedInstanceState.getString(SearchManager.QUERY);
+//            mPreviouslySelectedSearchItem =
+//                    savedInstanceState.getInt(STATE_PREVIOUSLY_SELECTED_KEY, 0);
+//        }
 
         /*
          * An ImageLoader object loads and resizes an image in the background and binds it to the
@@ -182,27 +132,31 @@ public class ContactsFragment extends ListFragment implements
          *
          * http://developer.android.com/training/displaying-bitmaps/
          */
-        mImageLoader = new ImageLoader(getActivity(), getListPreferredItemHeight()) {
-            @Override
-            protected Bitmap processBitmap(Object data) {
-                // This gets called in a background thread and passed the data from
-                // ImageLoader.loadImage().
-                return loadContactPhotoThumbnail((String) data, getImageSize());
-            }
-        };
+//        mImageLoader = new ImageLoader(getActivity(), getListPreferredItemHeight()) {
+//            @Override
+//            protected Bitmap processBitmap(Object data) {
+//                // This gets called in a background thread and passed the data from
+//                // ImageLoader.loadImage().
+//                return loadContactPhotoThumbnail((String) data, getImageSize());
+//            }
+//        };
 
         // Set a placeholder loading image for the image loader
-        mImageLoader.setLoadingImage(R.drawable.ic_action_person);
+//        mImageLoader.setLoadingImage(R.drawable.ic_action_person);
 
         // Add a cache to the image loader
-        mImageLoader.addImageCache(getActivity().getSupportFragmentManager(), 0.1f);
+//        mImageLoader.addImageCache(getActivity().getSupportFragmentManager(), 0.1f);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the list fragment layout
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        // Inflate the fragment layout
+        View root = inflater.inflate(R.layout.fragment_contacts, container, false);
+        mContactListView = (RecyclerView) root.findViewById(android.R.id.list);
+        mContactListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mContactListView.setItemAnimator(new DefaultItemAnimator());
+        return root;
     }
 
     @Override
@@ -211,29 +165,30 @@ public class ContactsFragment extends ListFragment implements
 
         // Set up ListView, assign adapter and set some listeners. The adapter was previously
         // created in onCreate().
-        setListAdapter(mAdapter);
-        getListView().setOnItemClickListener(this);
-        getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                // Pause image loader to ensure smoother scrolling when flinging
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-                    mImageLoader.setPauseWork(true);
-                } else {
-                    mImageLoader.setPauseWork(false);
-                }
-            }
+//        setListAdapter(mAdapter);
+//        getListView().setOnItemClickListener(this);
+//        getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+//                // Pause image loader to ensure smoother scrolling when flinging
+//                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+//                    mImageLoader.setPauseWork(true);
+//                } else {
+//                    mImageLoader.setPauseWork(false);
+//                }
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+//            }
+//        });
 
-            @Override
-            public void onScroll(AbsListView absListView, int i, int i1, int i2) {}
-        });
-
-        if (mIsTwoPaneLayout) {
-            // In a two-pane layout, set choice mode to single as there will be two panes
-            // when an item in the ListView is selected it should remain highlighted while
-            // the content shows in the second pane.
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        }
+//        if (mIsTwoPaneLayout) {
+//            // In a two-pane layout, set choice mode to single as there will be two panes
+//            // when an item in the ListView is selected it should remain highlighted while
+//            // the content shows in the second pane.
+//            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+//        }
 
         // If there's a previously selected search item from a saved state then don't bother
         // initializing the loader as it will be restarted later when the query is populated into
@@ -244,101 +199,218 @@ public class ContactsFragment extends ListFragment implements
         }
     }
 
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//
+//        try {
+//            // Assign callback listener which the holding activity must implement. This is used
+//            // so that when a contact item is interacted with (selected by the user) the holding
+//            // activity will be notified and can take further action such as populating the contact
+//            // detail pane (if in multi-pane layout) or starting a new activity with the contact
+//            // details (single pane layout).
+//            mOnContactSelectedListener = (OnContactsInteractionListener) context;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException(context.toString()
+//                    + " must implement OnContactsInteractionListener");
+//        }
+//    }
+
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//
+//        // In the case onPause() is called during a fling the image loader is
+//        // un-paused to let any remaining background work complete.
+//        mImageLoader.setPauseWork(false);
+//    }
+//
+//    @Override
+//    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//        // Gets the Cursor object currently bound to the ListView
+//        final Cursor cursor = mAdapter.getCursor();
+//
+//        // Moves to the Cursor row corresponding to the ListView item that was clicked
+//        cursor.moveToPosition(position);
+//
+//        // Creates a contact lookup Uri from contact ID and lookup_key
+//        final Uri uri = ContactsContract.Contacts.getLookupUri(
+//                cursor.getLong(ContactsQuery.ID),
+//                cursor.getString(ContactsQuery.LOOKUP_KEY));
+//
+//        // Notifies the parent activity that the user selected a contact. In a two-pane layout, the
+//        // parent activity loads a ContactDetailFragment that displays the details for the selected
+//        // contact. In a single-pane layout, the parent activity starts a new activity that
+//        // displays contact details in its own Fragment.
+//        mOnContactSelectedListener.onContactSelected(uri);
+//
+//        // If two-pane layout sets the selected item to checked so it remains highlighted. In a
+//        // single-pane layout a new activity is started so this is not needed.
+//        if (mIsTwoPaneLayout) {
+//            getListView().setItemChecked(position, true);
 //        }
 //    }
 //
-    @Override
-    public void onAttach(Context ctx) {
-        super.onAttach(ctx);
-
-        try {
-            // Assign callback listener which the holding activity must implement. This is used
-            // so that when a contact item is interacted with (selected by the user) the holding
-            // activity will be notified and can take further action such as populating the contact
-            // detail pane (if in multi-pane layout) or starting a new activity with the contact
-            // details (single pane layout).
-            mOnContactSelectedListener = (OnContactsInteractionListener) getActivity();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString()
-                    + " must implement OnContactsInteractionListener");
-        }
-    }
+//    /**
+//     * Called when ListView selection is cleared, for example
+//     * when search mode is finished and the currently selected
+//     * contact should no longer be selected.
+//     */
+//    private void onSelectionCleared() {
+//        // Uses callback to notify activity this contains this fragment
+//        mOnContactSelectedListener.onSelectionCleared();
 //
+//        // Clears currently checked item
+//        getListView().clearChoices();
+//    }
+
+    // This method uses APIs from newer OS versions than the minimum that this app supports. This
+    // annotation tells Android lint that they are properly guarded so they won't run on older OS
+    // versions and can be ignored by lint.
+//    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 //    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//
+//        // Inflate the menu items
+//        inflater.inflate(R.menu.contact_list_menu, menu);
+//        // Locate the search item
+//        MenuItem searchItem = menu.findItem(R.id.menu_search);
+//
+//        // In versions prior to Android 3.0, hides the search item to prevent additional
+//        // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
+//        // Since the search doesn't create a new Activity to do the searching, the menu item
+//        // doesn't need to be turned off.
+//        if (mIsSearchResultView) {
+//            searchItem.setVisible(false);
+//        }
+//
+//        // In version 3.0 and later, sets up and configures the ActionBar SearchView
+//        if (Utils.hasHoneycomb()) {
+//
+//            // Retrieves the system search manager service
+//            final SearchManager searchManager =
+//                    (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+//
+//            // Retrieves the SearchView from the search menu item
+//            final SearchView searchView = (SearchView) searchItem.getActionView();
+//
+//            // Assign searchable info to SearchView
+//            searchView.setSearchableInfo(
+//                    searchManager.getSearchableInfo(getActivity().getComponentName()));
+//
+//            // Set listeners for SearchView
+//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                @Override
+//                public boolean onQueryTextSubmit(String queryText) {
+//                    // Nothing needs to happen when the user submits the search string
+//                    return true;
+//                }
+//
+//                @Override
+//                public boolean onQueryTextChange(String newText) {
+//                    // Called when the action bar search text has changed.  Updates
+//                    // the search filter, and restarts the loader to do a new query
+//                    // using the new search string.
+//                    String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
+//
+//                    // Don't do anything if the filter is empty
+//                    if (mSearchTerm == null && newFilter == null) {
+//                        return true;
+//                    }
+//
+//                    // Don't do anything if the new filter is the same as the current filter
+//                    if (mSearchTerm != null && mSearchTerm.equals(newFilter)) {
+//                        return true;
+//                    }
+//
+//                    // Updates current filter to new filter
+//                    mSearchTerm = newFilter;
+//
+//                    // Restarts the loader. This triggers onCreateLoader(), which builds the
+//                    // necessary content Uri from mSearchTerm.
+//                    mSearchQueryChanged = true;
+//                    getLoaderManager().restartLoader(
+//                            ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
+//                    return true;
+//                }
+//            });
+//
+//            if (Utils.hasICS()) {
+//                // This listener added in ICS
+//                searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+//                    @Override
+//                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+//                        // Nothing to do when the action item is expanded
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+//                        // When the user collapses the SearchView the current search string is
+//                        // cleared and the loader restarted.
+//                        if (!TextUtils.isEmpty(mSearchTerm)) {
+//                            onSelectionCleared();
+//                        }
+//                        mSearchTerm = null;
+//                        getLoaderManager().restartLoader(
+//                                ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
+//                        return true;
+//                    }
+//                });
+//            }
+//
+//            if (mSearchTerm != null) {
+//                // If search term is already set here then this fragment is
+//                // being restored from a saved state and the search menu item
+//                // needs to be expanded and populated again.
+//
+//                // Stores the search term (as it will be wiped out by
+//                // onQueryTextChange() when the menu item is expanded).
+//                final String savedSearchTerm = mSearchTerm;
+//
+//                // Expands the search menu item
+//                if (Utils.hasICS()) {
+//                    searchItem.expandActionView();
+//                }
+//
+//                // Sets the SearchView to the previous search string
+//                searchView.setQuery(savedSearchTerm, false);
+//            }
+//        }
+//    }
+
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        if (!TextUtils.isEmpty(mSearchTerm)) {
+//            // Saves the current search string
+//            outState.putString(SearchManager.QUERY, mSearchTerm);
+//
+//            // Saves the currently selected contact
+//            outState.putInt(STATE_PREVIOUSLY_SELECTED_KEY, getListView().getCheckedItemPosition());
+//        }
+//    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            // Sends a request to the People app to display the create contact screen
+//            case R.id.menu_add_contact:
+//                final Intent intent = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
+//                startActivity(intent);
+//                break;
+//            // For platforms earlier than Android 3.0, triggers the search activity
+//            case R.id.menu_search:
+//                if (!Utils.hasHoneycomb()) {
+//                    getActivity().onSearchRequested();
+//                }
+//                break;
+//        }
+//        return super.onOptionsItemSelected(item);
 //    }
 
     @Override
-    public void onPause() {
-        super.onPause();
-
-        // In the case onPause() is called during a fling the image loader is
-        // un-paused to let any remaining background work complete.
-        mImageLoader.setPauseWork(false);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-        // Gets the Cursor object currently bound to the ListView
-        final Cursor cursor = mAdapter.getCursor();
-
-        // Moves to the Cursor row corresponding to the ListView item that was clicked
-        cursor.moveToPosition(position);
-
-        // Creates a contact lookup Uri from contact ID and lookup_key
-        final Uri uri = ContactsContract.Contacts.getLookupUri(
-                cursor.getLong(ContactsQuery.ID),
-                cursor.getString(ContactsQuery.LOOKUP_KEY));
-
-        // Notifies the parent activity that the user selected a contact. In a two-pane layout, the
-        // parent activity loads a ContactDetailFragment that displays the details for the selected
-        // contact. In a single-pane layout, the parent activity starts a new activity that
-        // displays contact details in its own Fragment.
-        mOnContactSelectedListener.onContactSelected(uri);
-
-        // If two-pane layout sets the selected item to checked so it remains highlighted. In a
-        // single-pane layout a new activity is started so this is not needed.
-        if (mIsTwoPaneLayout) {
-            getListView().setItemChecked(position, true);
-        }
-    }
-
-    /**
-     * Called when ListView selection is cleared, for example
-     * when search mode is finished and the currently selected
-     * contact should no longer be selected.
-     */
-    private void onSelectionCleared() {
-        // Uses callback to notify activity this contains this fragment
-        mOnContactSelectedListener.onSelectionCleared();
-
-        // Clears currently checked item
-        getListView().clearChoices();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (!TextUtils.isEmpty(mSearchTerm)) {
-            // Saves the current search string
-            outState.putString(SearchManager.QUERY, mSearchTerm);
-
-            // Saves the currently selected contact
-            outState.putInt(STATE_PREVIOUSLY_SELECTED_KEY, getListView().getCheckedItemPosition());
-        }
-    }
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        // If this is the loader for finding contacts in the Contacts Provider
-        // (the only one supported)
         if (id == ContactsQuery.QUERY_ID) {
             Uri contentUri;
 
@@ -375,34 +447,35 @@ public class ContactsFragment extends ListFragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Put the result Cursor in the adapter for the ListView
         // This swaps the new cursor into the adapter.
         if (loader.getId() == ContactsQuery.QUERY_ID) {
-            mAdapter.swapCursor(data);
+            mContactListView.setAdapter(new com.paperfly.instantjio.presenter.ContactsAdapter(data));
 
             // If this is a two-pane layout and there is a search query then
             // there is some additional work to do around default selected
             // search item.
-            if (mIsTwoPaneLayout && !TextUtils.isEmpty(mSearchTerm) && mSearchQueryChanged) {
-                // Selects the first item in results, unless this fragment has
-                // been restored from a saved state (like orientation change)
-                // in which case it selects the previously selected search item.
-                if (data != null && data.moveToPosition(mPreviouslySelectedSearchItem)) {
-                    // Creates the content Uri for the previously selected contact by appending the
-                    // contact's ID to the Contacts table content Uri
-                    final Uri uri = Uri.withAppendedPath(
-                            ContactsContract.Contacts.CONTENT_URI, String.valueOf(data.getLong(ContactsQuery.ID)));
-                    mOnContactSelectedListener.onContactSelected(uri);
-                    getListView().setItemChecked(mPreviouslySelectedSearchItem, true);
-                } else {
-                    // No results, clear selection.
-                    onSelectionCleared();
-                }
-                // Only restore from saved state one time. Next time fall back
-                // to selecting first item. If the fragment state is saved again
-                // then the currently selected item will once again be saved.
-                mPreviouslySelectedSearchItem = 0;
-                mSearchQueryChanged = false;
-            }
+//                    if (mIsTwoPaneLayout && !TextUtils.isEmpty(mSearchTerm) && mSearchQueryChanged) {
+//                        // Selects the first item in results, unless this fragment has
+//                        // been restored from a saved state (like orientation change)
+//                        // in which case it selects the previously selected search item.
+//                        if (data != null && data.moveToPosition(mPreviouslySelectedSearchItem)) {
+//                            // Creates the content Uri for the previously selected contact by appending the
+//                            // contact's ID to the Contacts table content Uri
+//                            final Uri uri = Uri.withAppendedPath(
+//                                    ContactsContract.Contacts.CONTENT_URI, String.valueOf(data.getLong(ContactsQuery.ID)));
+//                            mOnContactSelectedListener.onContactSelected(uri);
+//                            getListView().setItemChecked(mPreviouslySelectedSearchItem, true);
+//                        } else {
+//                            // No results, clear selection.
+//                            onSelectionCleared();
+//                        }
+//                        // Only restore from saved state one time. Next time fall back
+//                        // to selecting first item. If the fragment state is saved again
+//                        // then the currently selected item will once again be saved.
+//                        mPreviouslySelectedSearchItem = 0;
+//                        mSearchQueryChanged = false;
+//                    }
         }
     }
 
@@ -411,7 +484,7 @@ public class ContactsFragment extends ListFragment implements
         if (loader.getId() == ContactsQuery.QUERY_ID) {
             // When the loader is being reset, clear the cursor from the adapter. This allows the
             // cursor resources to be freed.
-            mAdapter.swapCursor(null);
+//                    mAdapter.swapCursor(null);
         }
     }
 
@@ -422,22 +495,22 @@ public class ContactsFragment extends ListFragment implements
      *
      * @return The preferred height in pixels, based on the current theme.
      */
-    private int getListPreferredItemHeight() {
-        final TypedValue typedValue = new TypedValue();
-
-        // Resolve list item preferred height theme attribute into typedValue
-        getActivity().getTheme().resolveAttribute(
-                android.R.attr.listPreferredItemHeight, typedValue, true);
-
-        // Create a new DisplayMetrics object
-        final DisplayMetrics metrics = new android.util.DisplayMetrics();
-
-        // Populate the DisplayMetrics
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        // Return theme value based on DisplayMetrics
-        return (int) typedValue.getDimension(metrics);
-    }
+//    private int getListPreferredItemHeight() {
+//        final TypedValue typedValue = new TypedValue();
+//
+//        // Resolve list item preferred height theme attribute into typedValue
+//        getActivity().getTheme().resolveAttribute(
+//                android.R.attr.listPreferredItemHeight, typedValue, true);
+//
+//        // Create a new DisplayMetrics object
+//        final DisplayMetrics metrics = new android.util.DisplayMetrics();
+//
+//        // Populate the DisplayMetrics
+//        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//
+//        // Return theme value based on DisplayMetrics
+//        return (int) typedValue.getDimension(metrics);
+//    }
 
     /**
      * Decodes and scales a contact's image from a file pointed to by a Uri in the contact's data,
@@ -450,73 +523,74 @@ public class ContactsFragment extends ListFragment implements
      * @return A Bitmap containing the contact's image, resized to fit the provided image size. If
      * no thumbnail exists, returns null.
      */
-    private Bitmap loadContactPhotoThumbnail(String photoData, int imageSize) {
+//    private Bitmap loadContactPhotoThumbnail(String photoData, int imageSize) {
+//
+//        // Ensures the Fragment is still added to an activity. As this method is called in a
+//        // background thread, there's the possibility the Fragment is no longer attached and
+//        // added to an activity. If so, no need to spend resources loading the contact photo.
+//        if (!isAdded() || getActivity() == null) {
+//            return null;
+//        }
+//
+//        // Instantiates an AssetFileDescriptor. Given a content Uri pointing to an image file, the
+//        // ContentResolver can return an AssetFileDescriptor for the file.
+//        AssetFileDescriptor afd = null;
+//
+//        // This "try" block catches an Exception if the file descriptor returned from the Contacts
+//        // Provider doesn't point to an existing file.
+//        try {
+//            Uri thumbUri;
+//            // If Android 3.0 or later, converts the Uri passed as a string to a Uri object.
+//            if (Utils.hasHoneycomb()) {
+//                thumbUri = Uri.parse(photoData);
+//            } else {
+//                // For versions prior to Android 3.0, appends the string argument to the content
+//                // Uri for the Contacts table.
+//                final Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, photoData);
+//
+//                // Appends the content Uri for the Contacts.Photo table to the previously
+//                // constructed contact Uri to yield a content URI for the thumbnail image
+//                thumbUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+//            }
+//            // Retrieves a file descriptor from the Contacts Provider. To learn more about this
+//            // feature, read the reference documentation for
+//            // ContentResolver#openAssetFileDescriptor.
+//            afd = getActivity().getContentResolver().openAssetFileDescriptor(thumbUri, "r");
+//
+//            // Gets a FileDescriptor from the AssetFileDescriptor. A BitmapFactory object can
+//            // decode the contents of a file pointed to by a FileDescriptor into a Bitmap.
+//            FileDescriptor fileDescriptor = afd.getFileDescriptor();
+//
+//            if (fileDescriptor != null) {
+//                // Decodes a Bitmap from the image pointed to by the FileDescriptor, and scales it
+//                // to the specified width and height
+//                return ImageLoader.decodeSampledBitmapFromDescriptor(
+//                        fileDescriptor, imageSize, imageSize);
+//            }
+//        } catch (FileNotFoundException e) {
+//            // If the file pointed to by the thumbnail URI doesn't exist, or the file can't be
+//            // opened in "read" mode, ContentResolver.openAssetFileDescriptor throws a
+//            // FileNotFoundException.
+//            if (BuildConfig.DEBUG) {
+//                Log.d(TAG, "Contact photo thumbnail not found for contact " + photoData
+//                        + ": " + e.toString());
+//            }
+//        } finally {
+//            // If an AssetFileDescriptor was returned, try to close it
+//            if (afd != null) {
+//                try {
+//                    afd.close();
+//                } catch (IOException e) {
+//                    // Closing a file descriptor might cause an IOException if the file is
+//                    // already closed. Nothing extra is needed to handle this.
+//                }
+//            }
+//        }
+//
+//        // If the decoding failed, returns null
+//        return null;
+//    }
 
-        // Ensures the Fragment is still added to an activity. As this method is called in a
-        // background thread, there's the possibility the Fragment is no longer attached and
-        // added to an activity. If so, no need to spend resources loading the contact photo.
-        if (!isAdded() || getActivity() == null) {
-            return null;
-        }
-
-        // Instantiates an AssetFileDescriptor. Given a content Uri pointing to an image file, the
-        // ContentResolver can return an AssetFileDescriptor for the file.
-        AssetFileDescriptor afd = null;
-
-        // This "try" block catches an Exception if the file descriptor returned from the Contacts
-        // Provider doesn't point to an existing file.
-        try {
-            Uri thumbUri;
-            // If Android 3.0 or later, converts the Uri passed as a string to a Uri object.
-            if (Utils.hasHoneycomb()) {
-                thumbUri = Uri.parse(photoData);
-            } else {
-                // For versions prior to Android 3.0, appends the string argument to the content
-                // Uri for the Contacts table.
-                final Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, photoData);
-
-                // Appends the content Uri for the Contacts.Photo table to the previously
-                // constructed contact Uri to yield a content URI for the thumbnail image
-                thumbUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
-            }
-            // Retrieves a file descriptor from the Contacts Provider. To learn more about this
-            // feature, read the reference documentation for
-            // ContentResolver#openAssetFileDescriptor.
-            afd = getActivity().getContentResolver().openAssetFileDescriptor(thumbUri, "r");
-
-            // Gets a FileDescriptor from the AssetFileDescriptor. A BitmapFactory object can
-            // decode the contents of a file pointed to by a FileDescriptor into a Bitmap.
-            FileDescriptor fileDescriptor = afd.getFileDescriptor();
-
-            if (fileDescriptor != null) {
-                // Decodes a Bitmap from the image pointed to by the FileDescriptor, and scales it
-                // to the specified width and height
-                return ImageLoader.decodeSampledBitmapFromDescriptor(
-                        fileDescriptor, imageSize, imageSize);
-            }
-        } catch (FileNotFoundException e) {
-            // If the file pointed to by the thumbnail URI doesn't exist, or the file can't be
-            // opened in "read" mode, ContentResolver.openAssetFileDescriptor throws a
-            // FileNotFoundException.
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Contact photo thumbnail not found for contact " + photoData
-                        + ": " + e.toString());
-            }
-        } finally {
-            // If an AssetFileDescriptor was returned, try to close it
-            if (afd != null) {
-                try {
-                    afd.close();
-                } catch (IOException e) {
-                    // Closing a file descriptor might cause an IOException if the file is
-                    // already closed. Nothing extra is needed to handle this.
-                }
-            }
-        }
-
-        // If the decoding failed, returns null
-        return null;
-    }
 
     /**
      * This is a subclass of CursorAdapter that supports binding Cursor columns to a view layout.
@@ -663,7 +737,7 @@ public class ContactsFragment extends ListFragment implements
 
             // Loads the thumbnail image pointed to by photoUri into the QuickContactBadge in a
             // background worker thread
-            mImageLoader.loadImage(photoUri, holder.icon);
+//            mImageLoader.loadImage(photoUri, holder.icon);
         }
 
         /**
@@ -721,7 +795,7 @@ public class ContactsFragment extends ListFragment implements
 
         /**
          * A class that defines fields for each resource ID in the list item layout. This allows
-         * ContactsAdapter.newView() to store the IDs once, when it inflates the layout, instead of
+         * ContactsAdapter2.newView() to store the IDs once, when it inflates the layout, instead of
          * calling findViewById in each iteration of bindView.
          */
         private class ViewHolder {
@@ -731,24 +805,26 @@ public class ContactsFragment extends ListFragment implements
         }
     }
 
+
     /**
      * This interface must be implemented by any activity that loads this fragment. When an
      * interaction occurs, such as touching an item from the ListView, these callbacks will
      * be invoked to communicate the event back to the activity.
      */
-    public interface OnContactsInteractionListener {
-        /**
-         * Called when a contact is selected from the ListView.
-         * @param contactUri The contact Uri.
-         */
-        public void onContactSelected(Uri contactUri);
+//    public interface OnContactsInteractionListener {
+//        /**
+//         * Called when a contact is selected from the ListView.
+//         * @param contactUri The contact Uri.
+//         */
+//        public void onContactSelected(Uri contactUri);
+//
+//        /**
+//         * Called when the ListView selection is cleared like when
+//         * a contact search is taking place or is finishing.
+//         */
+//        public void onSelectionCleared();
+//    }
 
-        /**
-         * Called when the ListView selection is cleared like when
-         * a contact search is taking place or is finishing.
-         */
-        public void onSelectionCleared();
-    }
 
     /**
      * This interface defines constants for the Cursor and CursorLoader, based on constants defined
@@ -757,20 +833,20 @@ public class ContactsFragment extends ListFragment implements
     public interface ContactsQuery {
 
         // An identifier for the loader
-        final static int QUERY_ID = 1;
+        int QUERY_ID = 1;
 
         // A content URI for the Contacts table
-        final static Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
+        Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
 
         // The search/filter query Uri
-        final static Uri FILTER_URI = ContactsContract.Contacts.CONTENT_FILTER_URI;
+        Uri FILTER_URI = ContactsContract.Contacts.CONTENT_FILTER_URI;
 
         // The selection clause for the CursorLoader query. The search criteria defined here
         // restrict results to contacts that have a display name and are linked to visible groups.
         // Notice that the search on the string provided by the user is implemented by appending
         // the search string to CONTENT_FILTER_URI.
         @SuppressLint("InlinedApi")
-        final static String SELECTION =
+        String SELECTION =
                 (Utils.hasHoneycomb() ? ContactsContract.Contacts.DISPLAY_NAME_PRIMARY : ContactsContract.Contacts.DISPLAY_NAME) +
                         "<>''" + " AND " + ContactsContract.Contacts.IN_VISIBLE_GROUP + "=1";
 
@@ -778,13 +854,13 @@ public class ContactsFragment extends ListFragment implements
         // sort key allows for localization. In earlier versions. use the display name as the sort
         // key.
         @SuppressLint("InlinedApi")
-        final static String SORT_ORDER =
+        String SORT_ORDER =
                 Utils.hasHoneycomb() ? ContactsContract.Contacts.SORT_KEY_PRIMARY : ContactsContract.Contacts.DISPLAY_NAME;
 
         // The projection for the CursorLoader query. This is a list of columns that the Contacts
         // Provider should return in the Cursor.
         @SuppressLint("InlinedApi")
-        final static String[] PROJECTION = {
+        String[] PROJECTION = {
 
                 // The contact's row id
                 ContactsContract.Contacts._ID,
@@ -812,25 +888,10 @@ public class ContactsFragment extends ListFragment implements
         };
 
         // The query column numbers which map to each value in the projection
-        final static int ID = 0;
-        final static int LOOKUP_KEY = 1;
-        final static int DISPLAY_NAME = 2;
-        final static int PHOTO_THUMBNAIL_DATA = 3;
-        final static int SORT_KEY = 4;
+        int ID = 0;
+        int LOOKUP_KEY = 1;
+        int DISPLAY_NAME = 2;
+        int PHOTO_THUMBNAIL_DATA = 3;
+        int SORT_KEY = 4;
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        public void onFragmentInteraction(Uri uri);
-//    }
 }

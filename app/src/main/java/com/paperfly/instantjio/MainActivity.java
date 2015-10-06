@@ -24,22 +24,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ContactsFragment.OnContactsInteractionListener {
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +44,13 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
     private void initViewPagerAndTabs() {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mSectionsPagerAdapter.addFragment(GroupsFragment.newInstance(), "Groups");
         mSectionsPagerAdapter.addFragment(EventsFragment.newInstance(), "Jio");
         mSectionsPagerAdapter.addFragment(ContactsFragment.newInstance(), "Contacts");
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -132,36 +117,5 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
 
         @Override
         public CharSequence getPageTitle(int position) { return fragmentTitleList.get(position); }
-    }
-
-    /**
-     * This interface callback lets the main contacts list fragment notify
-     * this activity that a contact has been selected.
-     *
-     * @param contactUri The contact Uri to the selected contact.
-     */
-    @Override
-    public void onContactSelected(Uri contactUri) {
-//        if (isTwoPaneLayout && mContactDetailFragment != null) {
-//            // If two pane layout then update the detail fragment to show the selected contact
-//            mContactDetailFragment.setContact(contactUri);
-//        } else {
-//            // Otherwise single pane layout, start a new ContactDetailActivity with
-//            // the contact Uri
-//            Intent intent = new Intent(this, ContactDetailActivity.class);
-//            intent.setData(contactUri);
-//            startActivity(intent);
-//        }
-    }
-
-    /**
-     * This interface callback lets the main contacts list fragment notify
-     * this activity that a contact is no longer selected.
-     */
-    @Override
-    public void onSelectionCleared() {
-//        if (isTwoPaneLayout && mContactDetailFragment != null) {
-//            mContactDetailFragment.setContact(null);
-//        }
     }
 }
