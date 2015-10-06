@@ -1,13 +1,22 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.paperfly.instantjio.ContactsFragment">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.paperfly.instantjio.ContactsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ListView
+        android:id="@id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <TextView
+        android:id="@id/android:empty"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:text="@string/no_contacts"
+        android:fontFamily="sans-serif-light"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 </FrameLayout>

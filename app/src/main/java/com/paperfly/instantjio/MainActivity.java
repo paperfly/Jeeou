@@ -1,5 +1,7 @@
 package com.paperfly.instantjio;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,7 +24,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ContactsFragment.OnContactsInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -130,5 +132,36 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) { return fragmentTitleList.get(position); }
+    }
+
+    /**
+     * This interface callback lets the main contacts list fragment notify
+     * this activity that a contact has been selected.
+     *
+     * @param contactUri The contact Uri to the selected contact.
+     */
+    @Override
+    public void onContactSelected(Uri contactUri) {
+//        if (isTwoPaneLayout && mContactDetailFragment != null) {
+//            // If two pane layout then update the detail fragment to show the selected contact
+//            mContactDetailFragment.setContact(contactUri);
+//        } else {
+//            // Otherwise single pane layout, start a new ContactDetailActivity with
+//            // the contact Uri
+//            Intent intent = new Intent(this, ContactDetailActivity.class);
+//            intent.setData(contactUri);
+//            startActivity(intent);
+//        }
+    }
+
+    /**
+     * This interface callback lets the main contacts list fragment notify
+     * this activity that a contact is no longer selected.
+     */
+    @Override
+    public void onSelectionCleared() {
+//        if (isTwoPaneLayout && mContactDetailFragment != null) {
+//            mContactDetailFragment.setContact(null);
+//        }
     }
 }
