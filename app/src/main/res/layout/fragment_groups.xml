@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.paperfly.instantjio.GroupsFragment">
+             tools:context="com.paperfly.instantjio.groups.GroupsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

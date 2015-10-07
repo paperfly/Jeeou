@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.paperfly.instantjio.contacts.ContactsFragment;
+import com.paperfly.instantjio.events.EventsFragment;
+import com.paperfly.instantjio.groups.GroupsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
