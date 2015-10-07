@@ -7,6 +7,17 @@
         <item name="colorPrimaryDark">@color/customColorPrimaryDark</item>
         <item name="colorAccent">@color/customColorAccent</item>
     </style>
+    <!--TabLayout theme-->
+    <style name="AppTheme.Tab"/>
+    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="android:background">@color/customTabBackground</item>
+        <item name="tabTextAppearance">@style/CustomTabTextAppearance</item>
+        <item name="tabSelectedTextColor">@color/customSelectedTabText</item>
+    </style>
+    <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textColor">@color/customTabText</item>
+        <item name="textAllCaps">true</item>
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

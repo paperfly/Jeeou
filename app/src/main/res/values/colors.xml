@@ -7,4 +7,8 @@
     <color name="customColorPrimary">#FFE135</color>
     <color name="customColorPrimaryDark">#DFBE00</color>
     <color name="customColorAccent">#FFE135</color>
+
+    <color name="customTabBackground">#F5F5F5</color>
+    <color name="customTabText">#80000000</color>
+    <color name="customSelectedTabText">#FFD600</color>
 </resources>
