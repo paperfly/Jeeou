@@ -17,13 +17,10 @@
 package com.paperfly.instantjio.util;
 
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.StrictMode;
 
-import com.paperfly.instantjio.ContactsFragment;
-import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.MainActivity;
 
 /**
  * This class contains static utility methods.
@@ -61,7 +58,7 @@ public class Utils {
                 // For each activity class, set an instance limit of 1. Any more instances and
                 // there could be a memory leak.
                 vmPolicyBuilder
-                        .setClassInstanceLimit(ContactsFragment.class, 1);
+                        .setClassInstanceLimit(MainActivity.class, 1);
 //                        .setClassInstanceLimit(ContactDetailActivity.class, 1);
             }
 

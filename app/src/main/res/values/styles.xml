@@ -14,9 +14,6 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="quickContactBadgeStyle">
-        <item name="android:background">#D8D8D8</item>
-    </style>
     <style name="ContactListView">
         <!--<item name="android:verticalScrollbarPosition">right</item>-->
         <!--<item name="android:fastScrollAlwaysVisible">true</item>-->

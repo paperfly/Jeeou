@@ -8,5 +8,7 @@
 
     <string name="search_match_other">Matches Other Field</string>
     <string name="no_contacts">No Contacts Found</string>
-    <string name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_add_contact">Add Contact</string>
+    <string name="search_hint">Find contacts</string>
 </resources>
