@@ -5,10 +5,13 @@ import android.net.Uri;
 /**
  * Entity model that represents a contact
  */
-final public class Contact {
-    final private String photoUri;
-    final private String displayName;
-    final private Uri contactUri;
+public class Contact {
+    String photoUri;
+    String displayName;
+    Uri contactUri;
+
+    public Contact() {
+    }
 
     public Contact(String photoUri, String displayName, Uri contactUri) {
         this.photoUri = photoUri;
