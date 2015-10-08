@@ -20,6 +20,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -41,26 +44,25 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener  {
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private CallbackManager mFacebookCallbackManager;
+    /* Used to track user logging in/out off Facebook */
+    private AccessTokenTracker mFacebookAccessTokenTracker;
+
     /* Request code used to invoke sign in user interactions. */
     private static final int RC_SIGN_IN = 0;
-
     /* Client used to interact with Google APIs. */
     private GoogleApiClient mGoogleApiClient;
-
     /* Is there a ConnectionResult resolution in progress? */
     private boolean mIsResolving = false;
-
     /* Should we automatically resolve ConnectionResults when possible? */
     private boolean mShouldResolve = false;
 
     private Firebase ref;
-
     private Firebase.AuthStateListener authStateListener;
-
     private Firebase.AuthResultHandler authResultHandler;
 
     @Override
@@ -70,9 +72,10 @@ public class MainActivity extends AppCompatActivity implements
 
         initFirebase();
         initGoogleAPI();
+        initFacebookAPI();
         initToolbar();
         initViewPagerAndTabs();
-        initFAB();
+//        initFAB();
     }
 
     private void initFirebase() {
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements
                     findViewById(R.id.container_login).setVisibility(View.VISIBLE);
                     findViewById(R.id.container_main).setVisibility(View.GONE);
                     findViewById(R.id.appbar).setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), "Logged out from Firebase", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "Logged out from Firebase", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -101,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements
                 // Authenticated successfully with payload authData
                 Toast.makeText(getApplicationContext(), "Firebase authenticated", Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onAuthenticationError(FirebaseError firebaseError) {
                 // Something went wrong :(
@@ -117,6 +121,40 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         };
+        ref.addAuthStateListener(authStateListener);
+    }
+
+    private void initFacebookAPI() {
+        mFacebookCallbackManager = CallbackManager.Factory.create();
+//        mFacebookAccessTokenTracker = new AccessTokenTracker() {
+//            @Override
+//            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+//                Log.i(TAG, "Facebook.AccessTokenTracker.OnCurrentAccessTokenChanged");
+//                MainActivity.this.onFacebookAccessTokenChange(currentAccessToken);
+//            }
+//        };
+        mFacebookAccessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(
+                    AccessToken oldAccessToken,
+                    AccessToken currentAccessToken) {
+                Log.i(TAG, "Facebook.AccessTokenTracker.OnCurrentAccessTokenChanged");
+                // Set the access token using
+                // currentAccessToken when it's loaded or set.
+                if (currentAccessToken != null) {
+//                    mAuthProgressDialog.show();
+                    ref.authWithOAuthToken("facebook", currentAccessToken.getToken(), authResultHandler);
+                } else {
+                    // Logged out of Facebook and currently authenticated with Firebase using Facebook, so do a logout
+                    if (ref.getAuth() != null && ref.getAuth().getProvider().equals("facebook")) {
+                        ref.unauth();
+//                        setAuthenticatedUser(null);
+                    }
+                }
+            }
+        };
+        // If the access token is available already assign it.
+//        mFacebookAccessTokenTracker = AccessToken.getCurrentAccessToken();
     }
 
     private void initGoogleAPI() {
@@ -128,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements
                 .addScope(new Scope(Scopes.EMAIL))
                 .build();
 
-        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.google_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onSignInClicked();
@@ -157,36 +195,38 @@ public class MainActivity extends AppCompatActivity implements
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-    private void initFAB() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-    }
+//    private void initFAB() {
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+//    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        ref.addAuthStateListener(authStateListener);
-        if (!mGoogleApiClient.isConnected())
-            mGoogleApiClient.connect();
+//        ref.addAuthStateListener(authStateListener);
+//        if (ref.getAuth() == null)
+//            mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        ref.removeAuthStateListener(authStateListener);
+//        ref.removeAuthStateListener(authStateListener);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mGoogleApiClient.isConnected())
-            mGoogleApiClient.disconnect();
+        mFacebookAccessTokenTracker.stopTracking();
+        ref.removeAuthStateListener(authStateListener);
+//        if (ref.getAuth() != null)
+//            mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -244,6 +284,8 @@ public class MainActivity extends AppCompatActivity implements
 
             mIsResolving = false;
             mGoogleApiClient.connect();
+        } else {
+            mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -311,8 +353,8 @@ public class MainActivity extends AppCompatActivity implements
             if (result != null) {
                 // Successfully retrieved ID Token
                 // ...
-                if (ref.getAuth() == null)
-                    ref.authWithOAuthToken("google", result, authResultHandler);
+//                if (ref.getAuth() == null)
+                ref.authWithOAuthToken("google", result, authResultHandler);
             } else {
                 // There was some error getting the ID Token
                 // ...
@@ -339,12 +381,18 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-        public Fragment getItem(int position) { return fragmentList.get(position); }
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
 
         @Override
-        public int getCount() { return fragmentList.size(); }
+        public int getCount() {
+            return fragmentList.size();
+        }
 
         @Override
-        public CharSequence getPageTitle(int position) { return fragmentTitleList.get(position); }
+        public CharSequence getPageTitle(int position) {
+            return fragmentTitleList.get(position);
+        }
     }
 }
