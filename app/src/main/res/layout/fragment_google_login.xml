@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.paperfly.instantjio.GoogleLoginFragment">
+             tools:context="com.paperfly.instantjio.login.GoogleLoginFragment">
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_login"

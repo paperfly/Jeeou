@@ -62,13 +62,13 @@
 
         <fragment
             android:id="@+id/google_fragment"
-            android:name="com.paperfly.instantjio.GoogleLoginFragment"
+            android:name="com.paperfly.instantjio.login.GoogleLoginFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <fragment
             android:id="@+id/facebook_fragment"
-            android:name="com.paperfly.instantjio.FacebookLoginFragment"
+            android:name="com.paperfly.instantjio.login.FacebookLoginFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

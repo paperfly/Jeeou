@@ -1,4 +1,4 @@
-package com.paperfly.instantjio;
+package com.paperfly.instantjio.login;
 
 
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
+import com.paperfly.instantjio.R;
 
 
 /**
@@ -57,10 +58,6 @@ public class FacebookLoginFragment extends Fragment {
         };
     }
 
-    public interface OnFacebookLoginListener {
-        void onFacebookCurrentAccessTokenChanged(AccessToken currentAccessToken);
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -99,5 +96,9 @@ public class FacebookLoginFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mAccessTokenTracker.stopTracking();
+    }
+
+    public interface OnFacebookLoginListener {
+        void onFacebookCurrentAccessTokenChanged(AccessToken currentAccessToken);
     }
 }

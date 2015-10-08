@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.paperfly.instantjio.FacebookLoginFragment">
+             tools:context="com.paperfly.instantjio.login.FacebookLoginFragment">
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/facebook_login"

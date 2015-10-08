@@ -20,6 +20,8 @@ import com.firebase.client.FirebaseError;
 import com.paperfly.instantjio.contacts.ContactsFragment;
 import com.paperfly.instantjio.events.EventsFragment;
 import com.paperfly.instantjio.groups.GroupsFragment;
+import com.paperfly.instantjio.login.FacebookLoginFragment;
+import com.paperfly.instantjio.login.GoogleLoginFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
