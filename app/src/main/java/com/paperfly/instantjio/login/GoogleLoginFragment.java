@@ -88,11 +88,6 @@ public class GoogleLoginFragment extends Fragment implements
             throw new ClassCastException(context.toString()
                     + " must implement OnGoogleLoginListener");
         }
-        if (mCallback == null) {
-            Log.e(TAG, "onAttach: mCallback IS null");
-        } else {
-            Log.e(TAG, "onAttach: mCallback NOT null");
-        }
     }
 
     private void onSignInClicked() {

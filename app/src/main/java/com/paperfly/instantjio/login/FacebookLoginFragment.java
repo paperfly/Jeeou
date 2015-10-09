@@ -70,11 +70,6 @@ public class FacebookLoginFragment extends Fragment {
             throw new ClassCastException(context.toString()
                     + " must implement OnFacebookLoginListener");
         }
-        if (mCallback == null) {
-            Log.e(TAG, "onAttach: mCallback IS null");
-        } else {
-            Log.e(TAG, "onAttach: mCallback NOT null");
-        }
     }
 
     @Override
