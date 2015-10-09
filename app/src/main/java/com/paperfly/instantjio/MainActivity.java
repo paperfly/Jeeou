@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initFirebase() {
-        ref = new Firebase("https://popping-inferno-4928.firebaseio.com/");
+        ref = new Firebase(getResources().getString(R.string.firebase_url));
 
         authStateListener = new Firebase.AuthStateListener() {
             @Override
