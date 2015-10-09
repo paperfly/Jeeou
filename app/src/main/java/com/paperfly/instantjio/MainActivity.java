@@ -11,12 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import com.facebook.AccessToken;
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.contacts.ContactsFragment;
 import com.paperfly.instantjio.events.EventsFragment;
 import com.paperfly.instantjio.groups.GroupsFragment;
@@ -44,9 +46,32 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         initFirebase();
+        initPhonePromptLayout();
         initToolbar();
         initViewPagerAndTabs();
 //        initFAB();
+    }
+
+    private void initPhonePromptLayout() {
+        findViewById(R.id.button_phone_number).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText editPhoneNum = (EditText) findViewById(R.id.edit_phone_number);
+                ref.child("users").child(ref.getAuth().getUid()).child("phoneNumber").setValue(editPhoneNum.getText().toString(), new Firebase.CompletionListener() {
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                        if (firebaseError != null) {
+                            Log.e(TAG, "Data could not be saved. " + firebaseError.getMessage());
+                        } else {
+                            Log.d(TAG, "Data saved successfully.");
+                            findViewById(R.id.container_signup).setVisibility(View.GONE);
+                            findViewById(R.id.container_main).setVisibility(View.VISIBLE);
+                            findViewById(R.id.appbar).setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void initFirebase() {
@@ -56,14 +81,33 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onAuthStateChanged(AuthData authData) {
                 if (authData != null) {
-                    findViewById(R.id.container_main).setVisibility(View.VISIBLE);
-                    findViewById(R.id.appbar).setVisibility(View.VISIBLE);
                     findViewById(R.id.container_login).setVisibility(View.GONE);
+
+                    ref.child("users").child(authData.getUid()).child("phoneNumber").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (!dataSnapshot.exists()) {
+                                findViewById(R.id.container_signup).setVisibility(View.VISIBLE);
+                                findViewById(R.id.container_main).setVisibility(View.GONE);
+                                findViewById(R.id.appbar).setVisibility(View.GONE);
+                            } else {
+                                findViewById(R.id.container_signup).setVisibility(View.GONE);
+                                findViewById(R.id.container_main).setVisibility(View.VISIBLE);
+                                findViewById(R.id.appbar).setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
                 } else {
                     // user is not logged in
                     findViewById(R.id.container_login).setVisibility(View.VISIBLE);
                     findViewById(R.id.container_main).setVisibility(View.GONE);
                     findViewById(R.id.appbar).setVisibility(View.GONE);
+                    findViewById(R.id.container_signup).setVisibility(View.GONE);
 //                    Toast.makeText(getApplicationContext(), "Logged out from Firebase", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -71,16 +115,30 @@ public class MainActivity extends AppCompatActivity implements
 
         authResultHandler = new Firebase.AuthResultHandler() {
             @Override
-            public void onAuthenticated(AuthData authData) {
+            public void onAuthenticated(final AuthData authData) {
                 // Authenticated successfully with payload authData
                 // Authentication just completed successfully :)
-                Map<String, String> map = new HashMap<>();
-                map.put("provider", authData.getProvider());
-                if (authData.getProviderData().containsKey("displayName")) {
-                    map.put("displayName", authData.getProviderData().get("displayName").toString());
-                }
-                ref.child("users").child(authData.getUid()).setValue(map);
-                Toast.makeText(getApplicationContext(), "Firebase authenticated", Toast.LENGTH_SHORT).show();
+                ref.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.exists()) {
+                            Map<String, String> map = new HashMap<>();
+                            map.put("provider", authData.getProvider());
+                            if (authData.getProviderData().containsKey("displayName")) {
+                                map.put("displayName", authData.getProviderData().get("displayName").toString());
+                            }
+                            ref.child("users").child(authData.getUid()).setValue(map);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+                        // ignore
+                    }
+                });
+
+                Log.d(TAG, "Firebase authenticated");
+//                Toast.makeText(getApplicationContext(), "Firebase authenticated", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -167,11 +225,9 @@ public class MainActivity extends AppCompatActivity implements
         // Set the access token using
         // currentAccessToken when it's loaded or set.
         if (currentAccessToken != null) {
-            Log.e(TAG, "currentAccessToken != null");
 //                    mAuthProgressDialog.show();
             ref.authWithOAuthToken("facebook", currentAccessToken.getToken(), authResultHandler);
         } else {
-            Log.e(TAG, "currentAccessToken == null");
             // Logged out of Facebook and currently authenticated with Firebase using Facebook, so do a logout
             if (ref.getAuth() != null && ref.getAuth().getProvider().equals("facebook")) {
                 ref.unauth();
