@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements
         FacebookLoginFragment.OnFacebookLoginListener,
         GoogleLoginFragment.OnGoogleLoginListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getCanonicalName();
 
     private Firebase ref;
     private Firebase.AuthStateListener authStateListener;
