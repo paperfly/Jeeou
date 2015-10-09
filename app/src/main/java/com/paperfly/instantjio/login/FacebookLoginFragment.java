@@ -40,7 +40,7 @@ public class FacebookLoginFragment extends Fragment {
             protected void onCurrentAccessTokenChanged(
                     AccessToken oldAccessToken,
                     AccessToken currentAccessToken) {
-                Log.i(TAG, "Facebook.AccessTokenTracker.OnCurrentAccessTokenChanged");
+                Log.d(TAG, "Facebook.AccessTokenTracker.OnCurrentAccessTokenChanged");
 //                // Set the access token using
 //                // currentAccessToken when it's loaded or set.
 //                if (currentAccessToken != null) {
