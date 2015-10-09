@@ -22,13 +22,12 @@ import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.contacts.ContactsFragment;
 import com.paperfly.instantjio.events.EventsFragment;
 import com.paperfly.instantjio.groups.GroupsFragment;
+import com.paperfly.instantjio.groups.User;
 import com.paperfly.instantjio.login.FacebookLoginFragment;
 import com.paperfly.instantjio.login.GoogleLoginFragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements
         FacebookLoginFragment.OnFacebookLoginListener,
@@ -57,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 EditText editPhoneNum = (EditText) findViewById(R.id.edit_phone_number);
+
                 ref.child("users").child(ref.getAuth().getUid()).child("phoneNumber").setValue(editPhoneNum.getText().toString(), new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -122,12 +122,13 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.exists()) {
-                            Map<String, String> map = new HashMap<>();
-                            map.put("provider", authData.getProvider());
+                            User user = new User();
+                            user.setProvider(authData.getProvider());
                             if (authData.getProviderData().containsKey("displayName")) {
-                                map.put("displayName", authData.getProviderData().get("displayName").toString());
+                                user.setName(authData.getProviderData().get("displayName").toString());
                             }
-                            ref.child("users").child(authData.getUid()).setValue(map);
+
+                            ref.child("users").child(authData.getUid()).setValue(user);
                         }
                     }
 
