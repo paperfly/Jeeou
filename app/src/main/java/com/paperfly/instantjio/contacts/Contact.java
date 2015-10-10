@@ -8,14 +8,16 @@ import android.net.Uri;
 public class Contact {
     String photoUri;
     String displayName;
+    String lookupKey;
     Uri contactUri;
 
     public Contact() {
     }
 
-    public Contact(String photoUri, String displayName, Uri contactUri) {
+    public Contact(String photoUri, String displayName, String lookupKey, Uri contactUri) {
         this.photoUri = photoUri;
         this.displayName = displayName;
+        this.lookupKey = lookupKey;
         this.contactUri = contactUri;
     }
 
@@ -25,6 +27,10 @@ public class Contact {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getLookupKey() {
+        return lookupKey;
     }
 
     public Uri getContactUri() {

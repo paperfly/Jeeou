@@ -11,16 +11,21 @@ import android.view.ViewGroup;
 
 import com.paperfly.instantjio.R;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
  * Provide views to RecyclerView with data from mCursor
  */
 public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
+    HashMap<String, String> mContacts;
     private Cursor mCursor;
+    private ContactsFragment.OnContactClickListener mCallback;
 
-    public ContactsAdapter(Cursor cursor) {
+    public ContactsAdapter(Cursor cursor, ContactsFragment.OnContactClickListener callback, HashMap<String, String> contacts) {
         mCursor = cursor;
+        mCallback = callback;
+        mContacts = contacts;
     }
 
     // Create new views (invoked by the layout manager)
@@ -29,8 +34,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
         // Create a new view
         View listItemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.contact_list_item, parent, false);
-
-        return new ContactViewHolder(listItemView);
+        return new ContactViewHolder(listItemView, mCallback);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -38,15 +42,31 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
     public void onBindViewHolder(ContactViewHolder contactViewHolder, final int pos) {
         // Extract info from cursor
         mCursor.moveToPosition(pos);
-        final String photoUri = mCursor.getString(ContactsQuery.PHOTO_THUMBNAIL_DATA);
-        final String displayName = mCursor.getString(ContactsQuery.DISPLAY_NAME);
-        final Uri contactUri = ContactsContract.Contacts.getLookupUri(
-                mCursor.getLong(ContactsQuery.ID),
-                mCursor.getString(ContactsQuery.LOOKUP_KEY));
+        final String photoUri = mCursor.getString(ContactsQuery.Contact.PHOTO_THUMBNAIL_DATA);
+        final String displayName = mCursor.getString(ContactsQuery.Contact.DISPLAY_NAME);
+
+
+        final String lookupKey = mCursor.getString(ContactsQuery.Contact.LOOKUP_KEY);
+        Uri contactUri = null;
+        if (mCallback == null)
+            contactUri = ContactsContract.Contacts.getLookupUri(mCursor.getLong(ContactsQuery.Contact.ID), mCursor.getString(ContactsQuery.Contact.LOOKUP_KEY));
 //        final int startIndex = indexOfSearchQuery(displayName);
 
+        Boolean checked;
+
+        if (mContacts != null) {
+            if (mContacts.containsKey(lookupKey)) {
+                checked = true;
+            } else {
+                checked = false;
+            }
+        } else {
+            checked = null;
+        }
+
+
         // Create contact model and bind to ViewHolder
-        contactViewHolder.set(new Contact(photoUri, displayName, contactUri));
+        contactViewHolder.set(new Contact(photoUri, displayName, lookupKey, contactUri), checked);
     }
 
     // Return the size of the cursor (invoked by the layout manager)
@@ -72,4 +92,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
         }
         return -1;
     }
+
+
 }

@@ -31,17 +31,15 @@ import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.util.Utils;
 import com.paperfly.instantjio.widget.decorator.DividerItemDecoration;
 
+import java.util.HashMap;
+
 public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    // Defines a tag for identifying log entries
-    private static final String TAG = "ContactsFragment";
+    final static String CHOOSING_MODE = "CHOOSING_MODE";
 
     // Bundle key for saving previously selected search result item
 //    private static final String STATE_PREVIOUSLY_SELECTED_KEY =
 //            "com.paperfly.instantjio.SELECTED_ITEM";
-
-//    private ContactsAdapter mAdapter; // The main query adapter
-//    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
-    private String mSearchTerm; // Stores the current search query term
+    final static String CHOSEN_CONTACTS = "CHOSEN_CONTACTS";
 
     // Contact selected listener that allows the activity holding this fragment to be notified of
     // a contact being selected
@@ -60,23 +58,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
 //    private boolean mIsSearchResultView = false;
-
+    // Defines a tag for identifying log entries
+    private static final String TAG = ContactsFragment.class.getCanonicalName();
+    HashMap<String, String> contacts;
+    //    private ContactsAdapter mAdapter; // The main query adapter
+//    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
+    private String mSearchTerm; // Stores the current search query term
     private RecyclerView mContactListView;
-
-    public static ContactsFragment newInstance() {
-//        ContactsFragment fragment = new ContactsFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-        return new ContactsFragment();
-    }
-
-    /**
-     * Fragments require an empty constructor.
-     */
-    public ContactsFragment() {}
-
+    private Boolean choosingMode = false;
     /**
      * In platform versions prior to Android 3.0, the ActionBar and SearchView are not supported,
      * and the UI gets the search string from an EditText. However, the fragment doesn't allow
@@ -95,6 +84,74 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 //            mIsSearchResultView = true;
 //        }
 //    }
+
+    private OnContactClickListener mOnContactClickListener;
+
+
+    /**
+     * Fragments require an empty constructor.
+     */
+    public ContactsFragment() {
+    }
+
+    public static ContactsFragment newInstance(Boolean choosingMode, HashMap<String, String> contacts) {
+        ContactsFragment fragment = new ContactsFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(CHOOSING_MODE, choosingMode);
+
+        if (contacts != null) {
+            args.putSerializable(CHOSEN_CONTACTS, contacts);
+        }
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.d(TAG, "onAttach called");
+
+
+        Bundle b = this.getArguments();
+        if (b != null) {
+            choosingMode = b.getBoolean(CHOOSING_MODE);
+
+            if (b.getSerializable(CHOSEN_CONTACTS) != null)
+                contacts = (HashMap<String, String>) b.getSerializable(CHOSEN_CONTACTS);
+        }
+        if (choosingMode)
+            Log.d(TAG, "CHOOSING_MODE IS TRUE");
+        else
+            Log.d(TAG, "CHOOSING_MODE IS FALSE");
+        if (!choosingMode)
+            return;
+        else {
+            if (mOnContactClickListener == null)
+                Log.d(TAG, "BEFORE: ONCONTACTCLICK NULL");
+            else
+                Log.d(TAG, "BEFORE: ONCONTACTCLICK NOT NULL");
+
+            try {
+                mOnContactClickListener = (OnContactClickListener) context;
+
+                if (mOnContactClickListener == null)
+                    Log.d(TAG, "AFTER 1: ONCONTACTCLICK NULL");
+                else
+                    Log.d(TAG, "AFTER 1: ONCONTACTCLICK NOT NULL");
+            } catch (ClassCastException e) {
+                throw new ClassCastException(context.toString()
+                        + " must implement mOnItemClickListener");
+            }
+            if (mOnContactClickListener == null)
+                Log.d(TAG, "AFTER 2: ONCONTACTCLICK NULL");
+            else
+                Log.d(TAG, "AFTER 2: ONCONTACTCLICK NOT NULL");
+        }
+
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -196,61 +253,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         // the action bar search view (see onQueryTextChange() in onCreateOptionsMenu()).
 //        if (mPreviouslySelectedSearchItem == 0) {
             // Initialize the loader, and create a loader identified by ContactsQuery.QUERY_ID
-            getLoaderManager().initLoader(ContactsQuery.QUERY_ID, null, this);
+        getLoaderManager().initLoader(ContactsQuery.Contact.QUERY_ID, null, this);
 //        }
     }
-
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//
-//        try {
-//            // Assign callback listener which the holding activity must implement. This is used
-//            // so that when a contact item is interacted with (selected by the user) the holding
-//            // activity will be notified and can take further action such as populating the contact
-//            // detail pane (if in multi-pane layout) or starting a new activity with the contact
-//            // details (single pane layout).
-//            mOnContactSelectedListener = (OnContactsInteractionListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(context.toString()
-//                    + " must implement OnContactsInteractionListener");
-//        }
-//    }
-
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//
-//        // In the case onPause() is called during a fling the image loader is
-//        // un-paused to let any remaining background work complete.
-//        mImageLoader.setPauseWork(false);
-//    }
-//
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//        // Gets the Cursor object currently bound to the ListView
-//        final Cursor cursor = mAdapter.getCursor();
-//
-//        // Moves to the Cursor row corresponding to the ListView item that was clicked
-//        cursor.moveToPosition(position);
-//
-//        // Creates a contact lookup Uri from contact ID and lookup_key
-//        final Uri uri = ContactsContract.Contacts.getLookupUri(
-//                cursor.getLong(ContactsQuery.ID),
-//                cursor.getString(ContactsQuery.LOOKUP_KEY));
-//
-//        // Notifies the parent activity that the user selected a contact. In a two-pane layout, the
-//        // parent activity loads a ContactDetailFragment that displays the details for the selected
-//        // contact. In a single-pane layout, the parent activity starts a new activity that
-//        // displays contact details in its own Fragment.
-//        mOnContactSelectedListener.onContactSelected(uri);
-//
-//        // If two-pane layout sets the selected item to checked so it remains highlighted. In a
-//        // single-pane layout a new activity is started so this is not needed.
-//        if (mIsTwoPaneLayout) {
-//            getListView().setItemChecked(position, true);
-//        }
-//    }
 
     /**
      * Called when ListView selection is cleared, for example
@@ -277,6 +282,13 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         // Locate the search item
         MenuItem searchItem = menu.findItem(R.id.menu_search);
 
+        if (!choosingMode) {
+            menu.findItem(R.id.menu_contact_choose).setVisible(false);
+            menu.findItem(R.id.menu_add_contact).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_contact_choose).setVisible(true);
+            menu.findItem(R.id.menu_add_contact).setVisible(false);
+        }
         // In versions prior to Android 3.0, hides the search item to prevent additional
         // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
         // Since the search doesn't create a new Activity to do the searching, the menu item
@@ -332,7 +344,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     // necessary content Uri from mSearchTerm.
 //                    mSearchQueryChanged = true;
                     getLoaderManager().restartLoader(
-                            ContactsQuery.QUERY_ID, null, ContactsFragment.this);
+                            ContactsQuery.Contact.QUERY_ID, null, ContactsFragment.this);
                     return true;
                 }
             });
@@ -355,7 +367,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 //                        }
                         mSearchTerm = null;
                         getLoaderManager().restartLoader(
-                                ContactsQuery.QUERY_ID, null, ContactsFragment.this);
+                                ContactsQuery.Contact.QUERY_ID, null, ContactsFragment.this);
                         return true;
                     }
                 });
@@ -380,6 +392,58 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             }
         }
     }
+
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//
+//        try {
+//            // Assign callback listener which the holding activity must implement. This is used
+//            // so that when a contact item is interacted with (selected by the user) the holding
+//            // activity will be notified and can take further action such as populating the contact
+//            // detail pane (if in multi-pane layout) or starting a new activity with the contact
+//            // details (single pane layout).
+//            mOnContactSelectedListener = (OnContactsInteractionListener) context;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException(context.toString()
+//                    + " must implement OnContactsInteractionListener");
+//        }
+//    }
+
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//
+//        // In the case onPause() is called during a fling the image loader is
+//        // un-paused to let any remaining background work complete.
+//        mImageLoader.setPauseWork(false);
+//    }
+//
+//    @Override
+//    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//        // Gets the Cursor object currently bound to the ListView
+//        final Cursor cursor = mAdapter.getCursor();
+//
+//        // Moves to the Cursor row corresponding to the ListView item that was clicked
+//        cursor.moveToPosition(position);
+//
+//        // Creates a contact lookup Uri from contact ID and lookup_key
+//        final Uri uri = ContactsContract.Contacts.getLookupUri(
+//                cursor.getLong(ContactsQuery.ID),
+//                cursor.getString(ContactsQuery.LOOKUP_KEY));
+//
+//        // Notifies the parent activity that the user selected a contact. In a two-pane layout, the
+//        // parent activity loads a ContactDetailFragment that displays the details for the selected
+//        // contact. In a single-pane layout, the parent activity starts a new activity that
+//        // displays contact details in its own Fragment.
+//        mOnContactSelectedListener.onContactSelected(uri);
+//
+//        // If two-pane layout sets the selected item to checked so it remains highlighted. In a
+//        // single-pane layout a new activity is started so this is not needed.
+//        if (mIsTwoPaneLayout) {
+//            getListView().setItemChecked(position, true);
+//        }
+//    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -407,6 +471,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     getActivity().onSearchRequested();
                 }
                 break;
+            case R.id.menu_contact_choose:
+                if (mOnContactClickListener != null)
+                    mOnContactClickListener.onConfirmClick();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -416,7 +484,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         // If this is the loader for finding contacts in the Contacts Provider
         // (the only one supported)
-        if (id == ContactsQuery.QUERY_ID) {
+        if (id == ContactsQuery.Contact.QUERY_ID) {
             Uri contentUri;
 
             // There are two types of searches, one which displays all contacts and
@@ -426,12 +494,12 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             if (mSearchTerm == null) {
                 // Since there's no search string, use the content URI that searches the entire
                 // Contacts table
-                contentUri = ContactsQuery.CONTENT_URI;
+                contentUri = ContactsQuery.Contact.CONTENT_URI;
             } else {
                 // Since there's a search string, use the special content Uri that searches the
                 // Contacts table. The URI consists of a base Uri and the search string.
                 contentUri =
-                        Uri.withAppendedPath(ContactsQuery.FILTER_URI, Uri.encode(mSearchTerm));
+                        Uri.withAppendedPath(ContactsQuery.Contact.FILTER_URI, Uri.encode(mSearchTerm));
             }
 
             // Returns a new CursorLoader for querying the Contacts table. No arguments are used
@@ -440,10 +508,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             // the ContactsQuery interface.
             return new CursorLoader(getContext(),
                     contentUri,
-                    ContactsQuery.PROJECTION,
-                    ContactsQuery.SELECTION,
+                    ContactsQuery.Contact.PROJECTION,
+                    ContactsQuery.Contact.SELECTION,
                     null,
-                    ContactsQuery.SORT_ORDER);
+                    ContactsQuery.Contact.SORT_ORDER);
         }
 
         Log.e(TAG, "onCreateLoader - incorrect ID provided (" + id + ")");
@@ -453,8 +521,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Put the result Cursor in the adapter for the ListView
-        if (loader.getId() == ContactsQuery.QUERY_ID) {
-            mContactListView.setAdapter(new ContactsAdapter(data));
+        if (loader.getId() == ContactsQuery.Contact.QUERY_ID) {
+            mContactListView.setAdapter(new ContactsAdapter(data, mOnContactClickListener, contacts));
 
             // If this is a two-pane layout and there is a search query then
             // there is some additional work to do around default selected
@@ -490,5 +558,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 //            // cursor resources to be freed.
 //            mAdapter.swapCursor(null);
 //        }
+    }
+
+    public interface OnContactClickListener {
+        void onContactClick(String lookupKey);
+
+        void onConfirmClick();
     }
 }
