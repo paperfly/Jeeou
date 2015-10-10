@@ -88,11 +88,11 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d(TAG, "%%%%%%%%% " + phoneNumberStr);
                 PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
                 TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-                final String ISO2 = manager.getSimCountryIso();
+                final String ISO2 = BuildConfig.DEBUG ? "MY" : manager.getSimCountryIso().toUpperCase();
                 Log.d(TAG, "initPhonePromptLayout(): " + ISO2);
                 Phonenumber.PhoneNumber phoneNumberProto = new Phonenumber.PhoneNumber();
                 try {
-                    phoneNumberProto = phoneUtil.parse(phoneNumberStr, ISO2.toUpperCase());
+                    phoneNumberProto = phoneUtil.parse(phoneNumberStr, ISO2);
                 } catch (NumberParseException e) {
                     Log.e(TAG, "NumberParseException was thrown: " + e.toString());
                 }
