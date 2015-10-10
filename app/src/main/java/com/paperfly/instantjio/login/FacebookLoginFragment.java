@@ -13,7 +13,10 @@ import android.view.ViewGroup;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
+import com.facebook.login.widget.LoginButton;
 import com.paperfly.instantjio.R;
+
+import java.util.Arrays;
 
 
 /**
@@ -21,8 +24,9 @@ import com.paperfly.instantjio.R;
  */
 public class FacebookLoginFragment extends Fragment {
 
-    private static final String TAG = FacebookLoginFragment.class.getSimpleName();
+    private static final String TAG = FacebookLoginFragment.class.getCanonicalName();
 
+    private LoginButton mLoginButton;
     private CallbackManager mCallbackManager;
     /* Used to track user logging in/out off Facebook */
     private AccessTokenTracker mAccessTokenTracker;
@@ -33,7 +37,8 @@ public class FacebookLoginFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private void initFacebookAPI() {
+    private void initFacebookAPI(View view) {
+        mLoginButton = (LoginButton) view.findViewById(R.id.facebook_login);
         mCallbackManager = CallbackManager.Factory.create();
         mAccessTokenTracker = new AccessTokenTracker() {
             @Override
@@ -48,7 +53,7 @@ public class FacebookLoginFragment extends Fragment {
 //                    ref.authWithOAuthToken("facebook", currentAccessToken.getToken(), authResultHandler);
 //                } else {
 //                    // Logged out of Facebook and currently authenticated with Firebase using Facebook, so do a logout
-//                    if (ref.getAuth() != null && ref.getAuth().getProvider().equals("facebook")) {
+//                    if (ref.getAuth() != null && ref.getAuth().getProviders().equals("facebook")) {
 //                        ref.unauth();
 ////                        setAuthenticatedUser(null);
 //                    }
@@ -56,6 +61,7 @@ public class FacebookLoginFragment extends Fragment {
                 mCallback.onFacebookCurrentAccessTokenChanged(currentAccessToken);
             }
         };
+        mLoginButton.setReadPermissions(Arrays.asList("email"));
     }
 
     @Override
@@ -77,7 +83,7 @@ public class FacebookLoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_facebook_login, container, false);
-        initFacebookAPI();
+        initFacebookAPI(view);
         return view;
     }
 
