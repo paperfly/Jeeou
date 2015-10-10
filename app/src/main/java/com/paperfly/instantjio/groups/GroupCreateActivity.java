@@ -56,27 +56,26 @@ public class GroupCreateActivity extends AppCompatActivity {
     }
 
     public void addGroup() {
+        final Firebase ref = new Firebase(getResources().getString(R.string.firebase_url));
         final EditText editText = (EditText) findViewById(R.id.group_name);
         final String groupName = editText.getText().toString();
-        final Map<String, Boolean> members = new HashMap<>();
+        final Group group = new Group(groupName);
+        final Firebase newRef = ref.child("groups").push();
+        final Map<String, Object> groupIndexMap = new HashMap<>();
 
         // Group only needs the index of the members (the uid -> phoneNumber in this case)
         for (HashMap.Entry<String, String> entry : chosenContacts.entrySet()) {
-            members.put(entry.getValue(), true);
+            group.addMembers(entry.getValue());
         }
 
-        final Group group = new Group(groupName, members);
-        final Firebase ref = new Firebase(getResources().getString(R.string.firebase_url));
-
         // Add group to Firebase
-        ref.child("groups").push().setValue(group);
+        newRef.setValue(group);
 
-        final Map<String, Object> groupIndex = new HashMap<>();
-        groupIndex.put(groupName, true);
+        groupIndexMap.put(newRef.getKey(), true);
 
         // Members need to have the group's index too
-        for (HashMap.Entry<String, Boolean> entry : members.entrySet()) {
-            ref.child("users").child(entry.getKey()).child("groups").updateChildren(groupIndex);
+        for (HashMap.Entry<String, Boolean> entry : group.getMembers().entrySet()) {
+            ref.child("users").child(entry.getKey()).child("groups").updateChildren(groupIndexMap);
         }
 
         finish();
