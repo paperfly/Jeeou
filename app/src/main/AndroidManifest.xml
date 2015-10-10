@@ -34,6 +34,11 @@
                 android:resource="@xml/searchable_contacts"/>
         </activity>
 
+
+        <activity android:name=".groups.ContactsChooserActivity"/>
+        <activity android:name=".groups.GroupCreateActivity"/>
+
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges=
