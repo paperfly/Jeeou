@@ -1,11 +1,9 @@
 package com.paperfly.instantjio.groups;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class Group {
     String name;
     Map<String, Boolean> members;
@@ -26,8 +24,16 @@ public class Group {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Map<String, Boolean> getMembers() {
         return members;
+    }
+
+    public void setMembers(Map<String, Boolean> members) {
+        this.members = members;
     }
 
     public void addMembers(String memberName) {

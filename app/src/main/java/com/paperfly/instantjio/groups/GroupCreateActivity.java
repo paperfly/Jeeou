@@ -68,12 +68,12 @@ public class GroupCreateActivity extends AppCompatActivity {
             group.addMembers(entry.getValue());
         }
 
-        // Add group to Firebase
+        // Add mGroup to Firebase
         newRef.setValue(group);
 
         groupIndexMap.put(newRef.getKey(), true);
 
-        // Members need to have the group's index too
+        // Members need to have the mGroup's index too
         for (HashMap.Entry<String, Boolean> entry : group.getMembers().entrySet()) {
             ref.child("users").child(entry.getKey()).child("groups").updateChildren(groupIndexMap);
         }
