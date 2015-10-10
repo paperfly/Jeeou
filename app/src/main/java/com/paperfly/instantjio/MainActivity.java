@@ -1,7 +1,9 @@
 package com.paperfly.instantjio;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,8 +11,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.facebook.AccessToken;
@@ -19,8 +23,12 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.paperfly.instantjio.contacts.ContactsFragment;
 import com.paperfly.instantjio.events.EventsFragment;
+import com.paperfly.instantjio.groups.GroupCreateActivity;
 import com.paperfly.instantjio.groups.GroupsFragment;
 import com.paperfly.instantjio.groups.User;
 import com.paperfly.instantjio.login.FacebookLoginFragment;
@@ -31,7 +39,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         FacebookLoginFragment.OnFacebookLoginListener,
-        GoogleLoginFragment.OnGoogleLoginListener {
+        GoogleLoginFragment.OnGoogleLoginListener,
+        ViewPager.OnPageChangeListener {
 
     private static final String TAG = MainActivity.class.getCanonicalName();
 
@@ -44,6 +53,12 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        findViewById(R.id.appbar).setEnabled(false);
+        findViewById(R.id.container_main).setEnabled(false);
+        findViewById(R.id.container_login).setEnabled(false);
+        findViewById(R.id.container_signup).setEnabled(false);
+        findViewById(R.id.fab).setEnabled(false);
+
         initFirebase();
         initPhonePromptLayout();
         initToolbar();
@@ -55,15 +70,45 @@ public class MainActivity extends AppCompatActivity implements
         findViewById(R.id.button_phone_number).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText editPhoneNum = (EditText) findViewById(R.id.edit_phone_number);
+                final EditText editPhoneNum = (EditText) findViewById(R.id.edit_phone_number);
 
-                ref.child("users").child(ref.getAuth().getUid()).child("phoneNumber").setValue(editPhoneNum.getText().toString(), new Firebase.CompletionListener() {
+                final String phoneNumberStr = editPhoneNum.getText().toString();
+                Log.d(TAG, "%%%%%%%%% " + phoneNumberStr);
+                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+                TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                String ISO2 = manager.getSimCountryIso();
+                Log.d(TAG, "initPhonePromptLayout(): " + ISO2);
+                Phonenumber.PhoneNumber phoneNumberProto = new Phonenumber.PhoneNumber();
+                try {
+                    phoneNumberProto = phoneUtil.parse(phoneNumberStr, ISO2.toUpperCase());
+                } catch (NumberParseException e) {
+                    Log.e(TAG, "NumberParseException was thrown: " + e.toString());
+                }
+
+                if (!phoneUtil.isValidNumber(phoneNumberProto))
+                    return;
+
+                String phoneNumber = phoneUtil.format(phoneNumberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
+                Log.d(TAG, "initPhonePromptLayout(): " + phoneNumber);
+
+                ref.child("users").child(ref.getAuth().getUid()).child("phoneNumber").setValue(phoneNumber, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                         if (firebaseError != null) {
                             Log.e(TAG, "Data could not be saved. " + firebaseError.getMessage());
                         } else {
                             Log.d(TAG, "Data saved successfully.");
+
+                            if (editPhoneNum.isFocused()) {
+                                editPhoneNum.clearFocus();
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(editPhoneNum.getWindowToken(), 0);
+                            }
+
+                            findViewById(R.id.fab).setEnabled(true);
+                            findViewById(R.id.appbar).setEnabled(true);
+                            findViewById(R.id.container_main).setEnabled(true);
+                            findViewById(R.id.container_signup).setEnabled(false);
                             findViewById(R.id.container_signup).setVisibility(View.GONE);
                             findViewById(R.id.container_main).setVisibility(View.VISIBLE);
                             findViewById(R.id.appbar).setVisibility(View.VISIBLE);
@@ -81,16 +126,25 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onAuthStateChanged(AuthData authData) {
                 if (authData != null) {
+                    findViewById(R.id.container_login).setEnabled(false);
                     findViewById(R.id.container_login).setVisibility(View.GONE);
 
                     ref.child("users").child(authData.getUid()).child("phoneNumber").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (!dataSnapshot.exists()) {
+                                findViewById(R.id.fab).setEnabled(false);
+                                findViewById(R.id.appbar).setEnabled(false);
+                                findViewById(R.id.container_main).setEnabled(false);
+                                findViewById(R.id.container_signup).setEnabled(true);
                                 findViewById(R.id.container_signup).setVisibility(View.VISIBLE);
                                 findViewById(R.id.container_main).setVisibility(View.GONE);
                                 findViewById(R.id.appbar).setVisibility(View.GONE);
                             } else {
+                                findViewById(R.id.fab).setEnabled(true);
+                                findViewById(R.id.appbar).setEnabled(true);
+                                findViewById(R.id.container_main).setEnabled(true);
+                                findViewById(R.id.container_signup).setEnabled(false);
                                 findViewById(R.id.container_signup).setVisibility(View.GONE);
                                 findViewById(R.id.container_main).setVisibility(View.VISIBLE);
                                 findViewById(R.id.appbar).setVisibility(View.VISIBLE);
@@ -104,6 +158,11 @@ public class MainActivity extends AppCompatActivity implements
                     });
                 } else {
                     // user is not logged in
+                    findViewById(R.id.fab).setEnabled(false);
+                    findViewById(R.id.container_login).setEnabled(true);
+                    findViewById(R.id.appbar).setEnabled(false);
+                    findViewById(R.id.container_main).setEnabled(false);
+                    findViewById(R.id.container_signup).setEnabled(false);
                     findViewById(R.id.container_login).setVisibility(View.VISIBLE);
                     findViewById(R.id.container_main).setVisibility(View.GONE);
                     findViewById(R.id.appbar).setVisibility(View.GONE);
@@ -170,28 +229,69 @@ public class MainActivity extends AppCompatActivity implements
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mSectionsPagerAdapter.addFragment(GroupsFragment.newInstance(), "Groups");
-        mSectionsPagerAdapter.addFragment(EventsFragment.newInstance(), "Jio");
-        mSectionsPagerAdapter.addFragment(ContactsFragment.newInstance(), "Contacts");
+        mSectionsPagerAdapter.addFragment(new GroupsFragment(), "Groups");
+        mSectionsPagerAdapter.addFragment(new EventsFragment(), "Jio");
+        mSectionsPagerAdapter.addFragment(new ContactsFragment(), "Contacts");
 
         // Set up the ViewPager with the sections adapter.
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container_main);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(this);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setCurrentItem(1);
     }
 
-//    private void initFAB() {
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-//    }
+    private void setFABForGroups() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.show();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startGroupCreateActivity();
+            }
+        });
+    }
+
+    private void setFABForEvents() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide();
+    }
+
+    private void setFABForContacts() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide();
+    }
+
+    private void startGroupCreateActivity() {
+        Intent intent = new Intent(this, GroupCreateActivity.class);
+        startActivity(intent);
+    }
+
+    public void onPageSelected(int position) {
+        Log.d(TAG, String.valueOf(position));
+        switch (position) {
+            case 0:
+                Log.d(TAG, "SETFABFORGROUPS");
+                setFABForGroups();
+                break;
+            case 1:
+                setFABForEvents();
+                break;
+            case 2:
+                setFABForContacts();
+                break;
+        }
+    }
+
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    public void onPageScrollStateChanged(int state) {
+
+    }
 
     @Override
     protected void onDestroy() {
