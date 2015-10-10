@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.groups;
+package com.paperfly.instantjio.contacts;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,8 +16,6 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.paperfly.instantjio.BuildConfig;
 import com.paperfly.instantjio.R;
-import com.paperfly.instantjio.contacts.ContactsFragment;
-import com.paperfly.instantjio.contacts.ContactsQuery;
 
 import java.util.HashMap;
 

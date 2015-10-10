@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.firebase.client.Firebase;
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.contacts.ContactsChooserActivity;
 
 import java.util.HashMap;
 import java.util.Map;
