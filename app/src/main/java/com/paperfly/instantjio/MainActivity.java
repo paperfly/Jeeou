@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d(TAG, "%%%%%%%%% " + phoneNumberStr);
                 PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
                 TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-                final String ISO2 = BuildConfig.DEBUG ? "MY" : manager.getSimCountryIso().toUpperCase();
+                final String ISO2 = BuildConfig.DEBUG ? getResources().getString(R.string.default_country) : manager.getSimCountryIso().toUpperCase();
                 Log.d(TAG, "initPhonePromptLayout(): " + ISO2);
                 Phonenumber.PhoneNumber phoneNumberProto = new Phonenumber.PhoneNumber();
                 try {
