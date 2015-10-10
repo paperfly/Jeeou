@@ -49,7 +49,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@drawable/login_background_1"
+        android:layout_marginBottom="-50dp">
 
         <!--<com.google.android.gms.common.SignInButton-->
         <!--android:id="@+id/google_login"-->
@@ -62,17 +64,30 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="center_horizontal"/>-->
 
-        <fragment
-            android:id="@+id/google_fragment"
-            android:name="com.paperfly.instantjio.login.GoogleLoginFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="90dp"
+            android:layout_marginBottom="70dp"
+            android:contentDescription="Logo"
+            android:src="@drawable/instantjio_logo" />
 
         <fragment
             android:id="@+id/facebook_fragment"
             android:name="com.paperfly.instantjio.login.FacebookLoginFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"/>
+
+        <fragment
+            android:id="@+id/google_fragment"
+            android:name="com.paperfly.instantjio.login.GoogleLoginFragment"
+            android:layout_width="238dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"/>
 
     </LinearLayout>
 
