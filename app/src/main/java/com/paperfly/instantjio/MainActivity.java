@@ -18,6 +18,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -33,9 +35,14 @@ import com.paperfly.instantjio.groups.GroupsFragment;
 import com.paperfly.instantjio.groups.User;
 import com.paperfly.instantjio.login.FacebookLoginFragment;
 import com.paperfly.instantjio.login.GoogleLoginFragment;
+import com.paperfly.instantjio.util.TokenGenerator;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements
         FacebookLoginFragment.OnFacebookLoginListener,
@@ -43,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements
         ViewPager.OnPageChangeListener {
 
     private static final String TAG = MainActivity.class.getCanonicalName();
-
+    Map<String, Object> auth = new HashMap<>();
     private Firebase ref;
     private Firebase.AuthStateListener authStateListener;
     private Firebase.AuthResultHandler authResultHandler;
@@ -60,13 +67,18 @@ public class MainActivity extends AppCompatActivity implements
         findViewById(R.id.fab).setEnabled(false);
 
         initFirebase();
-        initPhonePromptLayout();
         initToolbar();
         initViewPagerAndTabs();
 //        initFAB();
+
+
     }
 
     private void initPhonePromptLayout() {
+        findViewById(R.id.container_login).setEnabled(false);
+        findViewById(R.id.container_signup).setEnabled(true);
+        findViewById(R.id.container_login).setVisibility(View.GONE);
+        findViewById(R.id.container_signup).setVisibility(View.VISIBLE);
         findViewById(R.id.button_phone_number).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d(TAG, "%%%%%%%%% " + phoneNumberStr);
                 PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
                 TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-                String ISO2 = manager.getSimCountryIso();
+                final String ISO2 = manager.getSimCountryIso();
                 Log.d(TAG, "initPhonePromptLayout(): " + ISO2);
                 Phonenumber.PhoneNumber phoneNumberProto = new Phonenumber.PhoneNumber();
                 try {
@@ -88,33 +100,43 @@ public class MainActivity extends AppCompatActivity implements
                 if (!phoneUtil.isValidNumber(phoneNumberProto))
                     return;
 
-                String phoneNumber = phoneUtil.format(phoneNumberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
+                final String phoneNumber = phoneUtil.format(phoneNumberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
                 Log.d(TAG, "initPhonePromptLayout(): " + phoneNumber);
 
-                ref.child("users").child(ref.getAuth().getUid()).child("phoneNumber").setValue(phoneNumber, new Firebase.CompletionListener() {
-                    @Override
-                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        if (firebaseError != null) {
-                            Log.e(TAG, "Data could not be saved. " + firebaseError.getMessage());
-                        } else {
-                            Log.d(TAG, "Data saved successfully.");
+                auth.put("uid", phoneNumber);
+                auth.put("regionCode", ISO2);
 
-                            if (editPhoneNum.isFocused()) {
-                                editPhoneNum.clearFocus();
-                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(editPhoneNum.getWindowToken(), 0);
-                            }
+                // TODO Remove JWT token generator when publishing app
+                TokenGenerator tokenGenerator = new TokenGenerator("V3JuTN4Ne5siDkvydx1gNJGQWmx1EwtcXMyxQC5O");
+                String token = tokenGenerator.createToken(auth);
 
-                            findViewById(R.id.fab).setEnabled(true);
-                            findViewById(R.id.appbar).setEnabled(true);
-                            findViewById(R.id.container_main).setEnabled(true);
-                            findViewById(R.id.container_signup).setEnabled(false);
-                            findViewById(R.id.container_signup).setVisibility(View.GONE);
-                            findViewById(R.id.container_main).setVisibility(View.VISIBLE);
-                            findViewById(R.id.appbar).setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
+                ref.authWithCustomToken(token, authResultHandler);
+
+
+//                ref.child("users").child(ref.getAuth().getUid()).child("phoneNumber").setValue(phoneNumber, new Firebase.CompletionListener() {
+//                    @Override
+//                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+//                        if (firebaseError != null) {
+//                            Log.e(TAG, "Data could not be saved. " + firebaseError.getMessage());
+//                        } else {
+//                            Log.d(TAG, "Data saved successfully.");
+//
+//                            if (editPhoneNum.isFocused()) {
+//                                editPhoneNum.clearFocus();
+//                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                                imm.hideSoftInputFromWindow(editPhoneNum.getWindowToken(), 0);
+//                            }
+//
+//                            findViewById(R.id.fab).setEnabled(true);
+//                            findViewById(R.id.appbar).setEnabled(true);
+//                            findViewById(R.id.container_main).setEnabled(true);
+//                            findViewById(R.id.container_signup).setEnabled(false);
+//                            findViewById(R.id.container_signup).setVisibility(View.GONE);
+//                            findViewById(R.id.container_main).setVisibility(View.VISIBLE);
+//                            findViewById(R.id.appbar).setVisibility(View.VISIBLE);
+//                        }
+//                    }
+//                });
             }
         });
     }
@@ -126,46 +148,59 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onAuthStateChanged(AuthData authData) {
                 if (authData != null) {
+//                    findViewById(R.id.container_login).setEnabled(false);
+//                    findViewById(R.id.container_login).setVisibility(View.GONE);
+
+//                    ref.child("users").child(authData.getUid()).child("phoneNumber").addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(DataSnapshot dataSnapshot) {
+//                            if (!dataSnapshot.exists()) {
+//                                findViewById(R.id.fab).setEnabled(false);
+//                                findViewById(R.id.appbar).setEnabled(false);
+//                                findViewById(R.id.container_main).setEnabled(false);
+//                                findViewById(R.id.container_signup).setEnabled(true);
+//                                findViewById(R.id.container_signup).setVisibility(View.VISIBLE);
+//                                findViewById(R.id.container_main).setVisibility(View.GONE);
+//                                findViewById(R.id.appbar).setVisibility(View.GONE);
+//                            } else {
+//                                findViewById(R.id.fab).setEnabled(true);
+//                                findViewById(R.id.appbar).setEnabled(true);
+//                                findViewById(R.id.container_main).setEnabled(true);
+//                                findViewById(R.id.container_signup).setEnabled(false);
+//                                findViewById(R.id.container_signup).setVisibility(View.GONE);
+//                                findViewById(R.id.container_main).setVisibility(View.VISIBLE);
+//                                findViewById(R.id.appbar).setVisibility(View.VISIBLE);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(FirebaseError firebaseError) {
+//
+//                        }
+//                    });
+
+
+                    findViewById(R.id.appbar).setEnabled(true);
+                    findViewById(R.id.container_main).setEnabled(true);
+                    findViewById(R.id.fab).setEnabled(true);
                     findViewById(R.id.container_login).setEnabled(false);
+                    findViewById(R.id.container_signup).setEnabled(false);
+                    findViewById(R.id.appbar).setVisibility(View.VISIBLE);
+                    findViewById(R.id.container_main).setVisibility(View.VISIBLE);
+                    findViewById(R.id.fab).setVisibility(View.GONE);
                     findViewById(R.id.container_login).setVisibility(View.GONE);
-
-                    ref.child("users").child(authData.getUid()).child("phoneNumber").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (!dataSnapshot.exists()) {
-                                findViewById(R.id.fab).setEnabled(false);
-                                findViewById(R.id.appbar).setEnabled(false);
-                                findViewById(R.id.container_main).setEnabled(false);
-                                findViewById(R.id.container_signup).setEnabled(true);
-                                findViewById(R.id.container_signup).setVisibility(View.VISIBLE);
-                                findViewById(R.id.container_main).setVisibility(View.GONE);
-                                findViewById(R.id.appbar).setVisibility(View.GONE);
-                            } else {
-                                findViewById(R.id.fab).setEnabled(true);
-                                findViewById(R.id.appbar).setEnabled(true);
-                                findViewById(R.id.container_main).setEnabled(true);
-                                findViewById(R.id.container_signup).setEnabled(false);
-                                findViewById(R.id.container_signup).setVisibility(View.GONE);
-                                findViewById(R.id.container_main).setVisibility(View.VISIBLE);
-                                findViewById(R.id.appbar).setVisibility(View.VISIBLE);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
-
-                        }
-                    });
+                    findViewById(R.id.container_signup).setVisibility(View.GONE);
                 } else {
                     // user is not logged in
                     findViewById(R.id.fab).setEnabled(false);
-                    findViewById(R.id.container_login).setEnabled(true);
                     findViewById(R.id.appbar).setEnabled(false);
                     findViewById(R.id.container_main).setEnabled(false);
+                    findViewById(R.id.container_login).setEnabled(true);
                     findViewById(R.id.container_signup).setEnabled(false);
-                    findViewById(R.id.container_login).setVisibility(View.VISIBLE);
-                    findViewById(R.id.container_main).setVisibility(View.GONE);
                     findViewById(R.id.appbar).setVisibility(View.GONE);
+                    findViewById(R.id.container_main).setVisibility(View.GONE);
+                    findViewById(R.id.fab).setVisibility(View.GONE);
+                    findViewById(R.id.container_login).setVisibility(View.VISIBLE);
                     findViewById(R.id.container_signup).setVisibility(View.GONE);
 //                    Toast.makeText(getApplicationContext(), "Logged out from Firebase", Toast.LENGTH_SHORT).show();
                 }
@@ -177,25 +212,91 @@ public class MainActivity extends AppCompatActivity implements
             public void onAuthenticated(final AuthData authData) {
                 // Authenticated successfully with payload authData
                 // Authentication just completed successfully :)
+
+
                 ref.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.exists()) {
-                            User user = new User();
-                            user.setProvider(authData.getProvider());
-                            if (authData.getProviderData().containsKey("displayName")) {
-                                user.setName(authData.getProviderData().get("displayName").toString());
-                            }
+//                            final User user = new User();
 
-                            ref.child("users").child(authData.getUid()).setValue(user);
+//                            final AuthData authData = ref.getAuth();
+//                            final String name =
+//                                    authData.getProviderData().containsKey("displayName") ?
+//                                            authData.getProviderData().get("displayName").toString() : null;
+//                            final String provider = authData.getProviders();
+//
+//                            user.setName(name);
+//                            user.setProvider(provider);
+//                            user.setRegionCode(ISO2);
+
+                            final User user = new User();
+                            user.setName(auth.get("name").toString());
+                            user.setEmail((auth.get("email").toString()));
+                            user.setRegionCode((auth.get("regionCode").toString()));
+
+                            if (auth.containsKey("facebook")) {
+                                user.addProvider("facebook", auth.get("facebook").toString());
+                            }
+//                            else if (auth.containsKey("google")) {
+                            // Handle google here
+//                            }
+
+
+                            ref.child("users").child(authData.getUid()).setValue(user, new Firebase.CompletionListener() {
+                                @Override
+                                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                    if (firebaseError != null) {
+                                        Log.e(TAG, "Data could not be saved. " + firebaseError.getMessage());
+                                    } else {
+                                        Log.d(TAG, "Data saved successfully.");
+
+                                        if (findViewById(R.id.edit_phone_number).isFocused()) {
+                                            findViewById(R.id.edit_phone_number).clearFocus();
+                                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                            imm.hideSoftInputFromWindow(findViewById(R.id.edit_phone_number).getWindowToken(), 0);
+                                        }
+
+//                                        findViewById(R.id.fab).setEnabled(true);
+//                                        findViewById(R.id.appbar).setEnabled(true);
+//                                        findViewById(R.id.container_main).setEnabled(true);
+//                                        findViewById(R.id.container_signup).setEnabled(false);
+//                                        findViewById(R.id.container_signup).setVisibility(View.GONE);
+//                                        findViewById(R.id.container_main).setVisibility(View.VISIBLE);
+//                                        findViewById(R.id.appbar).setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            });
                         }
                     }
 
                     @Override
                     public void onCancelled(FirebaseError firebaseError) {
-                        // ignore
+
                     }
                 });
+
+
+//                ref.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        if (!dataSnapshot.exists()) {
+//                            User user = new User();
+//                            user.setProvider(authData.getProviders());
+//                            if (authData.getProviderData().containsKey("displayName")) {
+//                                user.setName(authData.getProviderData().get("displayName").toString());
+//                            }
+//
+//                            ref.child("users").child(authData.getUid()).setValue(user);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(FirebaseError firebaseError) {
+//                        // ignore
+//                    }
+//                });
+
 
                 Log.d(TAG, "Firebase authenticated");
 //                Toast.makeText(getApplicationContext(), "Firebase authenticated", Toast.LENGTH_SHORT).show();
@@ -327,13 +428,46 @@ public class MainActivity extends AppCompatActivity implements
         // currentAccessToken when it's loaded or set.
         if (currentAccessToken != null) {
 //                    mAuthProgressDialog.show();
-            ref.authWithOAuthToken("facebook", currentAccessToken.getToken(), authResultHandler);
+
+            Log.d(TAG, "onFacebookCurrentAccessTokenChanged");
+            GraphRequest request = GraphRequest.newMeRequest(
+                    currentAccessToken,
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(
+                                JSONObject object,
+                                GraphResponse response) {
+                            Log.d(TAG, "GraphRequest.GraphJSONObjectCallback");
+                            try {
+                                auth.put("email", object.get("email"));
+                                auth.put("facebook", object.get("id"));
+                                auth.put("name", object.get("name"));
+
+                                Log.d(TAG, object.get("email").toString());
+                                Log.d(TAG, object.get("id").toString());
+                                Log.d(TAG, "NAME: " + object.get("name").toString());
+                            } catch (org.json.JSONException e) {
+                                Log.e(TAG, "GraphRequest.GraphJSONObjectCallback JSONException");
+                            }
+
+                            if (response.getError() != null) {
+                                Log.e(TAG, response.getError().getErrorMessage());
+                            }
+                        }
+                    });
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "email,name");
+            request.setParameters(parameters);
+            request.executeAsync();
+
+            initPhonePromptLayout();
+//            ref.authWithOAuthToken("facebook", currentAccessToken.getToken(), authResultHandler);
         } else {
             // Logged out of Facebook and currently authenticated with Firebase using Facebook, so do a logout
-            if (ref.getAuth() != null && ref.getAuth().getProvider().equals("facebook")) {
-                ref.unauth();
-//                        setAuthenticatedUser(null);
-            }
+//            if (ref.getAuth() != null && ref.getAuth().getProviders().equals("facebook")) {
+//                ref.unauth();
+////                        setAuthenticatedUser(null);
+//            }
         }
     }
 
