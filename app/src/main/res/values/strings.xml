@@ -13,4 +13,5 @@
     <string name="search_hint">Find contacts</string>
 
     <string name="default_country">MY</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
 </resources>
