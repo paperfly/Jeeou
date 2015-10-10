@@ -7,9 +7,14 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+import com.paperfly.instantjio.BuildConfig;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.contacts.ContactsFragment;
 import com.paperfly.instantjio.contacts.ContactsQuery;
@@ -107,7 +112,27 @@ public class ContactsChooserActivity extends AppCompatActivity implements Contac
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (loader.getId() == ContactsQuery.Phone.QUERY_ID) {
             if (data.moveToNext()) {
-                final String phoneNumber = String.valueOf(data.getString(ContactsQuery.Phone.PHONE_NUMBER));
+                final String phoneNumberStr = String.valueOf(data.getString(ContactsQuery.Phone.PHONE_NUMBER));
+                Log.d(TAG, "%%%%%%%%% " + phoneNumberStr);
+                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+                TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                final String ISO2 = BuildConfig.DEBUG ? "MY" : manager.getSimCountryIso().toUpperCase();
+                Log.d(TAG, ISO2);
+
+
+                Phonenumber.PhoneNumber phoneNumberProto = new Phonenumber.PhoneNumber();
+                try {
+                    phoneNumberProto = phoneUtil.parse(phoneNumberStr, ISO2);
+                } catch (NumberParseException e) {
+                    Log.e(TAG, "NumberParseException was thrown: " + e.toString());
+                }
+
+                if (!phoneUtil.isValidNumber(phoneNumberProto))
+                    return;
+
+                final String phoneNumber = phoneUtil.format(phoneNumberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
+
+//                final String phoneNumber = String.valueOf(data.getString(ContactsQuery.Phone.PHONE_NUMBER));
                 Log.d(TAG, phoneNumber);
 
 
