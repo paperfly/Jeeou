@@ -3,7 +3,6 @@ package com.paperfly.instantjio.groups;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -16,14 +15,21 @@ import java.util.Map;
 
 public class GroupCreateActivity extends AppCompatActivity {
     final static String TAG = GroupCreateActivity.class.getCanonicalName();
-    HashMap<String, String> members;
+    final String CHOSEN_CONTACTS = "CHOSEN_CONTACTS";
+    HashMap<String, String> chosenContacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_create);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        initEventListeners();
+    }
+
+    void initEventListeners() {
         findViewById(R.id.group_add_contact).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,83 +45,85 @@ public class GroupCreateActivity extends AppCompatActivity {
         });
     }
 
+    public void startContactsChooser() {
+        final Intent intent = new Intent(this, ContactsChooserActivity.class);
+
+        if (chosenContacts != null)
+            intent.putExtra(CHOSEN_CONTACTS, chosenContacts);
+
+        //TODO May need to change request code?
+        startActivityForResult(intent, 0);
+    }
+
+    public void addGroup() {
+        final EditText editText = (EditText) findViewById(R.id.group_name);
+        final String groupName = editText.getText().toString();
+        final Map<String, Boolean> members = new HashMap<>();
+
+        // Group only needs the index of the members (the uid -> phoneNumber in this case)
+        for (HashMap.Entry<String, String> entry : chosenContacts.entrySet()) {
+            members.put(entry.getValue(), true);
+        }
+
+        final Group group = new Group(groupName, members);
+        final Firebase ref = new Firebase(getResources().getString(R.string.firebase_url));
+
+        // Add group to Firebase
+        ref.child("groups").push().setValue(group);
+
+        final Map<String, Object> groupIndex = new HashMap<>();
+        groupIndex.put(groupName, true);
+
+        // Members need to have the group's index too
+        for (HashMap.Entry<String, Boolean> entry : members.entrySet()) {
+            ref.child("users").child(entry.getKey()).child("groups").updateChildren(groupIndex);
+        }
+
+        finish();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-//                Intent upIntent = NavUtils.getParentActivityIntent(this);
-//                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-//                    // This activity is NOT part of this app's task, so create a new task
-//                    // when navigating up, with a synthesized back stack.
-//                    TaskStackBuilder.create(this)
-//                            // Add all of this activity's parents to the back stack
-//                            .addNextIntentWithParentStack(upIntent)
-//                                    // Navigate up to the closest parent
-//                            .startActivities();
-//                } else {
-//                    // This activity is part of this app's task, so simply
-//                    // navigate up to the logical parent activity.
-//                    NavUtils.navigateUpTo(this, upIntent);
-//                }
                 finish();
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
-    }
-
-    public void addGroup() {
-        EditText editGroupName = (EditText) findViewById(R.id.group_name);
-        String name = editGroupName.getText().toString();
-        Map<String, Boolean> _members = new HashMap<>();
-
-        for (HashMap.Entry<String, String> entry : members.entrySet()) {
-            _members.put(entry.getValue(), true);
-        }
-
-        Group group = new Group(name, _members);
-        Firebase ref = new Firebase(getResources().getString(R.string.firebase_url));
-        ref.child("groups").push().setValue(group);
-        finish();
-    }
-
-    public void startContactsChooser() {
-        Intent intent = new Intent(this, ContactsChooserActivity.class);
-
-        if (members != null)
-            intent.putExtra("CHOSEN_CONTACTS", members);
-
-        startActivityForResult(intent, 0);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //TODO May need to change request code?
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
-//                String phoneNumber = data.getStringExtra("PHONE_NUMBER");
-                if (members == null)
-                    members = new HashMap<>();
+                if (chosenContacts == null)
+                    chosenContacts = new HashMap<>();
 
-                members = MergeMap(members, (HashMap<String, String>) data.getSerializableExtra("CHOSEN_CONTACTS"));
-//                members.put(phoneNumber, true);
-//                Log.d(TAG, phoneNumber);
-//                Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show();
+                chosenContacts = MergeMap(chosenContacts, (HashMap<String, String>) data.getSerializableExtra(CHOSEN_CONTACTS));
             }
         }
     }
 
-    HashMap<String, String> MergeMap(HashMap<String, String> map1, HashMap<String, String> map2) {
-        HashMap<String, String> temp = new HashMap<>();
-        for (HashMap.Entry<String, String> entry : map1.entrySet()) {
-            if (map2.containsKey(entry.getKey())) {
+    // Merge two maps from right to left
+    HashMap<String, String> MergeMap(HashMap<String, String> left, HashMap<String, String> right) {
+        final HashMap<String, String> temp = new HashMap<>();
+
+        // Remove deselected chosenContacts here
+        for (HashMap.Entry<String, String> entry : left.entrySet()) {
+            if (right.containsKey(entry.getKey())) {
                 temp.put(entry.getKey(), entry.getValue());
             }
         }
-        for (HashMap.Entry<String, String> entry : map2.entrySet()) {
+
+        // Merge them
+        for (HashMap.Entry<String, String> entry : right.entrySet()) {
             temp.put(entry.getKey(), entry.getValue());
-            Log.d(TAG, entry.getKey() + " ::: " + entry.getValue());
         }
+
         return temp;
     }
 }
