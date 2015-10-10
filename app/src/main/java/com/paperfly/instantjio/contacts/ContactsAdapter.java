@@ -28,6 +28,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
         mContacts = contacts;
     }
 
+    public void setDataSet(Cursor cursor) {
+        mCursor = cursor;
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public ContactViewHolder onCreateViewHolder(ViewGroup parent, int pos) {
@@ -41,38 +45,26 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
     @Override
     public void onBindViewHolder(ContactViewHolder contactViewHolder, final int pos) {
         // Extract info from cursor
-        mCursor.moveToPosition(pos);
-        final String photoUri = mCursor.getString(ContactsQuery.Contact.PHOTO_THUMBNAIL_DATA);
-        final String displayName = mCursor.getString(ContactsQuery.Contact.DISPLAY_NAME);
-
-
-        final String lookupKey = mCursor.getString(ContactsQuery.Contact.LOOKUP_KEY);
-        Uri contactUri = null;
-        if (mCallback == null)
-            contactUri = ContactsContract.Contacts.getLookupUri(mCursor.getLong(ContactsQuery.Contact.ID), mCursor.getString(ContactsQuery.Contact.LOOKUP_KEY));
+        if (mCursor.moveToPosition(pos)) {
+            final String photoUri = mCursor.getString(ContactsQuery.Contact.PHOTO_THUMBNAIL_DATA);
+            final String displayName = mCursor.getString(ContactsQuery.Contact.DISPLAY_NAME);
+            final String lookupKey = mCursor.getString(ContactsQuery.Contact.LOOKUP_KEY);
+            final Uri contactUri = mCallback == null ?
+                    ContactsContract.Contacts.getLookupUri(
+                            mCursor.getLong(ContactsQuery.Contact.ID),
+                            mCursor.getString(ContactsQuery.Contact.LOOKUP_KEY)) : null;
+            final Boolean checked = mContacts == null ? null : mContacts.containsKey(lookupKey);
 //        final int startIndex = indexOfSearchQuery(displayName);
 
-        Boolean checked;
-
-        if (mContacts != null) {
-            if (mContacts.containsKey(lookupKey)) {
-                checked = true;
-            } else {
-                checked = false;
-            }
-        } else {
-            checked = null;
+            // Create contact model and bind to ViewHolder
+            contactViewHolder.set(new Contact(photoUri, displayName, lookupKey, contactUri), checked);
         }
-
-
-        // Create contact model and bind to ViewHolder
-        contactViewHolder.set(new Contact(photoUri, displayName, lookupKey, contactUri), checked);
     }
 
     // Return the size of the cursor (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mCursor.getCount();
+        return mCursor != null ? mCursor.getCount() : -1;
     }
 
     /**

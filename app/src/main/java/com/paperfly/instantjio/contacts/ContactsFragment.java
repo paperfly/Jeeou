@@ -87,6 +87,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     private OnContactClickListener mOnContactClickListener;
 
+    private ContactsAdapter mAdapter;
 
     /**
      * Fragments require an empty constructor.
@@ -203,24 +204,28 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         // Add a cache to the image loader
 //        mImageLoader.addImageCache(getActivity().getSupportFragmentManager(), 0.1f);
+        mAdapter = new ContactsAdapter(null, mOnContactClickListener, contacts);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the fragment layout
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        View root = inflater.inflate(R.layout.fragment_contacts, container, false);
+        mContactListView = (RecyclerView) root.findViewById(android.R.id.list);
+        mContactListView.setHasFixedSize(true);
+        mContactListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mContactListView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        mContactListView.setItemAnimator(new DefaultItemAnimator());
+        mContactListView.setAdapter(mAdapter);
+        return root;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mContactListView = (RecyclerView) getActivity().findViewById(android.R.id.list);
-        mContactListView.setHasFixedSize(true);
-        mContactListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mContactListView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-        mContactListView.setItemAnimator(new DefaultItemAnimator());
+
         // Set up ListView, assign adapter and set some listeners. The adapter was previously
         // created in onCreate().
 //        setListAdapter(mAdapter);
@@ -522,7 +527,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Put the result Cursor in the adapter for the ListView
         if (loader.getId() == ContactsQuery.Contact.QUERY_ID) {
-            mContactListView.setAdapter(new ContactsAdapter(data, mOnContactClickListener, contacts));
+            mAdapter.setDataSet(data);
 
             // If this is a two-pane layout and there is a search query then
             // there is some additional work to do around default selected
