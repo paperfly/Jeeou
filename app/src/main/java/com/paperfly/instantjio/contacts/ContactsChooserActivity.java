@@ -20,13 +20,14 @@ import com.paperfly.instantjio.R;
 import java.util.HashMap;
 
 public class ContactsChooserActivity extends AppCompatActivity implements
-        ContactsFragment.OnContactClickListener,
+        ContactsListener.ContactClick,
         LoaderManager.LoaderCallbacks<Cursor> {
     final static String TAG = ContactsChooserActivity.class.getCanonicalName();
     final String CHOSEN_CONTACTS = "CHOSEN_CONTACTS";
     final Boolean CHOOSING_MODE = true;
     HashMap<String, String> chosenContacts;
     String mLookupKey;
+    ContactsListener.ContactsChooser mContactsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +40,11 @@ public class ContactsChooserActivity extends AppCompatActivity implements
         if (savedInstanceState != null)
             return;
 
+        chosenContacts = chosenContacts == null ? new HashMap<String, String>() : null;
+
         if (getIntent().getExtras() != null) {
-            if (chosenContacts == null)
-                chosenContacts = new HashMap<>();
+//            if (chosenContacts == null)
+//                chosenContacts = new HashMap<>();
 
             chosenContacts = (HashMap<String, String>) getIntent().getSerializableExtra(CHOSEN_CONTACTS);
         }
@@ -124,6 +127,9 @@ public class ContactsChooserActivity extends AppCompatActivity implements
                     chosenContacts.remove(mLookupKey);
                 else
                     chosenContacts.put(mLookupKey, phoneNumber);
+
+                if (mContactsListener != null)
+                    mContactsListener.updateChosenContacts(chosenContacts);
             }
         }
     }
@@ -133,4 +139,6 @@ public class ContactsChooserActivity extends AppCompatActivity implements
         // Nothing to do here. The Cursor does not need to be released as it was never directly
         // bound to anything (like an adapter).
     }
+
+
 }

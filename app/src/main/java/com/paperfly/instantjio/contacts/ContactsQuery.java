@@ -11,6 +11,7 @@ import com.paperfly.instantjio.util.Utils;
  * in the {@link android.provider.ContactsContract.Contacts} class.
  */
 public interface ContactsQuery {
+    //TODO Merge both Contact and Phone
     interface Contact {
         // An identifier for the loader
         int QUERY_ID = 1;

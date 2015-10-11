@@ -18,9 +18,9 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     final private QuickContactBadge mImage;
     final private TextView mLabel;
     private Contact mBoundContact; // Can be null
-    private ContactsFragment.OnContactClickListener mCallback;
+    private ContactsListener.ContactClick mCallback;
 
-    public ContactViewHolder(View v, ContactsFragment.OnContactClickListener callback) {
+    public ContactViewHolder(View v, ContactsListener.ContactClick callback) {
         super(v);
         mImage = (QuickContactBadge) v.findViewById(android.R.id.icon);
         mLabel = (TextView) v.findViewById(android.R.id.text1);
@@ -38,11 +38,12 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkbox.isChecked())
-                    checkbox.setChecked(false);
-                else
-                    checkbox.setChecked(true);
+//                if (checkbox.isChecked())
+//                    checkbox.setChecked(false);
+//                else
+//                    checkbox.setChecked(true);
 
+                checkbox.performClick();
                 if (mBoundContact != null) {
 //                    Toast.makeText(
 //                            v.getContext(),
@@ -68,6 +69,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
+
     public void set(Contact contact, Boolean checked) {
         mBoundContact = contact;
         mLabel.setText(contact.getDisplayName());
@@ -78,8 +80,9 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
                 .into(mImage);
         mImage.assignContactUri(contact.getContactUri());
 
-        if (checked != null)
+        if (checked != null) {
             checkbox.setChecked(checked);
+        }
     }
 
 }

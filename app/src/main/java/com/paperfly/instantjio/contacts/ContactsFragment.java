@@ -33,7 +33,8 @@ import com.paperfly.instantjio.widget.decorator.DividerItemDecoration;
 
 import java.util.HashMap;
 
-public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        ContactsListener.ContactsChooser {
     final static String CHOOSING_MODE = "CHOOSING_MODE";
 
     // Bundle key for saving previously selected search result item
@@ -85,7 +86,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 //        }
 //    }
 
-    private OnContactClickListener mOnContactClickListener;
+    private ContactsListener.ContactClick mOnContactClickListener;
 
     private ContactsAdapter mAdapter;
 
@@ -135,7 +136,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 Log.d(TAG, "BEFORE: ONCONTACTCLICK NOT NULL");
 
             try {
-                mOnContactClickListener = (OnContactClickListener) context;
+                mOnContactClickListener = (ContactsListener.ContactClick) context;
 
                 if (mOnContactClickListener == null)
                     Log.d(TAG, "AFTER 1: ONCONTACTCLICK NULL");
@@ -152,6 +153,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
 
+    }
+
+    @Override
+    public void updateChosenContacts(HashMap<String, String> chosenContacts) {
+        contacts = chosenContacts;
     }
 
     @Override
@@ -563,11 +569,5 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 //            // cursor resources to be freed.
 //            mAdapter.swapCursor(null);
 //        }
-    }
-
-    public interface OnContactClickListener {
-        void onContactClick(String lookupKey);
-
-        void onConfirmClick();
     }
 }
