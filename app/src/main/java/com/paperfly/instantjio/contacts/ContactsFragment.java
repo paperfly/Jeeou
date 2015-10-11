@@ -34,8 +34,7 @@ import com.paperfly.instantjio.widget.decorator.DividerItemDecoration;
 
 import java.util.HashMap;
 
-public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        ChooserEventListener.ItemChosen {
+public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     final static String CHOOSING_MODE = "CHOOSING_MODE";
 
     // Bundle key for saving previously selected search result item
@@ -156,10 +155,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     }
 
-    @Override
-    public void updateChosenItems(HashMap<String, String> chosenItems) {
-        contacts = chosenItems;
-    }
+//    @Override
+//    public void updateChosenItems(HashMap<String, String> chosenItems) {
+//        contacts = chosenItems;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -295,10 +294,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         MenuItem searchItem = menu.findItem(R.id.menu_search);
 
         if (!choosingMode) {
-            menu.findItem(R.id.menu_contact_choose).setVisible(false);
+            menu.findItem(R.id.menu_choose).setVisible(false);
             menu.findItem(R.id.menu_add_contact).setVisible(true);
         } else {
-            menu.findItem(R.id.menu_contact_choose).setVisible(true);
+            menu.findItem(R.id.menu_choose).setVisible(true);
             menu.findItem(R.id.menu_add_contact).setVisible(false);
         }
         // In versions prior to Android 3.0, hides the search item to prevent additional
@@ -483,7 +482,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     getActivity().onSearchRequested();
                 }
                 break;
-            case R.id.menu_contact_choose:
+            case R.id.menu_choose:
                 if (mOnContactClickListener != null)
                     mOnContactClickListener.onConfirmSelection();
                 break;
