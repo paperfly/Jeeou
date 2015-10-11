@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/group_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/instantjio_logo"/>
+
+    <TextView
+        android:id="@+id/group_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/group_photo"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:paddingBottom="@dimen/listview_item_padding"
+        android:paddingLeft="@dimen/listview_item_padding"
+        android:paddingRight="@dimen/listview_item_padding"
+        android:paddingTop="@dimen/listview_item_padding"
+        android:singleLine="true"/>
+
+</RelativeLayout>

@@ -1,29 +1,66 @@
 package com.paperfly.instantjio.groups;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.common.ChooserEventListener;
 
 public class GroupViewHolder extends RecyclerView.ViewHolder {
-    Group mGroup;
-    TextView name;
+    private static final String TAG = GroupViewHolder.class.getCanonicalName();
+    private ChooserEventListener.ItemInteraction mItemInteraction;
+    //    private Group mGroup;
+    private String mGroupIndex;
+    private TextView mGroupNameText;
+    private Boolean mSelected;
 
-    public GroupViewHolder(View itemView) {
+    public GroupViewHolder(final View itemView, ChooserEventListener.ItemInteraction itemInteraction) {
         super(itemView);
-        name = (TextView) itemView.findViewById(R.id.read_group_name);
+
+        mItemInteraction = itemInteraction;
+        mGroupNameText = (TextView) itemView.findViewById(R.id.group_name);
+        mSelected = false;
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mItemInteraction != null) {
+                    mItemInteraction.onItemClick(mGroupIndex);
+                    Log.i(TAG, mGroupIndex);
+                }
+                mSelected = !mSelected;
+                select();
 
             }
         });
     }
 
-    public void set(Group group) {
-        mGroup = group;
-        name.setText(group.getName());
+    private void select() {
+        if (mItemInteraction == null) {
+            return;
+        }
+
+
+        if (mSelected) {
+            itemView.setBackgroundColor(itemView.getResources().getColor(R.color.colorAccent));
+        } else {
+            TypedValue outValue = new TypedValue();
+            itemView.getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+            itemView.setBackgroundResource(outValue.resourceId);
+        }
+    }
+
+    public void set(Group group, String groupIndex, Boolean selected) {
+//        mGroup = group;
+        mGroupIndex = groupIndex;
+        mGroupNameText.setText(group.getName());
+
+        if (selected != null) {
+            mSelected = selected;
+            select();
+        }
     }
 }

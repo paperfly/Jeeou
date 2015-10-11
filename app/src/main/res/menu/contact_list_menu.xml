@@ -34,7 +34,7 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/menu_contact_choose"
+        android:id="@+id/menu_choose"
         android:icon="@drawable/ic_action_done"
         android:title="Confirm"
         app:showAsAction="ifRoom"/>
