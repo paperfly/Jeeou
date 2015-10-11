@@ -7,7 +7,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.paperfly.instantjio.ScrollingActivity"
     tools:showIn="@layout/activity_scrolling">
-    <!--android:layout_gravity="fill_vertical">-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,97 +16,104 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="0dp">
+            android:layout_marginBottom="15dp"
+            app:cardUseCompatPadding="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:padding="10dp"
-                    android:weightSum="3">
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="20dp">
 
-                    <TextView
-                        android:id="@+id/attendCount"
+                    <ImageView
+                        android:id="@+id/hostImg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="20\nAttending" />
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_account_circle_black" />
 
-                    <View
-                        android:id="@+id/vDivider1"
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="#CCCCCC"
-                        android:visibility="visible" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toEndOf="@id/hostImg"
+                        android:layout_toRightOf="@id/hostImg">
+
+                        <TextView
+                            android:id="@+id/hostName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Choon Ho"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/eventCategory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/hostName"
+                            android:text="Party"
+                            android:textSize="15sp" />
+                    </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/missCount"
+                        android:id="@+id/questionLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="5\nPassing" />
-
-                    <View
-                        android:id="@+id/vDivider2"
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="#CCCCCC"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/inviteCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="30\nWaiting" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/vDivider3"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#CCCCCC"
-                    android:visibility="visible" />
+                        android:layout_below="@id/hostImg"
+                        android:layout_marginTop="10dp"
+                        android:text="Are you going?" />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#EEEEEE"
                     android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:weightSum="3">
 
                     <Button
                         android:id="@+id/attendButton"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="-30dp"
-                        android:text="ATTEND" />
+                        android:text="Yes"
+                        android:textAllCaps="false"
+                        android:textSize="16sp"
+                        android:minHeight="0dp"
+                        android:minWidth="0dp" />
 
-                    <View
-                        android:id="@+id/vDivider4"
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="#CCCCCC"
-                        android:visibility="visible" />
+                    <Button
+                        android:id="@+id/maybeButton"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Maybe"
+                        android:textAllCaps="false"
+                        android:textSize="16sp"
+                        android:minHeight="0dp"
+                        android:minWidth="0dp" />
 
                     <Button
                         android:id="@+id/passButton"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="PASS" />
+                        android:text="No"
+                        android:textAllCaps="false"
+                        android:textSize="16sp"
+                        android:minHeight="0dp"
+                        android:minWidth="0dp" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -115,170 +121,285 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="0dp">
+            android:layout_marginBottom="15dp"
+            app:cardUseCompatPadding="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="10dp"
-                    android:weightSum="2">
+                    android:padding="20dp">
+
+                    <ImageView
+                        android:id="@+id/guestsIcon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_people_black" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:layout_weight="3"
+                        android:orientation="horizontal"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:weightSum="3">
 
-                        <TextView
-                            android:id="@+id/startDateTitle"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/attendingCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="5"
+                                android:textColor="#000000"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/attending"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Attending" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/vDivider1"
+                            android:layout_width="0.5dp"
                             android:layout_height="match_parent"
-                            android:padding="5dp"
-                            android:text="Start Date"
-                            android:textColor="#000000"
-                            android:textStyle="bold" />
+                            android:background="#E0E0E0"
+                            android:visibility="visible" />
 
-                        <TextView
-                            android:id="@+id/startDateInfo"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/maybeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1"
+                                android:textColor="#000000"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/maybe"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Maybe" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/vDivider2"
+                            android:layout_width="0.5dp"
                             android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:padding="5dp"
-                            android:text="Sat Oct 10 2015\n10:00 a.m." />
-                    </LinearLayout>
+                            android:background="#E0E0E0"
+                            android:visibility="visible" />
 
-                    <View
-                        android:id="@+id/vDivider5"
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="#CCCCCC"
-                        android:visibility="visible" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/leftCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3"
+                                android:textColor="#000000"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/endDateTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:padding="5dp"
-                            android:text="End Date"
-                            android:textColor="#000000"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/endDateInfo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:padding="5dp"
-                            android:text="Sun Oct 11 2015\n10:00 a.m." />
+                            <TextView
+                                android:id="@+id/invited"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Waiting" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/vDivider6"
+                    android:id="@+id/hDivider1"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="#CCCCCC"
+                    android:background="#E0E0E0"
                     android:visibility="visible" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:id="@+id/locationTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
-                        android:text="Location"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/locationInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="5dp"
-                        android:text="No. 129, Jalan SS15/5G, 47500 Subang Jaya\nSelangor, Malaysia" />
+                    android:orientation="horizontal"
+                    android:padding="20dp">
 
                     <ImageView
-                        android:id="@+id/mockMap"
+                        android:id="@+id/dateIcon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_access_time_black" />
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/instantjio_logo"
-                        android:padding="5dp"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp">
+
+                        <TextView
+                            android:id="@+id/startDateInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sat, 13:00 GMT+0800"
+                            android:textColor="#000000"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/untilLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/startDateInfo"
+                            android:text="until" />
+
+                        <TextView
+                            android:id="@+id/endDateInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/untilLabel"
+                            android:text="Sun, 11:00 GMT+0800" />
+                    </RelativeLayout>
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/hDivider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#E0E0E0"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="20dp">
+
+                        <ImageView
+                            android:id="@+id/locationIcon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center_vertical"
+                            android:clickable="true"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_location_on_black" />
+
+                        <TextView
+                            android:id="@+id/LocationInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="20dp"
+                            android:text="No. 127, Jalan SS19/4G, 47500 Subang Jaya, Malaysia"
+                            android:textColor="#000000"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#EEEEEE"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/viewLocButton"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="View Location"
+                            android:textAllCaps="false"
+                            android:textSize="16sp"
+                            android:minHeight="0dp"
+                            android:minWidth="0dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="0dp">
+            android:layout_marginBottom="25dp"
+            app:cardUseCompatPadding="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:padding="20dp">
 
                 <TextView
-                    android:id="@+id/eventDetailTitle"
+                    android:id="@+id/descriptionLabel"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:text="Event Details"
-                    android:textColor="#000000"
-                    android:textStyle="bold" />
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/eventDetail"
+                    android:id="@+id/descriptionInfo"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla elementum lectus vel arcu tristique posuere. Nulla purus arcu, posuere ac vulputate vel, finibus nec magna. Curabitur vitae justo vitae libero condimentum luctus blandit vel arcu. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc rutrum augue vitae lobortis egestas. Sed molestie tortor ac rutrum mattis. Curabitur at nisl purus. Aliquam vulputate elit ultrices elit aliquam, quis pretium erat finibus." />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam auctor hendrerit mauris ut porta. Ut tristique rhoncus tortor a volutpat. Curabitur tristique libero id arcu malesuada, eget condimentum nulla tempus. Nulla id nulla a elit consequat ullamcorper. Duis vitae tristique metus. Cras id ante bibendum, lobortis erat nec, euismod magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac rhoncus magna. Nulla vitae mi ut elit finibus tempus eget sed mi. Nullam vestibulum viverra nisi viverra porttitor. Nam finibus ligula et metus auctor euismod. Vestibulum ultrices venenatis purus non egestas. Morbi cursus massa nunc, vel dapibus sapien sagittis at. Maecenas a euismod dui." />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="0dp">
+            android:layout_marginBottom="15dp"
+            app:cardUseCompatPadding="false"
+            android:layout_gravity="center_horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/cancelButton"
                     style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="match_parent"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
-                    android:text="CANCEL EVENT"/>
+                    android:text="Cancel Event"
+                    android:textAllCaps="false"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
