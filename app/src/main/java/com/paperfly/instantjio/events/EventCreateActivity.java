@@ -8,14 +8,20 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.contacts.ContactsChooserActivity;
 import com.paperfly.instantjio.groups.GroupsChooserActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EventCreateActivity extends AppCompatActivity {
     private static final String TAG = EventCreateActivity.class.getCanonicalName();
     private static final String CHOSEN_GROUPS = "CHOSEN_GROUPS";
+    private static final String CHOSEN_CONTACTS = "CHOSEN_CONTACTS";
+    private static final int GROUPS_CHOOSER_RC = 0;
+    private static final int CONTACTS_CHOOSER_RC = 1;
     private ArrayList<String> mChosenGroups;
+    private HashMap<String, String> mChosenContacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,7 @@ public class EventCreateActivity extends AppCompatActivity {
         }
 
         mChosenGroups = new ArrayList<>();
+        mChosenContacts = new HashMap<>();
 
         initEventListeners();
     }
@@ -39,12 +46,19 @@ public class EventCreateActivity extends AppCompatActivity {
             }
         });
 
-//        findViewById(R.id.group_add_confirm).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                addGroup();
-//            }
-//        });
+        findViewById(R.id.add_contact).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startContactsChooser();
+            }
+        });
+
+        findViewById(R.id.add_event).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     public void startGroupsChooser() {
@@ -54,8 +68,16 @@ public class EventCreateActivity extends AppCompatActivity {
             intent.putExtra(CHOSEN_GROUPS, mChosenGroups);
         }
 
-        //TODO May need to change request code?
-        startActivityForResult(intent, 0);
+        startActivityForResult(intent, GROUPS_CHOOSER_RC);
+    }
+
+    public void startContactsChooser() {
+        final Intent intent = new Intent(this, ContactsChooserActivity.class);
+
+        if (mChosenContacts != null)
+            intent.putExtra(CHOSEN_CONTACTS, mChosenContacts);
+
+        startActivityForResult(intent, CONTACTS_CHOOSER_RC);
     }
 
     @Override
@@ -73,8 +95,7 @@ public class EventCreateActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //TODO May need to change request code?
-        if (requestCode == 0) {
+        if (requestCode == GROUPS_CHOOSER_RC) {
             if (resultCode == RESULT_OK) {
                 mChosenGroups = MergeList(mChosenGroups, (ArrayList<String>) data.getSerializableExtra(CHOSEN_GROUPS));
 
@@ -82,11 +103,37 @@ public class EventCreateActivity extends AppCompatActivity {
                     Log.i(TAG, mChosenGroups.get(i));
                 }
             }
+        } else if (requestCode == CONTACTS_CHOOSER_RC) {
+            if (resultCode == RESULT_OK) {
+                mChosenContacts = MergeMap(mChosenContacts, (HashMap<String, String>) data.getSerializableExtra(CHOSEN_CONTACTS));
+
+                for (HashMap.Entry<String, String> entry : mChosenContacts.entrySet()) {
+                    Log.i(TAG, entry.getKey() + " " + entry.getValue());
+                }
+            }
         }
     }
 
     // Merge two maps from right to left
-    ArrayList<String> MergeList(ArrayList<String> left, ArrayList<String> right) {
+    private HashMap<String, String> MergeMap(HashMap<String, String> left, HashMap<String, String> right) {
+        final HashMap<String, String> temp = new HashMap<>();
+
+        // Remove deselected chosenContacts here
+        for (HashMap.Entry<String, String> entry : left.entrySet()) {
+            if (right.containsKey(entry.getKey())) {
+                temp.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        // Merge them
+        for (HashMap.Entry<String, String> entry : right.entrySet()) {
+            temp.put(entry.getKey(), entry.getValue());
+        }
+
+        return temp;
+    }
+
+    private ArrayList<String> MergeList(ArrayList<String> left, ArrayList<String> right) {
         final ArrayList<String> temp = new ArrayList<>();
 
         // Remove deselected chosenContacts here

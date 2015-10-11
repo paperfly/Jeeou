@@ -92,6 +92,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Group" />
+
+    <Button
+        android:id="@+id/add_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Contact"/>
+
+    <Button
+        android:id="@+id/add_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Event!"/>
 </LinearLayout>
 
 
