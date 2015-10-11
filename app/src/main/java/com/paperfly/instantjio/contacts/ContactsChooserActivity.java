@@ -16,18 +16,19 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.paperfly.instantjio.BuildConfig;
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.common.ChooserEventListener;
 
 import java.util.HashMap;
 
 public class ContactsChooserActivity extends AppCompatActivity implements
-        ContactsListener.ContactClick,
+        ChooserEventListener.ItemInteraction,
         LoaderManager.LoaderCallbacks<Cursor> {
     final static String TAG = ContactsChooserActivity.class.getCanonicalName();
     final String CHOSEN_CONTACTS = "CHOSEN_CONTACTS";
     final Boolean CHOOSING_MODE = true;
     HashMap<String, String> chosenContacts;
     String mLookupKey;
-    ContactsListener.ContactsChooser mContactsListener;
+    ChooserEventListener.ItemChosen mContactsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +66,12 @@ public class ContactsChooserActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    public void onContactClick(String lookupKey) {
-        mLookupKey = lookupKey;
+    public void onItemClick(String s) {
+        mLookupKey = s;
         getSupportLoaderManager().restartLoader(ContactsQuery.Phone.QUERY_ID, null, this);
     }
 
-    public void onConfirmClick() {
+    public void onConfirmSelection() {
         if (chosenContacts == null)
             finish();
 
@@ -129,7 +130,7 @@ public class ContactsChooserActivity extends AppCompatActivity implements
                     chosenContacts.put(mLookupKey, phoneNumber);
 
                 if (mContactsListener != null)
-                    mContactsListener.updateChosenContacts(chosenContacts);
+                    mContactsListener.updateChosenItems(chosenContacts);
             }
         }
     }

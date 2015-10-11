@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.common.ChooserEventListener;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -18,9 +19,9 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     final private QuickContactBadge mImage;
     final private TextView mLabel;
     private Contact mBoundContact; // Can be null
-    private ContactsListener.ContactClick mCallback;
+    private ChooserEventListener.ItemInteraction mCallback;
 
-    public ContactViewHolder(View v, ContactsListener.ContactClick callback) {
+    public ContactViewHolder(View v, ChooserEventListener.ItemInteraction callback) {
         super(v);
         mImage = (QuickContactBadge) v.findViewById(android.R.id.icon);
         mLabel = (TextView) v.findViewById(android.R.id.text1);
@@ -50,7 +51,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
 //                            "Hi, I'm " + mBoundContact.getDisplayName(),
 //                            Toast.LENGTH_SHORT).show();
                     if (mCallback != null)
-                        mCallback.onContactClick(mBoundContact.getLookupKey());
+                        mCallback.onItemClick(mBoundContact.getLookupKey());
                 }
             }
         });

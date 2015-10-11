@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.common.ChooserEventListener;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -21,9 +22,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
     final static String TAG = ContactsAdapter.class.getCanonicalName();
     HashMap<String, String> mContacts;
     private Cursor mCursor;
-    private ContactsListener.ContactClick mCallback;
+    private ChooserEventListener.ItemInteraction mCallback;
 
-    public ContactsAdapter(Cursor cursor, ContactsListener.ContactClick callback, HashMap<String, String> contacts) {
+    public ContactsAdapter(Cursor cursor, ChooserEventListener.ItemInteraction callback, HashMap<String, String> contacts) {
         mCursor = cursor;
         mCallback = callback;
         mContacts = contacts;

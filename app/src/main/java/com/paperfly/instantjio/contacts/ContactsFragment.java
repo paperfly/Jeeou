@@ -28,13 +28,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.common.ChooserEventListener;
 import com.paperfly.instantjio.util.Utils;
 import com.paperfly.instantjio.widget.decorator.DividerItemDecoration;
 
 import java.util.HashMap;
 
 public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        ContactsListener.ContactsChooser {
+        ChooserEventListener.ItemChosen {
     final static String CHOOSING_MODE = "CHOOSING_MODE";
 
     // Bundle key for saving previously selected search result item
@@ -86,7 +87,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 //        }
 //    }
 
-    private ContactsListener.ContactClick mOnContactClickListener;
+    private ChooserEventListener.ItemInteraction mOnContactClickListener;
 
     private ContactsAdapter mAdapter;
 
@@ -136,7 +137,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 Log.d(TAG, "BEFORE: ONCONTACTCLICK NOT NULL");
 
             try {
-                mOnContactClickListener = (ContactsListener.ContactClick) context;
+                mOnContactClickListener = (ChooserEventListener.ItemInteraction) context;
 
                 if (mOnContactClickListener == null)
                     Log.d(TAG, "AFTER 1: ONCONTACTCLICK NULL");
@@ -156,8 +157,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void updateChosenContacts(HashMap<String, String> chosenContacts) {
-        contacts = chosenContacts;
+    public void updateChosenItems(HashMap<String, String> chosenItems) {
+        contacts = chosenItems;
     }
 
     @Override
@@ -484,7 +485,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 break;
             case R.id.menu_contact_choose:
                 if (mOnContactClickListener != null)
-                    mOnContactClickListener.onConfirmClick();
+                    mOnContactClickListener.onConfirmSelection();
                 break;
         }
         return super.onOptionsItemSelected(item);
