@@ -13,9 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements
     private Firebase ref;
     private Firebase.AuthStateListener authStateListener;
     private Firebase.AuthResultHandler authResultHandler;
+    private AccessToken mAccessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,38 +82,55 @@ public class MainActivity extends AppCompatActivity implements
         findViewById(R.id.container_signup).setEnabled(true);
         findViewById(R.id.container_login).setVisibility(View.GONE);
         findViewById(R.id.container_signup).setVisibility(View.VISIBLE);
+        EditText mPasswordView = (EditText) findViewById(R.id.edit_phone_number);
+        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                    attemptLogin();
+                    return true;
+                }
+                return false;
+            }
+        });
         findViewById(R.id.button_phone_number).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText editPhoneNum = (EditText) findViewById(R.id.edit_phone_number);
+                attemptLogin();
+            }
+        });
+    }
 
-                final String phoneNumberStr = editPhoneNum.getText().toString();
-                Log.d(TAG, "%%%%%%%%% " + phoneNumberStr);
-                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-                TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-                final String ISO2 = BuildConfig.DEBUG ? getResources().getString(R.string.default_country) : manager.getSimCountryIso().toUpperCase();
-                Log.d(TAG, "initPhonePromptLayout(): " + ISO2);
-                Phonenumber.PhoneNumber phoneNumberProto = new Phonenumber.PhoneNumber();
-                try {
-                    phoneNumberProto = phoneUtil.parse(phoneNumberStr, ISO2);
-                } catch (NumberParseException e) {
-                    Log.e(TAG, "NumberParseException was thrown: " + e.toString());
-                }
+    private void attemptLogin() {
+        final EditText editPhoneNum = (EditText) findViewById(R.id.edit_phone_number);
 
-                if (!phoneUtil.isValidNumber(phoneNumberProto))
-                    return;
+        final String phoneNumberStr = editPhoneNum.getText().toString();
+        Log.d(TAG, "%%%%%%%%% " + phoneNumberStr);
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        final String ISO2 = BuildConfig.DEBUG ? getResources().getString(R.string.default_country) : manager.getSimCountryIso().toUpperCase();
+        Log.d(TAG, "initPhonePromptLayout(): " + ISO2);
+        Phonenumber.PhoneNumber phoneNumberProto = new Phonenumber.PhoneNumber();
+        try {
+            phoneNumberProto = phoneUtil.parse(phoneNumberStr, ISO2);
+        } catch (NumberParseException e) {
+            Log.e(TAG, "NumberParseException was thrown: " + e.toString());
+        }
 
-                final String phoneNumber = phoneUtil.format(phoneNumberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
-                Log.d(TAG, "initPhonePromptLayout(): " + phoneNumber);
+        if (!phoneUtil.isValidNumber(phoneNumberProto))
+            return;
 
-                auth.put("uid", phoneNumber);
-                auth.put("regionCode", ISO2);
+        final String phoneNumber = phoneUtil.format(phoneNumberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
+        Log.d(TAG, "initPhonePromptLayout(): " + phoneNumber);
 
-                // TODO Remove JWT token generator when publishing app
-                TokenGenerator tokenGenerator = new TokenGenerator("V3JuTN4Ne5siDkvydx1gNJGQWmx1EwtcXMyxQC5O");
-                String token = tokenGenerator.createToken(auth);
+        auth.put("uid", phoneNumber);
+        auth.put("regionCode", ISO2);
 
-                ref.authWithCustomToken(token, authResultHandler);
+        // TODO Remove JWT token generator when publishing app
+        TokenGenerator tokenGenerator = new TokenGenerator("V3JuTN4Ne5siDkvydx1gNJGQWmx1EwtcXMyxQC5O");
+        final String token = tokenGenerator.createToken(auth);
+
+        ref.authWithCustomToken(token, authResultHandler);
 
 
 //                ref.child("users").child(ref.getAuth().getUid()).child("phoneNumber").setValue(phoneNumber, new Firebase.CompletionListener() {
@@ -136,8 +157,6 @@ public class MainActivity extends AppCompatActivity implements
 //                        }
 //                    }
 //                });
-            }
-        });
     }
 
     private void initFirebase() {
@@ -193,16 +212,23 @@ public class MainActivity extends AppCompatActivity implements
                     findViewById(R.id.container_signup).setVisibility(View.GONE);
                 } else {
                     // user is not logged in
-                    findViewById(R.id.fab).setEnabled(false);
-                    findViewById(R.id.appbar).setEnabled(false);
-                    findViewById(R.id.container_main).setEnabled(false);
-                    findViewById(R.id.container_login).setEnabled(true);
-                    findViewById(R.id.container_signup).setEnabled(false);
-                    findViewById(R.id.appbar).setVisibility(View.GONE);
-                    findViewById(R.id.container_main).setVisibility(View.GONE);
-                    findViewById(R.id.fab).setVisibility(View.GONE);
-                    findViewById(R.id.container_login).setVisibility(View.VISIBLE);
-                    findViewById(R.id.container_signup).setVisibility(View.GONE);
+
+                    if (AccessToken.getCurrentAccessToken() != null) {
+                        getFBData(AccessToken.getCurrentAccessToken());
+                        initPhonePromptLayout();
+                    } else {
+                        findViewById(R.id.fab).setEnabled(false);
+                        findViewById(R.id.appbar).setEnabled(false);
+                        findViewById(R.id.container_main).setEnabled(false);
+                        findViewById(R.id.container_login).setEnabled(true);
+                        findViewById(R.id.container_signup).setEnabled(false);
+                        findViewById(R.id.appbar).setVisibility(View.GONE);
+                        findViewById(R.id.container_main).setVisibility(View.GONE);
+                        findViewById(R.id.fab).setVisibility(View.GONE);
+                        findViewById(R.id.container_login).setVisibility(View.VISIBLE);
+                        findViewById(R.id.container_signup).setVisibility(View.GONE);
+                    }
+
 //                    Toast.makeText(getApplicationContext(), "Logged out from Firebase", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -439,6 +465,38 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private void getFBData(AccessToken accessToken) {
+        GraphRequest request = GraphRequest.newMeRequest(
+                accessToken,
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(
+                            JSONObject object,
+                            GraphResponse response) {
+                        Log.d(TAG, "GraphRequest.GraphJSONObjectCallback");
+                        try {
+                            auth.put("email", object.get("email"));
+                            auth.put("facebook", object.get("id"));
+                            auth.put("name", object.get("name"));
+
+                            Log.d(TAG, object.get("email").toString());
+                            Log.d(TAG, object.get("id").toString());
+                            Log.d(TAG, "NAME: " + object.get("name").toString());
+                        } catch (org.json.JSONException e) {
+                            Log.e(TAG, "GraphRequest.GraphJSONObjectCallback JSONException");
+                        }
+
+                        if (response.getError() != null) {
+                            Log.e(TAG, response.getError().getErrorMessage());
+                        }
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "email,name");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
+
     public void onFacebookCurrentAccessTokenChanged(AccessToken currentAccessToken) {
         // Set the access token using
         // currentAccessToken when it's loaded or set.
@@ -446,36 +504,8 @@ public class MainActivity extends AppCompatActivity implements
 //                    mAuthProgressDialog.show();
 
             Log.d(TAG, "onFacebookCurrentAccessTokenChanged");
-            GraphRequest request = GraphRequest.newMeRequest(
-                    currentAccessToken,
-                    new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(
-                                JSONObject object,
-                                GraphResponse response) {
-                            Log.d(TAG, "GraphRequest.GraphJSONObjectCallback");
-                            try {
-                                auth.put("email", object.get("email"));
-                                auth.put("facebook", object.get("id"));
-                                auth.put("name", object.get("name"));
 
-                                Log.d(TAG, object.get("email").toString());
-                                Log.d(TAG, object.get("id").toString());
-                                Log.d(TAG, "NAME: " + object.get("name").toString());
-                            } catch (org.json.JSONException e) {
-                                Log.e(TAG, "GraphRequest.GraphJSONObjectCallback JSONException");
-                            }
-
-                            if (response.getError() != null) {
-                                Log.e(TAG, response.getError().getErrorMessage());
-                            }
-                        }
-                    });
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "email,name");
-            request.setParameters(parameters);
-            request.executeAsync();
-
+            getFBData(currentAccessToken);
             initPhonePromptLayout();
 //            ref.authWithOAuthToken("facebook", currentAccessToken.getToken(), authResultHandler);
         } else {
