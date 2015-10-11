@@ -25,9 +25,9 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> impleme
 
     public GroupsAdapter(Firebase ref) {
         mRef = ref;
-        bRef = mRef.child("users").child("+60 10-208 0089").child("groups");
-        mItems = new ArrayList<Group>();
-        mKeys = new ArrayList<String>();
+        bRef = mRef.child("users").child(mRef.getAuth().getUid()).child("groups");
+        mItems = new ArrayList<>();
+        mKeys = new ArrayList<>();
         bRef.addChildEventListener(this);
     }
 

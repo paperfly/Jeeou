@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.common.ChooserEventListener;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -18,11 +19,12 @@ import java.util.Locale;
  * Provide views to RecyclerView with data from mCursor
  */
 public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
+    final static String TAG = ContactsAdapter.class.getCanonicalName();
     HashMap<String, String> mContacts;
     private Cursor mCursor;
-    private ContactsFragment.OnContactClickListener mCallback;
+    private ChooserEventListener.ItemInteraction mCallback;
 
-    public ContactsAdapter(Cursor cursor, ContactsFragment.OnContactClickListener callback, HashMap<String, String> contacts) {
+    public ContactsAdapter(Cursor cursor, ChooserEventListener.ItemInteraction callback, HashMap<String, String> contacts) {
         mCursor = cursor;
         mCallback = callback;
         mContacts = contacts;
@@ -53,7 +55,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
                     ContactsContract.Contacts.getLookupUri(
                             mCursor.getLong(ContactsQuery.Contact.ID),
                             mCursor.getString(ContactsQuery.Contact.LOOKUP_KEY)) : null;
-            final Boolean checked = mContacts == null ? null : mContacts.containsKey(lookupKey);
+
+            final Boolean checked = mContacts != null && mContacts.containsKey(lookupKey);
 //        final int startIndex = indexOfSearchQuery(displayName);
 
             // Create contact model and bind to ViewHolder
@@ -64,7 +67,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactViewHolder> {
     // Return the size of the cursor (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mCursor != null ? mCursor.getCount() : -1;
+        return mCursor != null ? mCursor.getCount() : 0;
     }
 
     /**

@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements
         findViewById(R.id.fab).setEnabled(false);
 
         initFirebase();
-        initToolbar();
-        initViewPagerAndTabs();
 //        initFAB();
 
 
@@ -179,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements
 //                        }
 //                    });
 
+                    initToolbar();
+                    initViewPagerAndTabs();
 
                     findViewById(R.id.appbar).setEnabled(true);
                     findViewById(R.id.container_main).setEnabled(true);
