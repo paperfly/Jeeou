@@ -29,6 +29,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.paperfly.instantjio.contacts.ContactsFragment;
+import com.paperfly.instantjio.events.EventCreateActivity;
 import com.paperfly.instantjio.events.EventsFragment;
 import com.paperfly.instantjio.groups.GroupCreateActivity;
 import com.paperfly.instantjio.groups.GroupsFragment;
@@ -357,7 +358,13 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setFABForEvents() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.hide();
+        fab.show();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startEventCreateActivity();
+            }
+        });
     }
 
     private void setFABForContacts() {
@@ -370,11 +377,15 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+
+    private void startEventCreateActivity() {
+        Intent intent = new Intent(this, EventCreateActivity.class);
+        startActivity(intent);
+    }
+
     public void onPageSelected(int position) {
-        Log.d(TAG, String.valueOf(position));
         switch (position) {
             case 0:
-                Log.d(TAG, "SETFABFORGROUPS");
                 setFABForGroups();
                 break;
             case 1:
@@ -382,6 +393,11 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case 2:
                 setFABForContacts();
+                break;
+            default:
+
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                fab.hide();
                 break;
         }
     }

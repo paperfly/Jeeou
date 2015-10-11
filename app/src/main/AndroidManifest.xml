@@ -37,6 +37,8 @@
 
         <activity android:name=".contacts.ContactsChooserActivity"/>
         <activity android:name=".groups.GroupCreateActivity"/>
+        <activity android:name=".groups.GroupsChooserActivity"/>
+        <activity android:name=".events.EventCreateActivity"/>
 
 
         <activity
