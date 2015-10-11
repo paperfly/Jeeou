@@ -10,38 +10,47 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.common.ChooserEventListener;
 
 import java.util.ArrayList;
 
-public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> implements
-        ChildEventListener {
-    final static String TAG = GroupsAdapter.class.getCanonicalName();
-    Firebase mRef;
-    Firebase bRef;
-    ArrayList<Group> mItems;
-    ArrayList<String> mKeys;
+public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> implements ChildEventListener {
+    private static final String TAG = GroupsAdapter.class.getCanonicalName();
+    private Firebase mBaseRef;
+    private ArrayList<Group> mItems;
+    private ArrayList<String> mKeys;
+    private ChooserEventListener.ItemInteraction mItemInteraction;
+    private ArrayList<String> mChosenGroups;
 
-    public GroupsAdapter(Firebase ref) {
-        mRef = ref;
-        bRef = mRef.child("users").child(mRef.getAuth().getUid()).child("groups");
+    public GroupsAdapter(Firebase ref, ArrayList<String> chosenGroups) {
+        mBaseRef = ref;
         mItems = new ArrayList<>();
         mKeys = new ArrayList<>();
-        bRef.addChildEventListener(this);
+        mChosenGroups = chosenGroups;
+        Query mQueryRef = mBaseRef.child("users").child(mBaseRef.getAuth().getUid()).child("groups");
+        mQueryRef.addChildEventListener(this);
+    }
+
+    public void setChooserListener(ChooserEventListener.ItemInteraction itemInteraction) {
+        mItemInteraction = itemInteraction;
     }
 
     @Override
     public GroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View listItemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.group_item, parent, false);
-        return new GroupViewHolder(listItemView);
-//        return null;
+                .inflate(R.layout.item_group, parent, false);
+        return new GroupViewHolder(listItemView, mItemInteraction);
     }
 
     @Override
     public void onBindViewHolder(GroupViewHolder holder, int position) {
-        holder.set(getItem(position));
+
+        final Boolean checked = mChosenGroups != null && mChosenGroups.contains(mKeys.get(position));
+
+        holder.set(getItem(position), mKeys.get(position), checked);
     }
 
     @Override
@@ -69,16 +78,12 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> impleme
     public void onChildAdded(DataSnapshot snapshot, final String previousChildKey) {
         final Group item = new Group();
         final String key = snapshot.getKey();
-        Log.i(TAG, key);
 
         if (!mKeys.contains(key)) {
-            mRef.child("groups").child(key).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            mBaseRef.child("groups").child(key).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() == null)
-                        Log.e(TAG, "null brother");
 
-                    Log.i(TAG, dataSnapshot.getValue().toString());
                     item.setName(dataSnapshot.getValue().toString());
 
                     int insertedPosition;
@@ -119,7 +124,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> impleme
             final Group oldItem = mItems.get(index);
             final Group newItem = new Group();
 
-            mRef.child("groups").child(key).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            mBaseRef.child("groups").child(key).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     newItem.setName(dataSnapshot.getValue().toString());
@@ -164,7 +169,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> impleme
 
         final Group item = new Group();
 
-        mRef.child("groups").child(key).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+        mBaseRef.child("groups").child(key).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 item.setName(dataSnapshot.getValue().toString());
@@ -205,7 +210,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> impleme
     }
 
     public void destroy() {
-        mRef.removeEventListener(this);
+        mBaseRef.removeEventListener(this);
     }
 
     public ArrayList<Group> getItems() {

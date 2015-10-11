@@ -28,7 +28,6 @@ public class ContactsChooserActivity extends AppCompatActivity implements
     final Boolean CHOOSING_MODE = true;
     HashMap<String, String> chosenContacts;
     String mLookupKey;
-    ChooserEventListener.ItemChosen mContactsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,7 @@ public class ContactsChooserActivity extends AppCompatActivity implements
         if (savedInstanceState != null)
             return;
 
-        chosenContacts = chosenContacts == null ? new HashMap<String, String>() : null;
+        chosenContacts = new HashMap<>();
 
         if (getIntent().getExtras() != null) {
 //            if (chosenContacts == null)
@@ -129,8 +128,6 @@ public class ContactsChooserActivity extends AppCompatActivity implements
                 else
                     chosenContacts.put(mLookupKey, phoneNumber);
 
-                if (mContactsListener != null)
-                    mContactsListener.updateChosenItems(chosenContacts);
             }
         }
     }
