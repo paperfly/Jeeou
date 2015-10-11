@@ -64,20 +64,27 @@ public class GroupCreateActivity extends AppCompatActivity {
         final Firebase newRef = ref.child("groups").push();
         final Map<String, Object> groupIndexMap = new HashMap<>();
 
-        // Group only needs the index of the members (the uid -> phoneNumber in this case)
-        for (HashMap.Entry<String, String> entry : chosenContacts.entrySet()) {
-            group.addMembers(entry.getValue());
+        groupIndexMap.put(newRef.getKey(), true);
+
+        if (chosenContacts != null) {
+            // Group only needs the index of the members (the uid -> phoneNumber in this case)
+            for (HashMap.Entry<String, String> entry : chosenContacts.entrySet()) {
+                group.addMembers(entry.getValue());
+            }
+
+            // Members need to have the mGroup's index too
+            for (HashMap.Entry<String, Boolean> entry : group.getMembers().entrySet()) {
+                ref.child("users").child(entry.getKey()).child("groups").updateChildren(groupIndexMap);
+            }
         }
+
+        group.setLeader(ref.getAuth().getUid());
 
         // Add mGroup to Firebase
         newRef.setValue(group);
 
-        groupIndexMap.put(newRef.getKey(), true);
 
-        // Members need to have the mGroup's index too
-        for (HashMap.Entry<String, Boolean> entry : group.getMembers().entrySet()) {
-            ref.child("users").child(entry.getKey()).child("groups").updateChildren(groupIndexMap);
-        }
+        ref.child("users").child(ref.getAuth().getUid()).child("groups").updateChildren(groupIndexMap);
 
         finish();
     }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 //@JsonIgnoreProperties(ignoreUnknown = true)
 public class Group {
+    String leader;
     String name;
     Map<String, Boolean> members;
 
@@ -15,9 +16,18 @@ public class Group {
         this.name = name;
     }
 
-    public Group(String name, Map<String, Boolean> members) {
+    public Group(String leader, String name, Map<String, Boolean> members) {
+        this.leader = leader;
         this.name = name;
         this.members = members;
+    }
+
+    public String getLeader() {
+        return leader;
+    }
+
+    public void setLeader(String leader) {
+        this.leader = leader;
     }
 
     public String getName() {

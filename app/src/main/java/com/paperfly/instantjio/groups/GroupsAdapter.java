@@ -83,6 +83,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> impleme
             mBaseRef.child("groups").child(key).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()) return;
 
                     item.setName(dataSnapshot.getValue().toString());
 
@@ -127,6 +128,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> impleme
             mBaseRef.child("groups").child(key).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()) return;
                     newItem.setName(dataSnapshot.getValue().toString());
 
                     mItems.set(index, newItem);
@@ -172,6 +174,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> impleme
         mBaseRef.child("groups").child(key).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) return;
                 item.setName(dataSnapshot.getValue().toString());
 
                 mItems.remove(index);
