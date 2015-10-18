@@ -1,5 +1,6 @@
 package com.paperfly.instantjio.events;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +23,14 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         mEventTitle = (TextView) view.findViewById(R.id.event_title);
         mEventPhoto = (ImageView) view.findViewById(R.id.event_photo);
         mEventDescription = (TextView) view.findViewById(R.id.event_description);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), ScrollingActivity.class);
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     public void set(Event event) {

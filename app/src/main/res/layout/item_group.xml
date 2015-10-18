@@ -9,7 +9,7 @@
         android:id="@+id/group_photo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/instantjio_logo"/>
+        android:src="@drawable/instantjio"/>
 
     <TextView
         android:id="@+id/group_name"

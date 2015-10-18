@@ -71,7 +71,7 @@
             android:layout_marginBottom="70dp"
             android:layout_marginTop="90dp"
             android:contentDescription="Logo"
-            android:src="@drawable/instantjio_logo"/>
+            android:src="@drawable/instantjio"/>
 
         <fragment
             android:id="@+id/facebook_fragment"
@@ -143,8 +143,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:layout_marginTop="50dp"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <!--<android.support.design.widget.TextInputLayout-->

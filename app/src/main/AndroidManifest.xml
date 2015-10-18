@@ -53,7 +53,7 @@
             android:value="@string/facebook_app_id"/>
 
         <activity
-            android:name=".ScrollingActivity"
+            android:name=".events.ScrollingActivity"
             android:label="@string/title_activity_scrolling"
             android:theme="@style/AppTheme.NoActionBar" >
 

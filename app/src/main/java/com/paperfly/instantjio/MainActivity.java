@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -40,6 +41,7 @@ import com.paperfly.instantjio.groups.User;
 import com.paperfly.instantjio.login.FacebookLoginFragment;
 import com.paperfly.instantjio.login.GoogleLoginFragment;
 import com.paperfly.instantjio.util.TokenGenerator;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements
     private Firebase.AuthStateListener authStateListener;
     private Firebase.AuthResultHandler authResultHandler;
     private AccessToken mAccessToken;
+    private MainActivity test = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initPhonePromptLayout() {
+
         findViewById(R.id.container_login).setEnabled(false);
         findViewById(R.id.container_signup).setEnabled(true);
         findViewById(R.id.container_login).setVisibility(View.GONE);
@@ -403,7 +407,6 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-
     private void startEventCreateActivity() {
         Intent intent = new Intent(this, EventCreateActivity.class);
         startActivity(intent);
@@ -466,6 +469,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void getFBData(AccessToken accessToken) {
+        final HashMap<String, String> test = new HashMap<>();
+
         GraphRequest request = GraphRequest.newMeRequest(
                 accessToken,
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -478,6 +483,29 @@ public class MainActivity extends AppCompatActivity implements
                             auth.put("email", object.get("email"));
                             auth.put("facebook", object.get("id"));
                             auth.put("name", object.get("name"));
+
+                            test.put("facebook", object.get("id").toString());
+                            test.put("name", object.get("name").toString());
+
+
+                            ImageView userdp = (ImageView) findViewById(R.id.userDP);
+                            Picasso.with(getApplicationContext())
+                                    .load("https://graph.facebook.com/" + test.get("facebook") + "/picture")
+                                    .placeholder(R.drawable.ic_account_circle_black)
+                                    .error(R.drawable.ic_account_circle_black)
+                                    .into(userdp);
+
+                            try {
+                                Log.d(TAG, test.get("name").toString());
+                            } catch (Exception e) {
+                                Log.e(TAG, "SOMETHING HAPPENED");
+                            }
+
+
+                            TextView username = (TextView) findViewById(R.id.username);
+                            if (test != null && test.get("name") != null) {
+                                username.setText(test.get("name").toString());
+                            }
 
                             Log.d(TAG, object.get("email").toString());
                             Log.d(TAG, object.get("id").toString());
@@ -495,6 +523,7 @@ public class MainActivity extends AppCompatActivity implements
         parameters.putString("fields", "email,name");
         request.setParameters(parameters);
         request.executeAsync();
+
     }
 
     public void onFacebookCurrentAccessTokenChanged(AccessToken currentAccessToken) {

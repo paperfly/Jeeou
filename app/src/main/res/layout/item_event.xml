@@ -4,6 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
     card_view:cardUseCompatPadding="true">
 
     <FrameLayout
@@ -16,12 +17,13 @@
             android:layout_height="200dp"
             android:contentDescription="Event photo here"
             android:scaleType="centerCrop"
-            android:src="@drawable/instantjio_logo"/>
+            android:src="@drawable/instantjio"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@drawable/gradient"/>
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="100dp"-->
+        <!--android:background="@drawable/gradient"-->
+        <!--android:layout_gravity="bottom"/>-->
 
         <TextView
             android:id="@+id/event_time_left"
