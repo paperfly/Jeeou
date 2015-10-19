@@ -40,8 +40,11 @@
         <activity android:name=".contact.ContactsChooserActivity"/>
         <activity android:name=".group.GroupCreateActivity"/>
         <activity android:name=".group.GroupsChooserActivity"/>
-        <activity android:name=".event.EventCreateActivity"/>
 
+        <activity
+            android:name=".event.EventCreateActivity"
+            android:label="Create new event"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name="com.facebook.FacebookActivity"
