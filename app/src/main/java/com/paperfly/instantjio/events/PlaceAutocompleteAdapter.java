@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -28,7 +29,6 @@ import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.paperfly.instantjio.logger.Log;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
@@ -42,6 +42,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+//import com.paperfly.instantjio.logger.Log;
+
 /**
  * Adapter that handles Autocomplete requests from the Places Geo Data API.
  * {@link AutocompletePrediction} results from the API are frozen and stored directly in this
@@ -54,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 public class PlaceAutocompleteAdapter
         extends ArrayAdapter<AutocompletePrediction> implements Filterable {
 
-    private static final String TAG = "PlaceAutocompleteAdapter";
+    private static final String TAG = PlaceAutocompleteAdapter.class.getCanonicalName();
     private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
     /**
      * Current results returned by this adapter.
