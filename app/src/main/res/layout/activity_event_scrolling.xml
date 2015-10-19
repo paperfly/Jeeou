@@ -43,7 +43,7 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_scrolling"/>
+    <include layout="@layout/content_event_scrolling"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
