@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.paperfly.instantjio.event.EventCustomFragment">
+
+    <android.support.v7.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:columnCount="3">
+
+        <ImageView
+            android:src="@drawable/ic_insert_invitation"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_vertical"/>
+
+        <EditText
+            android:id="@+id/inputEventTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:maxLines="1"
+            android:singleLine="true"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="10"/>
+
+        <ImageView
+            android:src="@drawable/ic_query_builder"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_vertical"/>
+
+        <Button
+            android:id="@+id/inputStartDate"
+            style="@style/dateTimePicker"
+            android:gravity="start|center_vertical"
+            android:text="Start Date"
+            app:layout_columnWeight="6"/>
+
+        <Button
+            android:id="@+id/inputStartTime"
+            style="@style/dateTimePicker"
+            android:gravity="end|center_vertical"
+            android:text="Start Time"
+            app:layout_columnWeight="4"/>
+
+        <Button
+            android:id="@+id/inputEndDate"
+            style="@style/dateTimePicker"
+            android:gravity="start|center_vertical"
+            android:text="End Date"
+            app:layout_column="1"
+            app:layout_columnWeight="6"/>
+
+        <Button
+            android:id="@+id/inputEndTime"
+            style="@style/dateTimePicker"
+            android:gravity="end|center_vertical"
+            android:text="End Time"
+            app:layout_columnWeight="4"/>
+
+        <ImageView
+            android:src="@drawable/ic_location_on"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_vertical"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/autocomplete_places"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Location"
+            android:maxLines="1"
+            android:singleLine="true"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="10"/>
+
+        <ImageView
+            android:src="@drawable/ic_comment"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center_vertical"/>
+
+        <EditText
+            android:id="@+id/descriptionInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:maxLines="1"
+            android:singleLine="true"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="10"/>
+
+    </android.support.v7.widget.GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1.0">
+
+        <Button
+            android:id="@+id/add_contact"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Invite Friend"/>
+
+        <Button
+            android:id="@+id/add_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Invite Group"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4CAF50"
+        android:text="Create Event"
+        android:textColor="#FFFFFF"/>
+
+</LinearLayout>
