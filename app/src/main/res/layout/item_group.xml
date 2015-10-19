@@ -71,12 +71,10 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="none"
                     android:gravity="center"
-                    android:inputType="textMultiLine"
-                    android:maxLines="2"
                     android:paddingBottom="@dimen/standard_layout_padding"
                     android:paddingTop="@dimen/standard_layout_padding"
                     android:scrollHorizontally="false"
-                    android:singleLine="true"
+                    android:singleLine="false"
                     android:text="member 1, member 2, member 3"
                     android:textSize="12dp" />
             </LinearLayout>
