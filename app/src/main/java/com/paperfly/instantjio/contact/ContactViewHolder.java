@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.contacts;
+package com.paperfly.instantjio.contact;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

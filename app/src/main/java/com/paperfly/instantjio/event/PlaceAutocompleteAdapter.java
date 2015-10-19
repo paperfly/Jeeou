@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.paperfly.instantjio.events;
+package com.paperfly.instantjio.event;
 
 import android.content.Context;
 import android.graphics.Typeface;

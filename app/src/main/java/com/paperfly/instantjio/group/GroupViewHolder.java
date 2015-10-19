@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.groups;
+package com.paperfly.instantjio.group;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

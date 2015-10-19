@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.contacts;
+package com.paperfly.instantjio.contact;
 
 import android.net.Uri;
 

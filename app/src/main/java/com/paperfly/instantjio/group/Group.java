@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.groups;
+package com.paperfly.instantjio.group;
 
 import java.util.HashMap;
 import java.util.Map;

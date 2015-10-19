@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.events;
+package com.paperfly.instantjio.event;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.firebase.client.Firebase;
 import com.paperfly.instantjio.R;
-import com.paperfly.instantjio.groups.GroupsFragment;
+import com.paperfly.instantjio.group.GroupsFragment;
 
 public class EventsFragment extends Fragment {
     private static final String TAG = GroupsFragment.class.getCanonicalName();

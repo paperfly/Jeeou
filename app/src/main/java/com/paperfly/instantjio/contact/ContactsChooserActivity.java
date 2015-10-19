@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.contacts;
+package com.paperfly.instantjio.contact;
 
 import android.content.Intent;
 import android.database.Cursor;

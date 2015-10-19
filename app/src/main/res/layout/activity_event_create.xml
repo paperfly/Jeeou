@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context="com.paperfly.instantjio.events.EventsFragment">
+              tools:context="com.paperfly.instantjio.event.EventsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <!--<TextView-->
@@ -103,18 +103,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="#FFFFFF"
+        android:orientation="horizontal"
         android:weightSum="2">
 
         <Button
-            style="?attr/borderlessButtonStyle"
             android:id="@+id/add_contact"
+            style="?attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAllCaps="false"
             android:layout_weight="1"
-            android:text="Invite Friend"/>
+            android:text="Invite Friend"
+            android:textAllCaps="false"/>
 
         <View
             android:id="@+id/vDivider1"
@@ -124,13 +124,13 @@
             android:visibility="visible" />
 
         <Button
-            style="?attr/borderlessButtonStyle"
             android:id="@+id/add_group"
+            style="?attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAllCaps="false"
             android:layout_weight="1"
-            android:text="Invite Group" />
+            android:text="Invite Group"
+            android:textAllCaps="false"/>
     </LinearLayout>
 
     <View
@@ -147,12 +147,12 @@
         android:orientation="vertical">
 
         <Button
-            style="?attr/borderlessButtonStyle"
             android:id="@+id/add_event"
+            style="?attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:text="Create Event"/>
+            android:text="Create Event"
+            android:textAllCaps="false"/>
 
     </LinearLayout>
 

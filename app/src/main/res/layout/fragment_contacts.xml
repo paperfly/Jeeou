@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.paperfly.instantjio.contacts.ContactsFragment">
+    tools:context="com.paperfly.instantjio.contact.ContactsFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@id/android:list"
+        style="@style/ContactListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        style="@style/ContactListView"/>
+        android:layout_height="match_parent"/>
 
     <!--<TextView android:id="@id/android:empty"-->
               <!--android:gravity="center"-->

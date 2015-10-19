@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.groups;
+package com.paperfly.instantjio.group;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import com.firebase.client.Firebase;
 import com.paperfly.instantjio.R;
-import com.paperfly.instantjio.contacts.ContactsChooserActivity;
+import com.paperfly.instantjio.contact.ContactsChooserActivity;
 
 import java.util.HashMap;
 import java.util.Map;

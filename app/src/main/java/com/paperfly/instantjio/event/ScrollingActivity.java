@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.events;
+package com.paperfly.instantjio.event;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

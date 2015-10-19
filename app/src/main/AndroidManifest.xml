@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.paperfly.instantjio"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    package="com.paperfly.instantjio"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
@@ -35,10 +37,10 @@
         </activity>
 
 
-        <activity android:name=".contacts.ContactsChooserActivity"/>
-        <activity android:name=".groups.GroupCreateActivity"/>
-        <activity android:name=".groups.GroupsChooserActivity"/>
-        <activity android:name=".events.EventCreateActivity"/>
+        <activity android:name=".contact.ContactsChooserActivity"/>
+        <activity android:name=".group.GroupCreateActivity"/>
+        <activity android:name=".group.GroupsChooserActivity"/>
+        <activity android:name=".event.EventCreateActivity"/>
 
 
         <activity
@@ -53,9 +55,9 @@
             android:value="@string/facebook_app_id"/>
 
         <activity
-            android:name=".events.ScrollingActivity"
+            android:name=".event.ScrollingActivity"
             android:label="@string/title_activity_scrolling"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 

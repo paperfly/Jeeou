@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.groups;
+package com.paperfly.instantjio.group;
 
 import android.content.Intent;
 import android.os.Bundle;

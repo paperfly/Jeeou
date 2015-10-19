@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.events;
+package com.paperfly.instantjio.event;
 
 import java.util.HashMap;
 import java.util.Map;
