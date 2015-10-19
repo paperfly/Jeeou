@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                                            tools:context="com.paperfly.instantjio.event.ScrollingActivity"
+                                            tools:context="com.paperfly.instantjio.event.EventScrollingActivity"
     tools:showIn="@layout/activity_scrolling">
 
     <LinearLayout
@@ -77,7 +77,7 @@
                     android:layout_marginTop="10dp"
                     android:background="#EEEEEE"
                     android:orientation="horizontal"
-                    android:weightSum="3">
+                    android:weightSum="2">
 
                     <Button
                         android:id="@+id/attendButton"
@@ -91,17 +91,17 @@
                         android:textAllCaps="false"
                         android:textSize="16sp"/>
 
-                    <Button
-                        android:id="@+id/maybeButton"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:minHeight="0dp"
-                        android:minWidth="0dp"
-                        android:text="Maybe"
-                        android:textAllCaps="false"
-                        android:textSize="16sp"/>
+                    <!--<Button-->
+                        <!--android:id="@+id/maybeButton"-->
+                        <!--style="?android:attr/borderlessButtonStyle"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:minHeight="0dp"-->
+                        <!--android:minWidth="0dp"-->
+                        <!--android:text="Maybe"-->
+                        <!--android:textAllCaps="false"-->
+                        <!--android:textSize="16sp"/>-->
 
                     <Button
                         android:id="@+id/passButton"
@@ -152,7 +152,7 @@
                         android:paddingLeft="15dp"
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
-                        android:weightSum="3">
+                        android:weightSum="2">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -185,29 +185,29 @@
                             android:background="#E0E0E0"
                             android:visibility="visible" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                        <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="1"-->
+                            <!--android:gravity="center"-->
+                            <!--android:orientation="vertical">-->
 
-                            <TextView
-                                android:id="@+id/maybeCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="1"
-                                android:textColor="#000000"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                            <!--<TextView-->
+                                <!--android:id="@+id/maybeCount"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:text="1"-->
+                                <!--android:textColor="#000000"-->
+                                <!--android:textSize="16sp"-->
+                                <!--android:textStyle="bold" />-->
 
-                            <TextView
-                                android:id="@+id/maybe"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Maybe" />
+                            <!--<TextView-->
+                                <!--android:id="@+id/maybe"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:text="Maybe" />-->
 
-                        </LinearLayout>
+                        <!--</LinearLayout>-->
 
                         <View
                             android:id="@+id/vDivider2"

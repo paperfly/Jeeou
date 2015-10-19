@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.paperfly.instantjio.R;
 
-public class ScrollingActivity extends AppCompatActivity {
+public class EventScrollingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

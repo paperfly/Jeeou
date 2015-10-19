@@ -27,7 +27,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ScrollingActivity.class);
+                Intent intent = new Intent(v.getContext(), EventScrollingActivity.class);
                 v.getContext().startActivity(intent);
             }
         });

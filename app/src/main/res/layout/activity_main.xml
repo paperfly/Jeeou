@@ -31,7 +31,7 @@
             style="@style/CustomTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.Tab"/>
+            android:theme="@style/AppTheme.Tab" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -46,7 +46,6 @@
         android:id="@+id/container_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="-50dp"
         android:background="@drawable/login_background_1"
         android:orientation="vertical"
         android:visibility="gone"
