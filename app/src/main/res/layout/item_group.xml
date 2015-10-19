@@ -1,29 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground">
 
-    <ImageView
-        android:id="@+id/group_photo"
+    <android.support.v7.widget.CardView
+        android:id="@+id/item_group_cv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/instantjio"/>
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardElevation="3sp"
+        app:cardUseCompatPadding="true">
 
-    <TextView
-        android:id="@+id/group_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/group_photo"
-        android:ellipsize="marquee"
-        android:gravity="center"
-        android:paddingBottom="@dimen/listview_item_padding"
-        android:paddingLeft="@dimen/listview_item_padding"
-        android:paddingRight="@dimen/listview_item_padding"
-        android:paddingTop="@dimen/listview_item_padding"
-        android:singleLine="true"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/standard_layout_padding"
+                android:paddingRight="@dimen/standard_layout_padding"
+                android:paddingTop="@dimen/standard_layout_padding">
+
+                <ImageView
+                    android:id="@+id/group_photo"
+                    android:layout_width="@dimen/standard_imagecon_size"
+                    android:layout_height="@dimen/standard_imagecon_size"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="Group Photo"
+                    android:padding="@dimen/standard_image_padding"
+                    android:src="@drawable/instantjio" />
+
+                <TextView
+                    android:id="@+id/group_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/listview_item_padding"
+                    android:paddingLeft="@dimen/listview_item_padding"
+                    android:paddingRight="@dimen/listview_item_padding"
+                    android:singleLine="true"
+                    android:textColor="#000000"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/half_standard_layout_padding"
+                android:paddingRight="@dimen/half_standard_layout_padding">
+
+                <View
+                    android:id="@+id/hDivider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#E0E0E0"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/group_member"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="none"
+                    android:gravity="center"
+                    android:inputType="textMultiLine"
+                    android:maxLines="2"
+                    android:paddingBottom="@dimen/standard_layout_padding"
+                    android:paddingTop="@dimen/standard_layout_padding"
+                    android:scrollHorizontally="false"
+                    android:singleLine="true"
+                    android:text="member 1, member 2, member 3"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

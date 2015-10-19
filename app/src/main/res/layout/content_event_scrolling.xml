@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                                            tools:context="com.paperfly.instantjio.event.EventScrollingActivity"
+    tools:context="com.paperfly.instantjio.event.EventScrollingActivity"
     tools:showIn="@layout/activity_scrolling">
 
     <LinearLayout
@@ -27,9 +27,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingTop="20dp">
+                    android:paddingLeft="@dimen/standard_layout_padding"
+                    android:paddingRight="@dimen/standard_layout_padding"
+                    android:paddingTop="@dimen/standard_layout_padding">
 
                     <ImageView
                         android:id="@+id/hostImg"
@@ -41,7 +41,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="@dimen/standard_layout_padding"
+                        android:layout_marginLeft="@dimen/standard_layout_padding"
                         android:layout_toEndOf="@id/hostImg"
                         android:layout_toRightOf="@id/hostImg">
 
@@ -92,16 +93,16 @@
                         android:textSize="16sp"/>
 
                     <!--<Button-->
-                        <!--android:id="@+id/maybeButton"-->
-                        <!--style="?android:attr/borderlessButtonStyle"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:minHeight="0dp"-->
-                        <!--android:minWidth="0dp"-->
-                        <!--android:text="Maybe"-->
-                        <!--android:textAllCaps="false"-->
-                        <!--android:textSize="16sp"/>-->
+                    <!--android:id="@+id/maybeButton"-->
+                    <!--style="?android:attr/borderlessButtonStyle"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:minHeight="0dp"-->
+                    <!--android:minWidth="0dp"-->
+                    <!--android:text="Maybe"-->
+                    <!--android:textAllCaps="false"-->
+                    <!--android:textSize="16sp"/>-->
 
                     <Button
                         android:id="@+id/passButton"
@@ -133,12 +134,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="20dp">
+                    android:padding="@dimen/standard_layout_padding">
 
                     <ImageView
                         android:id="@+id/guestsIcon"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/standard_icon_size"
+                        android:layout_height="@dimen/standard_icon_size"
                         android:layout_gravity="center_vertical"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_people_black" />
@@ -166,7 +167,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="5"
-                                android:textColor="#000000"
+                                android:textColor="@color/emphasizedTextColor"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -182,30 +183,30 @@
                             android:id="@+id/vDivider1"
                             android:layout_width="0.5dp"
                             android:layout_height="match_parent"
-                            android:background="#E0E0E0"
+                            android:background="@color/dividerColor"
                             android:visibility="visible" />
 
                         <!--<LinearLayout-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:gravity="center"-->
-                            <!--android:orientation="vertical">-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center"-->
+                        <!--android:orientation="vertical">-->
 
-                            <!--<TextView-->
-                                <!--android:id="@+id/maybeCount"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:text="1"-->
-                                <!--android:textColor="#000000"-->
-                                <!--android:textSize="16sp"-->
-                                <!--android:textStyle="bold" />-->
+                        <!--<TextView-->
+                        <!--android:id="@+id/maybeCount"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="1"-->
+                        <!--android:textColor="@color/emphasizedTextColor"-->
+                        <!--android:textSize="16sp"-->
+                        <!--android:textStyle="bold" />-->
 
-                            <!--<TextView-->
-                                <!--android:id="@+id/maybe"-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:text="Maybe" />-->
+                        <!--<TextView-->
+                        <!--android:id="@+id/maybe"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="Maybe" />-->
 
                         <!--</LinearLayout>-->
 
@@ -213,7 +214,7 @@
                             android:id="@+id/vDivider2"
                             android:layout_width="0.5dp"
                             android:layout_height="match_parent"
-                            android:background="#E0E0E0"
+                            android:background="@color/dividerColor"
                             android:visibility="visible" />
 
                         <LinearLayout
@@ -228,7 +229,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="3"
-                                android:textColor="#000000"
+                                android:textColor="@color/emphasizedTextColor"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -245,19 +246,19 @@
                     android:id="@+id/hDivider1"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="#E0E0E0"
+                    android:background="@color/dividerColor"
                     android:visibility="visible" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="20dp">
+                    android:padding="@dimen/standard_layout_padding">
 
                     <ImageView
                         android:id="@+id/dateIcon"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/standard_icon_size"
+                        android:layout_height="@dimen/standard_icon_size"
                         android:layout_gravity="center_vertical"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_access_time_black" />
@@ -265,14 +266,15 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp">
+                        android:layout_marginStart="@dimen/standard_layout_padding"
+                        android:layout_marginLeft="@dimen/standard_layout_padding">
 
                         <TextView
                             android:id="@+id/startDateInfo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Sat, 13:00 GMT+0800"
-                            android:textColor="#000000"
+                            android:textColor="@color/emphasizedTextColor"
                             android:textStyle="bold" />
 
                         <TextView
@@ -295,7 +297,7 @@
                     android:id="@+id/hDivider2"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="#E0E0E0"
+                    android:background="@color/dividerColor"
                     android:visibility="visible" />
 
                 <LinearLayout
@@ -307,12 +309,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="20dp">
+                        android:padding="@dimen/standard_layout_padding">
 
                         <ImageView
                             android:id="@+id/locationIcon"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="@dimen/standard_icon_size"
+                            android:layout_height="@dimen/standard_icon_size"
                             android:layout_gravity="center_vertical"
                             android:clickable="true"
                             android:scaleType="fitXY"
@@ -323,9 +325,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="@dimen/standard_layout_padding"
+                            android:layout_marginLeft="@dimen/standard_layout_padding"
                             android:text="No. 127, Jalan SS19/4G, 47500 Subang Jaya, Malaysia"
-                            android:textColor="#000000"
+                            android:textColor="@color/emphasizedTextColor"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -362,7 +365,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="@dimen/standard_layout_padding">
 
                 <TextView
                     android:id="@+id/descriptionLabel"
