@@ -12,14 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            app:cardUseCompatPadding="false"
-            app:cardCornerRadius="3dp">
+            app:cardCornerRadius="3dp"
+            app:cardUseCompatPadding="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -43,8 +46,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
                         android:layout_toEndOf="@id/hostImg"
                         android:layout_toRightOf="@id/hostImg">
 
@@ -84,35 +87,23 @@
 
                     <Button
                         android:id="@+id/attendButton"
-                        android:background="@drawable/greyed_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:background="@drawable/greyed_button"
                         android:text="Yes"
                         android:textAllCaps="false"
-                        android:textSize="16sp"/>
-
-                    <!--<Button-->
-                    <!--android:id="@+id/maybeButton"-->
-                    <!--style="?android:attr/borderlessButtonStyle"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:minHeight="0dp"-->
-                    <!--android:minWidth="0dp"-->
-                    <!--android:text="Maybe"-->
-                    <!--android:textAllCaps="false"-->
-                    <!--android:textSize="16sp"/>-->
+                        android:textSize="16sp" />
 
                     <Button
                         android:id="@+id/passButton"
-                        android:background="@drawable/greyed_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:background="@drawable/greyed_button"
                         android:text="No"
                         android:textAllCaps="false"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -121,8 +112,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            app:cardUseCompatPadding="false"
-            app:cardCornerRadius="3dp">
+            app:cardCornerRadius="3dp"
+            app:cardUseCompatPadding="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -133,7 +124,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="@dimen/activity_vertical_margin">
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin">
 
                     <ImageView
                         android:id="@+id/guestsIcon"
@@ -228,7 +222,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="@dimen/activity_vertical_margin">
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin">
 
                     <ImageView
                         android:id="@+id/dateIcon"
@@ -241,8 +238,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin">
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin">
 
                         <TextView
                             android:id="@+id/startDateInfo"
@@ -300,8 +297,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/activity_vertical_margin"
                             android:layout_marginLeft="@dimen/activity_vertical_margin"
+                            android:layout_marginStart="@dimen/activity_vertical_margin"
                             android:text="No. 127, Jalan SS19/4G, 47500 Subang Jaya, Malaysia"
                             android:textColor="@color/emphasizedTextColor"
                             android:textStyle="bold" />
@@ -309,12 +306,12 @@
 
                     <Button
                         android:id="@+id/viewLocButton"
-                        android:background="@drawable/greyed_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/greyed_button"
                         android:text="View Location"
                         android:textAllCaps="false"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -324,8 +321,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            app:cardUseCompatPadding="false"
-            app:cardCornerRadius="3dp">
+            app:cardCornerRadius="3dp"
+            app:cardUseCompatPadding="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -353,9 +350,9 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/cancel_button"
             android:text="Cancel Event"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/cancel_button" />
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
