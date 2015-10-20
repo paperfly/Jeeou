@@ -5,13 +5,13 @@ import android.util.Log;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 
 public abstract class DirectReferenceAdapter<ViewHolder extends RecyclerView.ViewHolder, T> extends ReferenceAdapter<ViewHolder, T> {
     private final String TAG = DirectReferenceAdapter.class.getCanonicalName();
 
-    public DirectReferenceAdapter(Firebase ref, Class<T> itemClass, ItemEventListener<T> itemListener) {
+    public DirectReferenceAdapter(Query ref, Class<T> itemClass, ItemEventListener<T> itemListener) {
         super(ref, null, itemClass, itemListener);
 
         mListener = new ChildEventListener() {

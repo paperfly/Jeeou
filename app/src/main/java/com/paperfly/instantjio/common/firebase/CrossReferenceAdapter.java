@@ -5,14 +5,14 @@ import android.util.Log;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.ViewHolder, T> extends ReferenceAdapter<ViewHolder, T> {
     private final String TAG = CrossReferenceAdapter.class.getCanonicalName();
 
-    public CrossReferenceAdapter(Firebase firstRef, Firebase secondRef, Class<T> itemClass, ItemEventListener<T> itemListener) {
+    public CrossReferenceAdapter(Query firstRef, Query secondRef, Class<T> itemClass, ItemEventListener<T> itemListener) {
         super(firstRef, secondRef, itemClass, itemListener);
 
         mListener = new ChildEventListener() {
@@ -21,7 +21,7 @@ public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.View
                 final String key = outerSnapshot.getKey();
 
                 if (!mKeys.contains(key)) {
-                    mSecondRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mSecondRef.getRef().child(key).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot innerSnapshot) {
                             T item = innerSnapshot.getValue(CrossReferenceAdapter.this.mItemClass);
@@ -66,7 +66,7 @@ public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.View
                     final int index = mKeys.indexOf(key);
                     final T oldItem = mItems.get(index);
 
-                    mSecondRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mSecondRef.getRef().child(key).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot innerSnapshot) {
                             T newItem = innerSnapshot.getValue(CrossReferenceAdapter.this.mItemClass);
@@ -112,7 +112,7 @@ public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.View
                 final String key = outerSnapshot.getKey();
                 final int index = mKeys.indexOf(key);
 
-                mSecondRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                mSecondRef.getRef().child(key).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot innerSnapshot) {
                         T item = innerSnapshot.getValue(CrossReferenceAdapter.this.mItemClass);

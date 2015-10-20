@@ -4,21 +4,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.firebase.client.ChildEventListener;
-import com.firebase.client.Firebase;
+import com.firebase.client.Query;
 
 import java.util.ArrayList;
 
 public abstract class ReferenceAdapter<ViewHolder extends RecyclerView.ViewHolder, T> extends RecyclerView.Adapter<ViewHolder> {
     private final String TAG = ReferenceAdapter.class.getCanonicalName();
-    protected Firebase mFirstRef;
-    protected Firebase mSecondRef;
+    protected Query mFirstRef;
+    protected Query mSecondRef;
     protected Class<T> mItemClass;
     protected ItemEventListener<T> mItemListener;
     protected ArrayList<T> mItems;
     protected ArrayList<String> mKeys;
     protected ChildEventListener mListener;
 
-    public ReferenceAdapter(Firebase firstRef, Firebase secondRef, Class<T> itemClass, ItemEventListener<T> itemListener) {
+    public ReferenceAdapter(Query firstRef, Query secondRef, Class<T> itemClass, ItemEventListener<T> itemListener) {
         mFirstRef = firstRef;
         mSecondRef = secondRef;
         mItemClass = itemClass;
