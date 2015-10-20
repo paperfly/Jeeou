@@ -12,7 +12,6 @@ import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.contact.ContactsChooserActivity;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class GroupCreateActivity extends AppCompatActivity {
     final static String TAG = GroupCreateActivity.class.getCanonicalName();
@@ -26,6 +25,8 @@ public class GroupCreateActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        chosenContacts = new HashMap<>();
 
         initEventListeners();
     }
@@ -58,33 +59,29 @@ public class GroupCreateActivity extends AppCompatActivity {
 
     public void addGroup() {
         final Firebase ref = new Firebase(getResources().getString(R.string.firebase_url));
-        final EditText editText = (EditText) findViewById(R.id.group_name);
-        final String groupName = editText.getText().toString();
-        final Group group = new Group(groupName);
         final Firebase newRef = ref.child("groups").push();
-        final Map<String, Object> groupIndexMap = new HashMap<>();
+        final Group group = new Group();
 
-        groupIndexMap.put(newRef.getKey(), true);
+        final EditText groupName = (EditText) findViewById(R.id.group_name);
 
-        if (chosenContacts != null) {
-            // Group only needs the index of the members (the uid -> phoneNumber in this case)
-            for (HashMap.Entry<String, String> entry : chosenContacts.entrySet()) {
+        group.setName(groupName.getText().toString());
+        group.setLeader(ref.getAuth().getUid());
+        // Add group members' indices
+        for (HashMap.Entry<String, String> entry : chosenContacts.entrySet()) {
+            if (!entry.getValue().equals(ref.getAuth().getUid())) { // the leader is not a member
                 group.addMembers(entry.getValue());
-            }
-
-            // Members need to have the mGroup's index too
-            for (HashMap.Entry<String, Boolean> entry : group.getMembers().entrySet()) {
-                ref.child("users").child(entry.getKey()).child("groups").updateChildren(groupIndexMap);
             }
         }
 
-        group.addMembers(ref.getAuth().getUid());
-
-        // Add mGroup to Firebase
+        // Add group to Firebase
         newRef.setValue(group);
 
-
-        ref.child("users").child(ref.getAuth().getUid()).child("groups").updateChildren(groupIndexMap);
+        // Leader need to have the group's index
+        ref.child("users").child(ref.getAuth().getUid()).child("groups").child(newRef.getKey()).setValue(true);
+        // Members need to have the group's index too
+        for (HashMap.Entry<String, Boolean> entry : group.getMembers().entrySet()) {
+            ref.child("users").child(entry.getKey()).child("groups").child(newRef.getKey()).setValue(true);
+        }
 
         finish();
     }
@@ -107,8 +104,6 @@ public class GroupCreateActivity extends AppCompatActivity {
         //TODO May need to change request code?
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
-                if (chosenContacts == null)
-                    chosenContacts = new HashMap<>();
 
                 chosenContacts = MergeMap(chosenContacts, (HashMap<String, String>) data.getSerializableExtra(CHOSEN_CONTACTS));
             }
