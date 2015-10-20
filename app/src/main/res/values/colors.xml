@@ -12,6 +12,8 @@
     <color name="customTabText">#80000000</color>
     <color name="customSelectedTabText">#FFD600</color>
 
+    <color name="okButton">#4CAF50</color>
+
     <color name="emphasizedTextColor">#000000</color>
     <color name="dividerColor">#E0E0E0</color>
 </resources>
