@@ -59,22 +59,22 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:text="Today"
                 android:textAppearance="@android:style/TextAppearance.Medium"
-                app:layout_columnSpan="2"
-                app:layout_columnWeight="10"/>
+                app:layout_columnWeight="6"/>
 
             <Button
                 android:id="@+id/event_template_start_time"
                 style="@style/borderlessButton"
-                android:gravity="start|center_vertical"
+                android:gravity="end|center_vertical"
                 android:text="Start Time"
-                app:layout_column="1"
-                app:layout_columnWeight="6"/>
+                app:layout_column="2"
+                app:layout_columnWeight="4"/>
 
             <Button
                 android:id="@+id/event_template_end_time"
                 style="@style/borderlessButton"
                 android:gravity="end|center_vertical"
                 android:text="End Time"
+                app:layout_column="2"
                 app:layout_columnWeight="4"/>
 
             <Space
