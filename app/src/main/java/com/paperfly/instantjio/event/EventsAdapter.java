@@ -156,7 +156,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventViewHolder> impleme
         final String key = dataSnapshot.getKey();
 
         final int index = mKeys.indexOf(key);
-//        Group item = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.mItemClass);
 
         final Event item = new Event();
 

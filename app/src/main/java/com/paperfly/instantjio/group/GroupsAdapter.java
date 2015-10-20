@@ -167,7 +167,6 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupViewHolder> impleme
         final String key = dataSnapshot.getKey();
 
         final int index = mKeys.indexOf(key);
-//        Group item = dataSnapshot.getValue(FirebaseRecyclerAdapter.this.mItemClass);
 
         final Group item = new Group();
 

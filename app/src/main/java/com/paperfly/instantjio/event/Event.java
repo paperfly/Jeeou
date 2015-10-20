@@ -6,29 +6,16 @@ import java.util.Map;
 public class Event {
     private String title;
     private String host;
+    private String description;
     private String startDate;
     private String startTime;
     private String endDate;
     private String endTime;
-    private String description;
     private Map<String, Boolean> invited;
     private Map<String, Boolean> attending;
     private Map<String, Boolean> notAttending;
 
     public Event() {
-    }
-
-    public Event(String title, String host, String startDate, String startTime, String endDate, String endTime, String description, Map<String, Boolean> invited, Map<String, Boolean> attending, Map<String, Boolean> notAttending) {
-        this.title = title;
-        this.host = host;
-        this.startDate = startDate;
-        this.startTime = startTime;
-        this.endDate = endDate;
-        this.endTime = endTime;
-        this.description = description;
-        this.invited = invited;
-        this.attending = attending;
-        this.notAttending = notAttending;
     }
 
     public String getTitle() {
@@ -45,6 +32,14 @@ public class Event {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getStartDate() {
@@ -77,14 +72,6 @@ public class Event {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Map<String, Boolean> getInvited() {
