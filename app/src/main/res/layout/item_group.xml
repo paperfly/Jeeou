@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardElevation="3sp"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -23,9 +22,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/standard_layout_padding"
-                android:paddingRight="@dimen/standard_layout_padding"
-                android:paddingTop="@dimen/standard_layout_padding">
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin">
 
                 <ImageView
                     android:id="@+id/group_photo"
@@ -34,7 +33,7 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="10dp"
                     android:contentDescription="Group Photo"
-                    android:padding="@dimen/standard_image_padding"
+                    android:padding="@dimen/standard_imagecon_padding"
                     android:src="@drawable/instantjio" />
 
                 <TextView
@@ -55,8 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/half_standard_layout_padding"
-                android:paddingRight="@dimen/half_standard_layout_padding">
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <View
                     android:id="@+id/hDivider1"
@@ -71,8 +70,8 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="none"
                     android:gravity="center"
-                    android:paddingBottom="@dimen/standard_layout_padding"
-                    android:paddingTop="@dimen/standard_layout_padding"
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:paddingTop="@dimen/activity_vertical_margin"
                     android:scrollHorizontally="false"
                     android:singleLine="false"
                     android:text="member 1, member 2, member 3"
