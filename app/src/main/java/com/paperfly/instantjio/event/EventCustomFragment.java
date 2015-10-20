@@ -250,7 +250,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
 
     private void createEvent(View view) {
         EditText eventTitle = (EditText) view.findViewById(R.id.event_title);
-        EditText eventDescription = (EditText) view.findViewById(R.id.descriptionInfo);
+        EditText eventDescription = (EditText) view.findViewById(R.id.event_description);
 
         Firebase ref = new Firebase(getString(R.string.firebase_url));
         final Event event = new Event();
