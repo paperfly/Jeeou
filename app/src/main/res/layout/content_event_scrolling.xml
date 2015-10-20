@@ -179,13 +179,6 @@
                             android:background="@color/dividerColor"
                             android:visibility="visible" />
 
-                        <View
-                            android:id="@+id/vDivider2"
-                            android:layout_width="0.5dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/dividerColor"
-                            android:visibility="visible" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
