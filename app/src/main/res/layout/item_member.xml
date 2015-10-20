@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="@dimen/half_standard_layout_padding">
+
+    <ImageView
+        android:id="@+id/member_photo"
+        android:layout_width="@dimen/standard_icon_size"
+        android:layout_height="@dimen/standard_icon_size"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/instantjio" />
+
+    <TextView
+        android:id="@+id/member_name"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/member_photo"
+        android:layout_toRightOf="@+id/member_photo"
+        android:ellipsize="marquee"
+        android:gravity="center_vertical"
+        android:text="Name" />
+
+    <TextView
+        android:id="@+id/member_contact"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/member_photo"
+        android:layout_toEndOf="@+id/member_photo"
+        android:layout_toRightOf="@+id/member_photo"
+        android:gravity="center_vertical"
+        android:text="+6012 3456789" />
+
+</RelativeLayout>

@@ -11,13 +11,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            app:cardUseCompatPadding="false">
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            app:cardUseCompatPadding="false"
+            app:cardCornerRadius="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -27,9 +29,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/standard_layout_padding"
-                    android:paddingRight="@dimen/standard_layout_padding"
-                    android:paddingTop="@dimen/standard_layout_padding">
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_vertical_margin">
 
                     <ImageView
                         android:id="@+id/hostImg"
@@ -41,8 +43,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/standard_layout_padding"
-                        android:layout_marginLeft="@dimen/standard_layout_padding"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:layout_toEndOf="@id/hostImg"
                         android:layout_toRightOf="@id/hostImg">
 
@@ -82,12 +84,10 @@
 
                     <Button
                         android:id="@+id/attendButton"
-                        style="?android:attr/borderlessButtonStyle"
+                        android:background="@drawable/greyed_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:minHeight="0dp"
-                        android:minWidth="0dp"
                         android:text="Yes"
                         android:textAllCaps="false"
                         android:textSize="16sp"/>
@@ -106,12 +106,10 @@
 
                     <Button
                         android:id="@+id/passButton"
-                        style="?android:attr/borderlessButtonStyle"
+                        android:background="@drawable/greyed_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:minHeight="0dp"
-                        android:minWidth="0dp"
                         android:text="No"
                         android:textAllCaps="false"
                         android:textSize="16sp"/>
@@ -122,8 +120,9 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            app:cardUseCompatPadding="false">
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            app:cardUseCompatPadding="false"
+            app:cardCornerRadius="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,7 +133,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="@dimen/standard_layout_padding">
+                    android:padding="@dimen/activity_vertical_margin">
 
                     <ImageView
                         android:id="@+id/guestsIcon"
@@ -186,30 +185,6 @@
                             android:background="@color/dividerColor"
                             android:visibility="visible" />
 
-                        <!--<LinearLayout-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:gravity="center"-->
-                        <!--android:orientation="vertical">-->
-
-                        <!--<TextView-->
-                        <!--android:id="@+id/maybeCount"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="1"-->
-                        <!--android:textColor="@color/emphasizedTextColor"-->
-                        <!--android:textSize="16sp"-->
-                        <!--android:textStyle="bold" />-->
-
-                        <!--<TextView-->
-                        <!--android:id="@+id/maybe"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="Maybe" />-->
-
-                        <!--</LinearLayout>-->
-
                         <View
                             android:id="@+id/vDivider2"
                             android:layout_width="0.5dp"
@@ -253,7 +228,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="@dimen/standard_layout_padding">
+                    android:padding="@dimen/activity_vertical_margin">
 
                     <ImageView
                         android:id="@+id/dateIcon"
@@ -266,8 +241,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/standard_layout_padding"
-                        android:layout_marginLeft="@dimen/standard_layout_padding">
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin">
 
                         <TextView
                             android:id="@+id/startDateInfo"
@@ -309,7 +284,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="@dimen/standard_layout_padding">
+                        android:padding="@dimen/activity_horizontal_margin">
 
                         <ImageView
                             android:id="@+id/locationIcon"
@@ -325,30 +300,21 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/standard_layout_padding"
-                            android:layout_marginLeft="@dimen/standard_layout_padding"
+                            android:layout_marginStart="@dimen/activity_vertical_margin"
+                            android:layout_marginLeft="@dimen/activity_vertical_margin"
                             android:text="No. 127, Jalan SS19/4G, 47500 Subang Jaya, Malaysia"
                             android:textColor="@color/emphasizedTextColor"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/viewLocButton"
+                        android:background="@drawable/greyed_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#EEEEEE"
-                        android:orientation="vertical">
-
-                        <Button
-                            android:id="@+id/viewLocButton"
-                            style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="0dp"
-                            android:minWidth="0dp"
-                            android:text="View Location"
-                            android:textAllCaps="false"
-                            android:textSize="16sp"/>
-                    </LinearLayout>
+                        android:text="View Location"
+                        android:textAllCaps="false"
+                        android:textSize="16sp"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -357,15 +323,16 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            app:cardUseCompatPadding="false">
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            app:cardUseCompatPadding="false"
+            app:cardCornerRadius="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:orientation="vertical"
-                android:padding="@dimen/standard_layout_padding">
+                android:padding="@dimen/activity_horizontal_margin">
 
                 <TextView
                     android:id="@+id/descriptionLabel"
@@ -378,35 +345,17 @@
                     android:id="@+id/descriptionInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam auctor hendrerit mauris ut porta. Ut tristique rhoncus tortor a volutpat. Curabitur tristique libero id arcu malesuada, eget condimentum nulla tempus. Nulla id nulla a elit consequat ullamcorper. Duis vitae tristique metus. Cras id ante bibendum, lobortis erat nec, euismod magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac rhoncus magna. Nulla vitae mi ut elit finibus tempus eget sed mi. Nullam vestibulum viverra nisi viverra porttitor. Nam finibus ligula et metus auctor euismod. Vestibulum ultrices venenatis purus non egestas. Morbi cursus massa nunc, vel dapibus sapien sagittis at. Maecenas a euismod dui." />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
+        <Button
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="15dp"
-            app:cardUseCompatPadding="false">
+            android:text="Cancel Event"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/cancel_button" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Button
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="230dp"
-                    android:layout_height="wrap_content"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:text="Cancel Event"
-                    android:textAllCaps="false"/>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <!--<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"-->
-        <!--android:layout_margin="@dimen/text_margin" android:text="@string/large_text" />-->
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

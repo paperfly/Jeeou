@@ -13,4 +13,5 @@
     <dimen name="standard_icon_size">40dp</dimen>
     <dimen name="standard_imagecon_size">85dp</dimen>
     <dimen name="standard_image_padding">5dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>
