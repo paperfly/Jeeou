@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.Semaphore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +79,8 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
     private SimpleDateFormat timeFormatter;
     private PlaceAutocompleteAdapter mAdapter;
     private AutoCompleteTextView mAutocompleteView;
+
+    private View root;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -168,22 +172,22 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_event_custom, container, false);
+        root = inflater.inflate(R.layout.fragment_event_custom, container, false);
         mChosenGroups = new ArrayList<>();
         mChosenContacts = new HashMap<>();
 
-        initEventListeners(view);
+        initEventListeners(root);
 
         dateFormatter = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.getDefault());
         timeFormatter = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-        startDate = (Button) view.findViewById(R.id.event_start_date);
+        startDate = (Button) root.findViewById(R.id.event_start_date);
         startDate.setInputType(InputType.TYPE_NULL);
-        startTime = (Button) view.findViewById(R.id.event_start_time);
+        startTime = (Button) root.findViewById(R.id.event_start_time);
         startTime.setInputType(InputType.TYPE_NULL);
-        endDate = (Button) view.findViewById(R.id.event_end_date);
+        endDate = (Button) root.findViewById(R.id.event_end_date);
         endDate.setInputType(InputType.TYPE_NULL);
-        endTime = (Button) view.findViewById(R.id.event_end_time);
+        endTime = (Button) root.findViewById(R.id.event_end_time);
         endTime.setInputType(InputType.TYPE_NULL);
 
         setDateField();
@@ -200,7 +204,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
 
         // Retrieve the AutoCompleteTextView that will display Place suggestions.
         mAutocompleteView = (AutoCompleteTextView)
-                view.findViewById(R.id.event_location);
+                root.findViewById(R.id.event_location);
 
         // Register a listener that receives callbacks when a suggestion has been selected
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
@@ -210,7 +214,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         mAdapter = new PlaceAutocompleteAdapter(getContext(), mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
                 null);
         mAutocompleteView.setAdapter(mAdapter);
-        return view;
+        return root;
     }
 
     @Override
@@ -252,7 +256,6 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         EditText eventTitle = (EditText) view.findViewById(R.id.event_title);
         EditText eventDescription = (EditText) view.findViewById(R.id.event_description);
 
-        Firebase ref = new Firebase(getString(R.string.firebase_url));
         final Event event = new Event();
         event.setTitle(eventTitle.getText().toString());
         event.setStartTime(startTime.getText().toString());
@@ -266,29 +269,11 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
             event.addInvited(entry.getValue());
         }
 
-        final Firebase newRef = ref.child("events").push();
 
-        // Add invited groups
-        for (int i = 0; i < mChosenGroups.size(); ++i) {
-            ref.child("groups").child(mChosenGroups.get(i)).child("members").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        event.addInvited(postSnapshot.getKey());
-                        newRef.setValue(event);
-                    }
-                }
+        new CreateEventTask().execute(event);
 
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
 
-                }
-            });
-        }
-
-        newRef.setValue(event);
-        ref.child("users").child(ref.getAuth().getUid()).child("events").child(newRef.getKey()).setValue(true);
-
+        Log.i(TAG, "Exiting activity...");
         getActivity().finish();
     }
 
@@ -390,7 +375,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
                 mChosenContacts = MergeMap(mChosenContacts, (HashMap<String, String>) data.getSerializableExtra(CHOSEN_CONTACTS));
 
                 for (HashMap.Entry<String, String> entry : mChosenContacts.entrySet()) {
-                    Log.i(TAG, entry.getKey() + " " + entry.getValue());
+                    Log.i(TAG, entry.getValue());
                 }
             }
         }
@@ -452,5 +437,57 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         Toast.makeText(getContext(),
                 "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    private class CreateEventTask extends AsyncTask<Event, Void, Void> {
+
+        @Override
+        protected Void doInBackground(final Event... events) {
+            final Firebase ref = new Firebase(getString(R.string.firebase_url));
+            final Firebase newRef = ref.child("events").push();
+            final Semaphore semaphore = new Semaphore(0);
+
+            for (int i = 0; i < events.length; ++i) {
+                final int o = i;
+                for (int u = 0; u < mChosenGroups.size(); ++u) {
+                    ref.child("groups").child(mChosenGroups.get(u)).child("members").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                events[o].addInvited(postSnapshot.getKey());
+                            }
+                            semaphore.release();
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+                }
+
+                try {
+                    semaphore.acquire();
+
+                    newRef.setValue(events[o]);
+//                    ref.child("users").child(ref.getAuth().getUid()).child("events").child(newRef.getKey()).setValue(true);
+
+                    //TODO Change events to newEvents to accomodate notifications later on
+                    for (HashMap.Entry<String, Boolean> entry : events[o].invited.entrySet()) {
+                        ref.child("users").child(entry.getKey()).child("events").child(newRef.getKey()).setValue(true);
+                    }
+                } catch (InterruptedException e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.i(TAG, "Successfully created new event");
+        }
     }
 }
