@@ -9,6 +9,7 @@
     <dimen name="app_bar_height">250dp</dimen>
 
     <dimen name="standard_icon_size">32dp</dimen>
+    <dimen name="standard_small_icon_size">18dp</dimen>
     <dimen name="standard_imagecon_size">96dp</dimen>
     <dimen name="standard_imagecon_padding">6dp</dimen>
 </resources>
