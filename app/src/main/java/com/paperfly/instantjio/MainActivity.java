@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements
 //                            final String provider = authData.getProviders();
 //
 //                            user.setName(name);
-//                            user.setProvider(provider);
+//                            user.setProviders(provider);
 //                            user.setRegionCode(ISO2);
 
                             final User user = new User();
@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements
                             user.setRegionCode((auth.get("regionCode").toString()));
 
                             if (auth.containsKey("facebook")) {
-                                user.addProvider("facebook", auth.get("facebook").toString());
+                                user.addProviders("facebook", auth.get("facebook").toString());
                             }
 //                            else if (auth.containsKey("google")) {
                             // Handle google here
@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements
 //                    public void onDataChange(DataSnapshot dataSnapshot) {
 //                        if (!dataSnapshot.exists()) {
 //                            User user = new User();
-//                            user.setProvider(authData.getProviders());
+//                            user.setProviders(authData.getProviders());
 //                            if (authData.getProviderData().containsKey("displayName")) {
 //                                user.setName(authData.getProviderData().get("displayName").toString());
 //                            }

@@ -4,12 +4,24 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.firebase.client.Firebase;
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
+import com.paperfly.instantjio.common.firebase.DirectReferenceAdapter;
+import com.paperfly.instantjio.event.Event;
 
 public class GroupScrollingActivity extends AppCompatActivity {
+
+    private GroupDetailAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,5 +40,48 @@ public class GroupScrollingActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        Firebase ref = new Firebase(getString(R.string.firebase_url));
+        Firebase groupRef = ref.child("groups").child("-K12x9E326mMVjAFbT6Y").child("members");
+        Firebase userRef = ref.child("users");
+        mAdapter = new GroupDetailAdapter(groupRef, userRef, User.class, null);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+    }
+
+    protected class GroupDetailAdapter extends CrossReferenceAdapter<GroupDetailAdapter.GroupDetailViewHolder, User> {
+        public GroupDetailAdapter(Firebase firstRef, Firebase secondRef, Class<User> itemClass, ItemEventListener<User> itemListener) {
+            super(firstRef, secondRef, itemClass, itemListener);
+        }
+
+        @Override
+        public GroupDetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View listItemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_member, parent, false);
+            return new GroupDetailViewHolder(listItemView);
+        }
+
+        @Override
+        public void onBindViewHolder(GroupDetailViewHolder holder, int position) {
+            holder.setView(getItem(position));
+        }
+
+        protected class GroupDetailViewHolder extends RecyclerView.ViewHolder {
+            TextView title;
+
+            public GroupDetailViewHolder(View itemView) {
+                super(itemView);
+
+                title = (TextView) itemView.findViewById(R.id.member_name);
+            }
+
+            public void setView(User user) {
+                title.setText(user.getName());
+            }
+        }
     }
 }
