@@ -2,7 +2,6 @@ package com.paperfly.instantjio.group;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -29,7 +28,6 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
                 if (mItemInteraction != null) {
                     mItemInteraction.onItemClick(mGroupIndex);
-                    Log.i(TAG, mGroupIndex);
                 }
                 mSelected = !mSelected;
                 select();
@@ -45,11 +43,13 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
 
 
         if (mSelected) {
-            itemView.setBackgroundColor(itemView.getResources().getColor(R.color.colorAccent));
+            Log.i(TAG, "Selected " + mGroupIndex);
+//            itemView.setBackgroundColor(itemView.getResources().getColor(R.color.colorAccent));
         } else {
-            TypedValue outValue = new TypedValue();
-            itemView.getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-            itemView.setBackgroundResource(outValue.resourceId);
+            Log.i(TAG, "Deselected " + mGroupIndex);
+//            TypedValue outValue = new TypedValue();
+//            itemView.getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+//            itemView.setBackgroundResource(outValue.resourceId);
         }
     }
 

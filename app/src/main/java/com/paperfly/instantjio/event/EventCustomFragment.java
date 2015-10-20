@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.Semaphore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,18 +67,11 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
     protected GoogleApiClient mGoogleApiClient;
     private ArrayList<String> mChosenGroups;
     private HashMap<String, String> mChosenContacts;
-    private Button startDate;
-    private Button endDate;
-    private Button startTime;
-    private Button endTime;
     private DatePickerDialog startDatePickerDialog;
     private DatePickerDialog endDatePickerDialog;
     private TimePickerDialog startTimePickerDialog;
     private TimePickerDialog endTimePickerDialog;
-    private SimpleDateFormat dateFormatter;
-    private SimpleDateFormat timeFormatter;
     private PlaceAutocompleteAdapter mAdapter;
-    private AutoCompleteTextView mAutocompleteView;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -168,26 +163,24 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_event_custom, container, false);
+        View root = inflater.inflate(R.layout.fragment_event_custom, container, false);
         mChosenGroups = new ArrayList<>();
         mChosenContacts = new HashMap<>();
 
-        initEventListeners(view);
+        initEventListeners(root);
 
-        dateFormatter = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.getDefault());
-        timeFormatter = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-        startDate = (Button) view.findViewById(R.id.event_start_date);
+        Button startDate = (Button) root.findViewById(R.id.event_start_date);
         startDate.setInputType(InputType.TYPE_NULL);
-        startTime = (Button) view.findViewById(R.id.event_start_time);
+        Button startTime = (Button) root.findViewById(R.id.event_start_time);
         startTime.setInputType(InputType.TYPE_NULL);
-        endDate = (Button) view.findViewById(R.id.event_end_date);
+        Button endDate = (Button) root.findViewById(R.id.event_end_date);
         endDate.setInputType(InputType.TYPE_NULL);
-        endTime = (Button) view.findViewById(R.id.event_end_time);
+        Button endTime = (Button) root.findViewById(R.id.event_end_time);
         endTime.setInputType(InputType.TYPE_NULL);
 
-        setDateField();
-        setTimeField();
+        setDateField(root);
+        setTimeField(root);
 
         // Construct a GoogleApiClient for the {@link Places#GEO_DATA_API} using AutoManage
         // functionality, which automatically sets up the API client to handle Activity lifecycle
@@ -199,8 +192,8 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
                 .build();
 
         // Retrieve the AutoCompleteTextView that will display Place suggestions.
-        mAutocompleteView = (AutoCompleteTextView)
-                view.findViewById(R.id.event_location);
+        AutoCompleteTextView mAutocompleteView = (AutoCompleteTextView)
+                root.findViewById(R.id.event_location);
 
         // Register a listener that receives callbacks when a suggestion has been selected
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
@@ -210,7 +203,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         mAdapter = new PlaceAutocompleteAdapter(getContext(), mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
                 null);
         mAutocompleteView.setAdapter(mAdapter);
-        return view;
+        return root;
     }
 
     @Override
@@ -248,50 +241,6 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         });
     }
 
-    private void createEvent(View view) {
-        EditText eventTitle = (EditText) view.findViewById(R.id.event_title);
-        EditText eventDescription = (EditText) view.findViewById(R.id.event_description);
-
-        Firebase ref = new Firebase(getString(R.string.firebase_url));
-        final Event event = new Event();
-        event.setTitle(eventTitle.getText().toString());
-        event.setStartTime(startTime.getText().toString());
-        event.setEndTime(endTime.getText().toString());
-        event.setStartDate(startDate.getText().toString());
-        event.setEndDate(endDate.getText().toString());
-        event.setDescription(eventDescription.getText().toString());
-
-        // Add invited contacts
-        for (HashMap.Entry<String, String> entry : mChosenContacts.entrySet()) {
-            event.addInvited(entry.getValue());
-        }
-
-        final Firebase newRef = ref.child("events").push();
-
-        // Add invited groups
-        for (int i = 0; i < mChosenGroups.size(); ++i) {
-            ref.child("groups").child(mChosenGroups.get(i)).child("members").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        event.addInvited(postSnapshot.getKey());
-                        newRef.setValue(event);
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-        }
-
-        newRef.setValue(event);
-        ref.child("users").child(ref.getAuth().getUid()).child("events").child(newRef.getKey()).setValue(true);
-
-        getActivity().finish();
-    }
-
     public void startGroupsChooser() {
         final Intent intent = new Intent(getContext(), GroupsChooserActivity.class);
 
@@ -311,7 +260,10 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         startActivityForResult(intent, CONTACTS_CHOOSER_RC);
     }
 
-    private void setDateField() {
+    private void setDateField(View root) {
+        final Button startDate = (Button) root.findViewById(R.id.event_start_date);
+        final Button endDate = (Button) root.findViewById(R.id.event_end_date);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.getDefault());
         startDate.setOnClickListener(this);
         endDate.setOnClickListener(this);
 
@@ -335,7 +287,10 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
-    private void setTimeField() {
+    private void setTimeField(View root) {
+        final Button startTime = (Button) root.findViewById(R.id.event_start_time);
+        final Button endTime = (Button) root.findViewById(R.id.event_end_time);
+        final SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm a", Locale.getDefault());
         startTime.setOnClickListener(this);
         endTime.setOnClickListener(this);
 
@@ -362,13 +317,13 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-        if (view == startDate) {
+        if (view == view.findViewById(R.id.event_start_date)) {
             startDatePickerDialog.show();
-        } else if (view == endDate) {
+        } else if (view == view.findViewById(R.id.event_end_date)) {
             endDatePickerDialog.show();
-        } else if (view == startTime) {
+        } else if (view == view.findViewById(R.id.event_start_time)) {
             startTimePickerDialog.show();
-        } else if (view == endTime) {
+        } else if (view == view.findViewById(R.id.event_end_time)) {
             endTimePickerDialog.show();
         }
         view.clearFocus();
@@ -390,7 +345,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
                 mChosenContacts = MergeMap(mChosenContacts, (HashMap<String, String>) data.getSerializableExtra(CHOSEN_CONTACTS));
 
                 for (HashMap.Entry<String, String> entry : mChosenContacts.entrySet()) {
-                    Log.i(TAG, entry.getKey() + " " + entry.getValue());
+                    Log.i(TAG, entry.getValue());
                 }
             }
         }
@@ -399,39 +354,33 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
     // Merge two maps from right to left
     private HashMap<String, String> MergeMap(HashMap<String, String> left, HashMap<String, String> right) {
         final HashMap<String, String> temp = new HashMap<>();
-
         // Remove deselected chosenContacts here
         for (HashMap.Entry<String, String> entry : left.entrySet()) {
             if (right.containsKey(entry.getKey())) {
                 temp.put(entry.getKey(), entry.getValue());
             }
         }
-
         // Merge them
         for (HashMap.Entry<String, String> entry : right.entrySet()) {
             temp.put(entry.getKey(), entry.getValue());
         }
-
         return temp;
     }
 
     private ArrayList<String> MergeList(ArrayList<String> left, ArrayList<String> right) {
         final ArrayList<String> temp = new ArrayList<>();
-
         // Remove deselected chosenContacts here
-
         for (int i = 0; i < left.size(); ++i) {
             if (right.contains(left.get(i))) {
                 temp.add(left.get(i));
             }
         }
-
+        // Merge them
         for (int i = 0; i < right.size(); ++i) {
             if (!temp.contains(right.get(i))) {
                 temp.add(right.get(i));
             }
         }
-
         return temp;
     }
 
@@ -452,5 +401,94 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         Toast.makeText(getContext(),
                 "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    private void createEvent(View view) {
+        new CreateEventTask(view).execute();
+
+        getActivity().finish();
+    }
+
+    private class CreateEventTask extends AsyncTask<Void, Void, Void> {
+        private Event event;
+
+        public CreateEventTask(final View root) {
+            super();
+            event = new Event();
+            getUIData(root);
+        }
+
+        private void getUIData(final View view) {
+            final EditText title = (EditText) view.findViewById(R.id.event_title);
+            final EditText description = (EditText) view.findViewById(R.id.event_description);
+            final Button startDate = (Button) view.findViewById(R.id.event_start_date);
+            final Button endDate = (Button) view.findViewById(R.id.event_end_date);
+            final Button startTime = (Button) view.findViewById(R.id.event_start_time);
+            final Button endTime = (Button) view.findViewById(R.id.event_end_time);
+
+            event.setTitle(title.getText().toString());
+            event.setDescription(description.getText().toString());
+            event.setStartDate(startDate.getText().toString());
+            event.setEndDate(endDate.getText().toString());
+            event.setStartTime(startTime.getText().toString());
+            event.setEndTime(endTime.getText().toString());
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            final Firebase ref = new Firebase(getString(R.string.firebase_url));
+            final Firebase newRef = ref.child("events").push();
+            final String uid = ref.getAuth().getUid();
+            final Semaphore semaphore = new Semaphore(0);
+
+            // Add invited contacts' indices
+            for (HashMap.Entry<String, String> entry : mChosenContacts.entrySet()) {
+                event.addInvited(entry.getValue());
+            }
+
+            // Add invited group members' indices
+            for (int i = 0; i < mChosenGroups.size(); ++i) {
+                ref.child("groups").child(mChosenGroups.get(i)).child("members").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            event.addInvited(postSnapshot.getKey());
+                        }
+
+                        semaphore.release();
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+
+            try {
+                semaphore.acquire(mChosenGroups.size());
+
+                // The host is not a member
+                event.removeInvited(uid);
+                event.setHost(uid);
+
+                newRef.setValue(event);
+
+                ref.child("users").child(uid).child("events").child(newRef.getKey()).setValue(true);
+                //TODO Change events to newEvents to accomodate notifications later on
+                for (HashMap.Entry<String, Boolean> entry : event.getInvited().entrySet()) {
+                    ref.child("users").child(entry.getKey()).child("events").child(newRef.getKey()).setValue(true);
+                }
+            } catch (InterruptedException e) {
+                Log.e(TAG, e.getMessage());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Log.i(TAG, "Successfully created new event");
+        }
     }
 }
