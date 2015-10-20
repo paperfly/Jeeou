@@ -179,6 +179,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         Button endTime = (Button) root.findViewById(R.id.event_end_time);
         endTime.setInputType(InputType.TYPE_NULL);
 
+
         setDateField(root);
         setTimeField(root);
 
@@ -268,6 +269,9 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         endDate.setOnClickListener(this);
 
         Calendar newCalendar = Calendar.getInstance();
+        startDate.setText(dateFormatter.format(newCalendar.getTime()));
+        endDate.setText(dateFormatter.format(newCalendar.getTime()));
+
         startDatePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
@@ -295,6 +299,8 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         endTime.setOnClickListener(this);
 
         Calendar newCalendar = Calendar.getInstance();
+        startTime.setText(timeFormatter.format(newCalendar.getTime()));
+        endTime.setText(timeFormatter.format(newCalendar.getTime()));
 
         startTimePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
