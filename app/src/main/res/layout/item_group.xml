@@ -1,50 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    android:id="@+id/item_group_cv"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardElevation="3sp"
-    app:cardUseCompatPadding="true">
+    android:background="?android:attr/selectableItemBackground">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/item_group_cv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:orientation="vertical">
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/standard_layout_padding"
-            android:paddingRight="@dimen/standard_layout_padding"
-            android:paddingTop="@dimen/standard_layout_padding">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/group_photo"
-                android:layout_width="@dimen/standard_imagecon_size"
-                android:layout_height="@dimen/standard_imagecon_size"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:contentDescription="Group Photo"
-                android:padding="@dimen/standard_image_padding"
-                android:src="@drawable/instantjio"/>
-
-            <TextView
-                android:id="@+id/group_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:ellipsize="marquee"
-                android:singleLine="true">
+                android:paddingTop="@dimen/activity_vertical_margin">
 
                 <ImageView
                     android:id="@+id/group_photo"
@@ -55,24 +36,22 @@
                     android:contentDescription="Group Photo"
                     android:padding="@dimen/standard_imagecon_padding"
                     android:src="@drawable/instantjio" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/half_standard_layout_padding"
-            android:paddingRight="@dimen/half_standard_layout_padding">
+                <TextView
+                    android:id="@+id/group_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/listview_item_padding"
+                    android:paddingLeft="@dimen/listview_item_padding"
+                    android:paddingRight="@dimen/listview_item_padding"
+                    android:singleLine="true"
+                    android:textColor="#000000"
+                    android:textSize="15dp" />
+            </LinearLayout>
 
-            <View
-                android:id="@+id/hDivider1"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#E0E0E0"
-                android:visibility="visible"/>
-
-            <TextView
-                android:id="@+id/group_member"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -102,6 +81,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 
-</android.support.v7.widget.CardView>
+</RelativeLayout>
