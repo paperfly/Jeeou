@@ -36,10 +36,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="dateTimePicker" parent="Widget.AppCompat.Button.Borderless">
+    <style name="borderlessButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:textAllCaps">false</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
         <item name="android:paddingLeft">4dp</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

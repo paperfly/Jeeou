@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.paperfly.instantjio.event.EventCustomFragment">
+    tools:context="com.paperfly.instantjio.event.EventTemplateCreateActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                 app:layout_gravity="center_vertical"/>
 
             <EditText
-                android:id="@+id/event_title"
+                android:id="@+id/event_template_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Title"
@@ -46,34 +46,32 @@
                 app:layout_gravity="fill"/>
 
             <ImageView
-                android:contentDescription="Event Date &amp; Time"
+                android:contentDescription="Event Time"
                 android:src="@drawable/ic_query_builder"
                 app:layout_gravity="center_vertical"/>
 
-            <Button
-                android:id="@+id/event_start_date"
-                style="@style/borderlessButton"
-                android:gravity="start|center_vertical"
-                android:text="Start Date"
-                app:layout_columnWeight="6"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="4dp"
+                android:paddingStart="4dp"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:text="Today"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="10"/>
 
             <Button
-                android:id="@+id/event_start_time"
+                android:id="@+id/event_template_start_time"
                 style="@style/borderlessButton"
-                android:gravity="end|center_vertical"
+                android:gravity="start|center_vertical"
                 android:text="Start Time"
-                app:layout_columnWeight="4"/>
-
-            <Button
-                android:id="@+id/event_end_date"
-                style="@style/borderlessButton"
-                android:gravity="start|center_vertical"
-                android:text="End Date"
                 app:layout_column="1"
                 app:layout_columnWeight="6"/>
 
             <Button
-                android:id="@+id/event_end_time"
+                android:id="@+id/event_template_end_time"
                 style="@style/borderlessButton"
                 android:gravity="end|center_vertical"
                 android:text="End Time"
@@ -90,7 +88,7 @@
                 app:layout_gravity="center_vertical"/>
 
             <AutoCompleteTextView
-                android:id="@+id/event_location"
+                android:id="@+id/event_template_location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Location"
@@ -112,7 +110,7 @@
                 app:layout_gravity="center_vertical"/>
 
             <EditText
-                android:id="@+id/event_description"
+                android:id="@+id/event_template_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Description"
@@ -134,7 +132,7 @@
                 app:layout_gravity="center_vertical"/>
 
             <Button
-                android:id="@+id/event_invite_group"
+                android:id="@+id/event_template_invite_group"
                 style="@style/borderlessButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -154,7 +152,7 @@
                 app:layout_gravity="center_vertical"/>
 
             <Button
-                android:id="@+id/event_invite_friend"
+                android:id="@+id/event_template_invite_friend"
                 style="@style/borderlessButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -171,11 +169,11 @@
         </android.support.v7.widget.GridLayout>
 
         <Button
-            android:id="@+id/event_create"
+            android:id="@+id/event_template_create"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/ok_button"
-            android:text="Create Event"
+            android:text="Create Template"
             android:textColor="#FFFFFF"/>
 
     </LinearLayout>

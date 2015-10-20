@@ -177,13 +177,13 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         dateFormatter = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.getDefault());
         timeFormatter = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-        startDate = (Button) view.findViewById(R.id.inputStartDate);
+        startDate = (Button) view.findViewById(R.id.event_start_date);
         startDate.setInputType(InputType.TYPE_NULL);
-        startTime = (Button) view.findViewById(R.id.inputStartTime);
+        startTime = (Button) view.findViewById(R.id.event_start_time);
         startTime.setInputType(InputType.TYPE_NULL);
-        endDate = (Button) view.findViewById(R.id.inputEndDate);
+        endDate = (Button) view.findViewById(R.id.event_end_date);
         endDate.setInputType(InputType.TYPE_NULL);
-        endTime = (Button) view.findViewById(R.id.inputEndTime);
+        endTime = (Button) view.findViewById(R.id.event_end_time);
         endTime.setInputType(InputType.TYPE_NULL);
 
         setDateField();
@@ -200,7 +200,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
 
         // Retrieve the AutoCompleteTextView that will display Place suggestions.
         mAutocompleteView = (AutoCompleteTextView)
-                view.findViewById(R.id.autocomplete_places);
+                view.findViewById(R.id.event_location);
 
         // Register a listener that receives callbacks when a suggestion has been selected
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
@@ -226,21 +226,21 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
     }
 
     void initEventListeners(final View view) {
-        view.findViewById(R.id.add_group).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.event_invite_group).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startGroupsChooser();
             }
         });
 
-        view.findViewById(R.id.add_contact).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.event_invite_friend).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startContactsChooser();
             }
         });
 
-        view.findViewById(R.id.add_event).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.event_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createEvent(view);
@@ -249,7 +249,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
     }
 
     private void createEvent(View view) {
-        EditText eventTitle = (EditText) view.findViewById(R.id.inputEventTitle);
+        EditText eventTitle = (EditText) view.findViewById(R.id.event_title);
         EditText eventDescription = (EditText) view.findViewById(R.id.descriptionInfo);
 
         Firebase ref = new Firebase(getString(R.string.firebase_url));
