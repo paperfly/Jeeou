@@ -17,7 +17,7 @@
             android:layout_height="200dp"
             android:contentDescription="Event photo here"
             android:scaleType="centerCrop"
-            android:src="@drawable/instantjio"/>
+            android:src="@drawable/banana_bg"/>
 
         <!--<View-->
         <!--android:layout_width="match_parent"-->
