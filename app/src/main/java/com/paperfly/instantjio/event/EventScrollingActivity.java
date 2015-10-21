@@ -15,6 +15,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.util.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.Map;
@@ -48,9 +49,9 @@ public class EventScrollingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_scrolling);
 
-        EventParcelable eventParcelable = getIntent().getParcelableExtra(EventsFragment.EVENT_OBJECT);
+        EventParcelable eventParcelable = getIntent().getParcelableExtra(Constants.EVENT_OBJECT);
         mEvent = eventParcelable.getEvent();
-        mKey = getIntent().getStringExtra(EventsFragment.EVENT_KEY);
+        mKey = getIntent().getStringExtra(Constants.EVENT_KEY);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
