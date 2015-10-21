@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.paperfly.instantjio.event.EventScrollingActivity"
-    tools:showIn="@layout/activity_scrolling">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
                     android:paddingTop="@dimen/activity_vertical_margin">
 
                     <ImageView
-                        android:id="@+id/hostImg"
+                        android:id="@+id/event_host_picture"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="centerCrop"
@@ -48,11 +48,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_toEndOf="@id/hostImg"
-                        android:layout_toRightOf="@id/hostImg">
+                        android:layout_toEndOf="@id/event_host_picture"
+                        android:layout_toRightOf="@id/event_host_picture">
 
                         <TextView
-                            android:id="@+id/hostName"
+                            android:id="@+id/event_host"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
@@ -63,16 +63,15 @@
                             android:id="@+id/eventCategory"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/hostName"
+                            android:layout_below="@id/event_host"
                             android:text="Party"
                             android:textSize="15sp" />
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/questionLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/hostImg"
+                        android:layout_below="@id/event_host_picture"
                         android:layout_marginTop="10dp"
                         android:text="Are you going?" />
                 </RelativeLayout>
@@ -86,7 +85,7 @@
                     android:weightSum="2">
 
                     <Button
-                        android:id="@+id/attendButton"
+                        android:id="@+id/event_action_attending"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -96,7 +95,7 @@
                         android:textSize="16sp" />
 
                     <Button
-                        android:id="@+id/passButton"
+                        android:id="@+id/event_action_not_attending"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -130,7 +129,6 @@
                     android:paddingTop="@dimen/activity_horizontal_margin">
 
                     <ImageView
-                        android:id="@+id/guestsIcon"
                         android:layout_width="@dimen/standard_icon_size"
                         android:layout_height="@dimen/standard_icon_size"
                         android:layout_gravity="center_vertical"
@@ -156,7 +154,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/attendingCount"
+                                android:id="@+id/event_attending_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="5"
@@ -165,7 +163,6 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/attending"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Attending" />
@@ -173,7 +170,6 @@
                         </LinearLayout>
 
                         <View
-                            android:id="@+id/vDivider1"
                             android:layout_width="0.5dp"
                             android:layout_height="match_parent"
                             android:background="@color/dividerColor"
@@ -187,7 +183,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/leftCount"
+                                android:id="@+id/event_waiting_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="3"
@@ -196,7 +192,6 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/invited"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Waiting" />
@@ -205,7 +200,6 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/hDivider1"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="@color/dividerColor"
@@ -221,7 +215,6 @@
                     android:paddingTop="@dimen/activity_horizontal_margin">
 
                     <ImageView
-                        android:id="@+id/dateIcon"
                         android:layout_width="@dimen/standard_icon_size"
                         android:layout_height="@dimen/standard_icon_size"
                         android:layout_gravity="center_vertical"
@@ -235,7 +228,7 @@
                         android:layout_marginStart="@dimen/activity_horizontal_margin">
 
                         <TextView
-                            android:id="@+id/startDateInfo"
+                            android:id="@+id/event_start_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Sat, 13:00 GMT+0800"
@@ -246,20 +239,19 @@
                             android:id="@+id/untilLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/startDateInfo"
+                            android:layout_below="@id/event_start_date"
                             android:text="until" />
 
                         <TextView
-                            android:id="@+id/endDateInfo"
+                            android:id="@+id/event_end_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/untilLabel"
+                            android:layout_below="@id/untilLabel"
                             android:text="Sun, 11:00 GMT+0800" />
                     </RelativeLayout>
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/hDivider2"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="@color/dividerColor"
@@ -277,7 +269,6 @@
                         android:padding="@dimen/activity_horizontal_margin">
 
                         <ImageView
-                            android:id="@+id/locationIcon"
                             android:layout_width="@dimen/standard_icon_size"
                             android:layout_height="@dimen/standard_icon_size"
                             android:layout_gravity="center_vertical"
@@ -286,7 +277,7 @@
                             android:src="@drawable/ic_location_on_black" />
 
                         <TextView
-                            android:id="@+id/LocationInfo"
+                            android:id="@+id/event_location"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -298,7 +289,7 @@
                     </LinearLayout>
 
                     <Button
-                        android:id="@+id/viewLocButton"
+                        android:id="@+id/event_action_view_location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/greyed_button"
@@ -325,14 +316,13 @@
                 android:padding="@dimen/activity_horizontal_margin">
 
                 <TextView
-                    android:id="@+id/descriptionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Description"
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/descriptionInfo"
+                    android:id="@+id/event_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -341,7 +331,7 @@
         </android.support.v7.widget.CardView>
 
         <Button
-            android:id="@+id/event_cancel"
+            android:id="@+id/event_action_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/cancel_button"
