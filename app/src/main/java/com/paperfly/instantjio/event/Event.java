@@ -30,22 +30,6 @@ public class Event {
         this.title = title;
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -70,13 +54,6 @@ public class Event {
         this.startDate = startDate;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
 
     public String getEndDate() {
         return endDate;
@@ -84,6 +61,14 @@ public class Event {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
     public String getEndTime() {
@@ -111,11 +96,25 @@ public class Event {
     }
 
     public void removeInvited(String invited) {
-        if (this.invited == null) {
-            this.invited = new HashMap<>();
+        if (this.invited != null) {
+            this.invited.remove(invited);
         }
+    }
 
-        this.invited.remove(invited);
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Map<String, Boolean> getAttending() {
@@ -135,11 +134,9 @@ public class Event {
     }
 
     public void removeAttending(String attending) {
-        if (this.attending == null) {
-            this.attending = new HashMap<>();
+        if (this.attending != null) {
+            this.attending.remove(attending);
         }
-
-        this.attending.remove(attending);
     }
 
     public Map<String, Boolean> getNotAttending() {
@@ -159,10 +156,8 @@ public class Event {
     }
 
     public void removeNotAttending(String notAttending) {
-        if (this.notAttending == null) {
-            this.notAttending = new HashMap<>();
+        if (this.notAttending != null) {
+            this.notAttending.remove(notAttending);
         }
-
-        this.notAttending.remove(notAttending);
     }
 }
