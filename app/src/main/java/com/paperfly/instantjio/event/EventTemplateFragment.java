@@ -11,6 +11,9 @@ import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -151,6 +154,7 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -199,6 +203,22 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.event_custom_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.event_create) {
+            createTemplate();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mGoogleApiClient.connect();
@@ -228,7 +248,7 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
         view.findViewById(R.id.event_template_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createTemplate(view);
+                createTemplate();
             }
         });
     }
@@ -366,8 +386,8 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
                 Toast.LENGTH_SHORT).show();
     }
 
-    private void createTemplate(View root) {
-        new CreateTemplateTask(root).execute();
+    private void createTemplate() {
+        new CreateTemplateTask(getView()).execute();
 
         getActivity().finish();
     }
@@ -384,13 +404,13 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
         private void getUIData(final View view) {
             final EditText title = (EditText) view.findViewById(R.id.event_template_title);
             final EditText description = (EditText) view.findViewById(R.id.event_template_description);
-            final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.getDefault());
-            final String date = dateFormatter.format(Calendar.getInstance().getTime());
+            final AutoCompleteTextView location = (AutoCompleteTextView) view.findViewById(R.id.event_template_location);
+            final String date = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.getDefault()).format(Calendar.getInstance().getTime());
             final Button startTime = (Button) view.findViewById(R.id.event_template_start_time);
             final Button endTime = (Button) view.findViewById(R.id.event_template_end_time);
-
             template.setTitle(title.getText().toString());
             template.setDescription(description.getText().toString());
+            template.setLocation(location.getText().toString());
             template.setStartDate(date);
             template.setEndDate(date);
             template.setStartTime(startTime.getText().toString());

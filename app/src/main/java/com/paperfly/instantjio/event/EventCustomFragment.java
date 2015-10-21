@@ -11,6 +11,9 @@ import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -153,6 +156,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -208,6 +212,22 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.event_custom_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.event_create) {
+            createEvent();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mGoogleApiClient.connect();
@@ -237,7 +257,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         view.findViewById(R.id.event_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createEvent(view);
+                createEvent();
             }
         });
     }
@@ -409,31 +429,31 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
                 Toast.LENGTH_SHORT).show();
     }
 
-    private void createEvent(View view) {
-        new CreateEventTask(view).execute();
-
+    private void createEvent() {
+        new CreateEventTask(getView()).execute();
         getActivity().finish();
     }
 
     private class CreateEventTask extends AsyncTask<Void, Void, Void> {
         private Event event;
 
-        public CreateEventTask(final View root) {
+        public CreateEventTask(View view) {
             super();
             event = new Event();
-            getUIData(root);
+            getUIData(view);
         }
 
-        private void getUIData(final View view) {
+        private void getUIData(View view) {
             final EditText title = (EditText) view.findViewById(R.id.event_title);
             final EditText description = (EditText) view.findViewById(R.id.event_description);
+            final AutoCompleteTextView location = (AutoCompleteTextView) view.findViewById(R.id.event_location);
             final Button startDate = (Button) view.findViewById(R.id.event_start_date);
             final Button endDate = (Button) view.findViewById(R.id.event_end_date);
             final Button startTime = (Button) view.findViewById(R.id.event_start_time);
             final Button endTime = (Button) view.findViewById(R.id.event_end_time);
-
             event.setTitle(title.getText().toString());
             event.setDescription(description.getText().toString());
+            event.setLocation(location.getText().toString());
             event.setStartDate(startDate.getText().toString());
             event.setEndDate(endDate.getText().toString());
             event.setStartTime(startTime.getText().toString());

@@ -7,6 +7,7 @@ public class Event {
     private String title;
     private String host;
     private String description;
+    private String location;
     private String startDate;
     private String startTime;
     private String endDate;
@@ -40,6 +41,14 @@ public class Event {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getStartDate() {
