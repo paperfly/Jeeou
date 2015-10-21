@@ -504,7 +504,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
                 ref.child("users").child(uid).child("events").child(newRef.getKey()).setValue(true);
                 //TODO Change events to newEvents to accomodate notifications later on
                 for (HashMap.Entry<String, Boolean> entry : event.getInvited().entrySet()) {
-                    ref.child("users").child(entry.getKey()).child("events").child(newRef.getKey()).setValue(true);
+                    ref.child("users").child(entry.getKey()).child("newEvents").child(newRef.getKey()).setValue(true);
                 }
             } catch (InterruptedException e) {
                 Log.e(TAG, e.getMessage());

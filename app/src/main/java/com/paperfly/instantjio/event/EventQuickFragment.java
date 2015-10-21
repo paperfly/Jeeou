@@ -127,6 +127,18 @@ public class EventQuickFragment extends Fragment {
                 });
     }
 
+    private void createEvent(Event event) {
+        final Firebase ref = new Firebase(getString(R.string.firebase_url));
+        event.setType("quick");
+        event.setHost(ref.getAuth().getUid());
+        Firebase eventRef = ref.child("events").push();
+        eventRef.setValue(event);
+        ref.child("users").child(event.getHost()).child("events").child(eventRef.getKey()).setValue(true);
+        for (HashMap.Entry<String, Boolean> entry : event.getInvited().entrySet()) {
+            ref.child("users").child(entry.getKey()).child("newEvents").child(eventRef.getKey()).setValue(true);
+        }
+    }
+
     protected class QuickEventAdapter extends DirectReferenceAdapter<QuickEventAdapter.QuickEventViewHolder, Event> {
         public QuickEventAdapter(Query ref, Class<Event> itemClass, ItemEventListener<Event> itemListener) {
             super(ref, itemClass, itemListener);
@@ -157,7 +169,8 @@ public class EventQuickFragment extends Fragment {
                 eventCreate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        createEvent(mKeys.get(getAdapterPosition()));
+//                        createEvent(mKeys.get(getAdapterPosition()));
+                        createEvent(getItem(getAdapterPosition()));
                         getActivity().finish();
                     }
                 });
