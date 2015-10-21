@@ -12,12 +12,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.DirectReferenceAdapter;
+
+import java.util.HashMap;
 
 public class EventQuickFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -97,6 +103,28 @@ public class EventQuickFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void createEvent(final String templateId) {
+        final Firebase ref = new Firebase(getString(R.string.firebase_url));
+        ref.child("users").child(ref.getAuth().getUid()).child("templates").child(templateId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Event event = dataSnapshot.getValue(Event.class);
+                        Firebase eventRef = ref.child("events").push();
+                        eventRef.setValue(event);
+                        ref.child("users").child(event.getHost()).child("events").child(eventRef.getKey()).setValue(true);
+                        for (HashMap.Entry<String, Boolean> entry : event.getInvited().entrySet()) {
+                            ref.child("users").child(entry.getKey()).child("events").child(eventRef.getKey()).setValue(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+    }
+
     protected class QuickEventAdapter extends DirectReferenceAdapter<QuickEventAdapter.QuickEventViewHolder, Event> {
         public QuickEventAdapter(Query ref, Class<Event> itemClass, ItemEventListener<Event> itemListener) {
             super(ref, itemClass, itemListener);
@@ -116,11 +144,21 @@ public class EventQuickFragment extends Fragment {
 
         protected class QuickEventViewHolder extends RecyclerView.ViewHolder {
             TextView title;
+            Button eventCreate;
 
             public QuickEventViewHolder(View itemView) {
                 super(itemView);
 
                 title = (TextView) itemView.findViewById(R.id.event_template_title);
+                eventCreate = (Button) itemView.findViewById(R.id.event_create);
+
+                eventCreate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        createEvent(mKeys.get(getAdapterPosition()));
+                        getActivity().finish();
+                    }
+                });
             }
 
             public void setView(Event event) {
