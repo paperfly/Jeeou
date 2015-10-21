@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -15,6 +16,9 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.event.Event;
+import com.paperfly.instantjio.event.EventParcelable;
+import com.paperfly.instantjio.event.EventScrollingActivity;
+import com.paperfly.instantjio.util.Constants;
 
 public class NotificationService extends Service {
     public static final String TAG = NotificationService.class.getCanonicalName();
@@ -53,7 +57,7 @@ public class NotificationService extends Service {
                                 }
 
                                 final Event event = dataSnapshot.getValue(Event.class);
-                                postNotification("New event!", event.getTitle());
+                                postNotification("New event!", event.getTitle(), event, dataSnapshot.getKey());
                                 startInvitedActivity();
 
                                 // Add the un-notified event to the user's list of notified events
@@ -96,25 +100,28 @@ public class NotificationService extends Service {
         }).start();
     }
 
-    private void postNotification(final String contentTitle, final String contentText) {
-        Intent resultIntent = new Intent(this, MainActivity.class);
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Adds the back stack
-//        stackBuilder.addParentStack(MainActivity.class);
-        // Adds the Intent to the top of the stack
-//        stackBuilder.addNextIntent(resultIntent);
-        // Gets a PendingIntent containing the entire back stack
-//        PendingIntent resultPendingIntent =
-//                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-//        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    private void postNotification(final String contentTitle, final String contentText, Event event, String key) {
+        Intent resultIntent = new Intent(this, EventScrollingActivity.class);
+        EventParcelable eventParcelable = new EventParcelable(event);
+        resultIntent.putExtra(Constants.EVENT_OBJECT, eventParcelable);
+        resultIntent.putExtra(Constants.EVENT_KEY, key);
 
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack
+        stackBuilder.addParentStack(EventScrollingActivity.class);
+        // Adds the Intent to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        // Gets a PendingIntent containing the entire back stack
         PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+//        PendingIntent resultPendingIntent =
+//                PendingIntent.getActivity(
+//                        this,
+//                        0,
+//                        resultIntent,
+//                        PendingIntent.FLAG_UPDATE_CURRENT
+//                );
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
