@@ -10,9 +10,9 @@
         app:showAsAction="ifRoom|collapseActionView"/>
 
     <item
-        android:id="@+id/menu_add_template"
-        android:icon="@drawable/ic_action_person_add_white"
-        android:title="Add Template"
+        android:id="@+id/event_template_add"
+        android:icon="@drawable/ic_calendar_plus_white_24dp"
+        android:title="Create template"
         app:showAsAction="ifRoom"/>
 
 </menu>
