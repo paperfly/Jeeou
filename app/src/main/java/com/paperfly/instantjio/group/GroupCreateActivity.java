@@ -69,7 +69,7 @@ public class GroupCreateActivity extends AppCompatActivity {
         // Add group members' indices
         for (HashMap.Entry<String, String> entry : chosenContacts.entrySet()) {
             if (!entry.getValue().equals(ref.getAuth().getUid())) { // the leader is not a member
-                group.addMembers(entry.getValue());
+                group.addMember(entry.getValue());
             }
         }
 

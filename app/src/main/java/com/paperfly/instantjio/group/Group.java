@@ -3,23 +3,12 @@ package com.paperfly.instantjio.group;
 import java.util.HashMap;
 import java.util.Map;
 
-//@JsonIgnoreProperties(ignoreUnknown = true)
 public class Group {
     String name;
     String leader;
     Map<String, Boolean> members;
 
     public Group() {
-    }
-
-    public Group(String name) {
-        this.name = name;
-    }
-
-    public Group(String name, String leader, Map<String, Boolean> members) {
-        this.name = name;
-        this.leader = leader;
-        this.members = members;
     }
 
     public String getName() {
@@ -46,10 +35,16 @@ public class Group {
         this.members = members;
     }
 
-    public void addMembers(String memberName) {
+    public void addMember(String memberName) {
         if (members == null)
             members = new HashMap<>();
 
         members.put(memberName, true);
+    }
+
+    public void removeMember(String memberName) {
+        if (members != null) {
+            members.remove(memberName);
+        }
     }
 }
