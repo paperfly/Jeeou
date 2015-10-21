@@ -192,22 +192,26 @@ public class EventScrollingActivity extends AppCompatActivity {
         if (mEvent.getInvited() != null) {
             for (Map.Entry<String, Boolean> entry : mEvent.getInvited().entrySet()) {
                 ref.child("users").child(entry.getKey()).child("events").child(mKey).removeValue();
+                ref.child("users").child(entry.getKey()).child("newEvents").child(mKey).removeValue();
             }
         }
 
         if (mEvent.getAttending() != null) {
             for (Map.Entry<String, Boolean> entry : mEvent.getAttending().entrySet()) {
                 ref.child("users").child(entry.getKey()).child("events").child(mKey).removeValue();
+                ref.child("users").child(entry.getKey()).child("newEvents").child(mKey).removeValue();
             }
         }
 
         if (mEvent.getNotAttending() != null) {
             for (Map.Entry<String, Boolean> entry : mEvent.getNotAttending().entrySet()) {
                 ref.child("users").child(entry.getKey()).child("events").child(mKey).removeValue();
+                ref.child("users").child(entry.getKey()).child("newEvents").child(mKey).removeValue();
             }
         }
 
         ref.child("users").child(mEvent.getHost()).child("events").child(mKey).removeValue();
+        ref.child("users").child(mEvent.getHost()).child("newEvents").child(mKey).removeValue();
 
         ref.child("events").child(mKey).removeValue();
         finish();
