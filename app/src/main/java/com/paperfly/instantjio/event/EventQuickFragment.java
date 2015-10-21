@@ -110,6 +110,8 @@ public class EventQuickFragment extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Event event = dataSnapshot.getValue(Event.class);
+                        event.setType("quick");
+                        event.setHost(ref.getAuth().getUid());
                         Firebase eventRef = ref.child("events").push();
                         eventRef.setValue(event);
                         ref.child("users").child(event.getHost()).child("events").child(eventRef.getKey()).setValue(true);

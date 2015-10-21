@@ -453,7 +453,6 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
 
                 // The host is not a member
                 template.removeInvited(uid);
-                template.setHost(uid);
 
                 newRef.setValue(template);
             } catch (InterruptedException e) {

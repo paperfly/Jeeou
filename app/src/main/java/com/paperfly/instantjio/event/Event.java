@@ -4,15 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Event {
+    // Event & Template
     private String title;
-    private String host;
     private String description;
     private String location;
     private String startDate;
-    private String startTime;
     private String endDate;
+    private String startTime;
     private String endTime;
     private Map<String, Boolean> invited;
+    // Event only
+    private String host;
+    private String type;
     private Map<String, Boolean> attending;
     private Map<String, Boolean> notAttending;
 
@@ -33,6 +36,14 @@ public class Event {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getDescription() {
