@@ -10,7 +10,7 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.ViewHolder, T> extends ReferenceAdapter<ViewHolder, T> {
-    private final String TAG = CrossReferenceAdapter.class.getCanonicalName();
+    private static final String TAG = CrossReferenceAdapter.class.getCanonicalName();
 
     public CrossReferenceAdapter(Query firstRef, Query secondRef, Class<T> itemClass, ItemEventListener<T> itemListener) {
         super(firstRef, secondRef, itemClass, itemListener);
@@ -89,7 +89,7 @@ public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.View
             }
 
             @Override
-            public void onChildRemoved(final DataSnapshot dataSnapshot) {
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String key = dataSnapshot.getKey();
 
                 if (mKeys.contains(key)) {
@@ -154,7 +154,5 @@ public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.View
                 Log.e(TAG, firebaseError.getMessage());
             }
         };
-
-        create();
     }
 }

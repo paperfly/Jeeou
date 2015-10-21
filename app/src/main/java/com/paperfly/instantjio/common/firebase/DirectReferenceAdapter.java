@@ -9,15 +9,15 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 
 public abstract class DirectReferenceAdapter<ViewHolder extends RecyclerView.ViewHolder, T> extends ReferenceAdapter<ViewHolder, T> {
-    private final String TAG = DirectReferenceAdapter.class.getCanonicalName();
+    private static final String TAG = DirectReferenceAdapter.class.getCanonicalName();
 
     public DirectReferenceAdapter(Query ref, Class<T> itemClass, ItemEventListener<T> itemListener) {
         super(ref, null, itemClass, itemListener);
 
         mListener = new ChildEventListener() {
             @Override
-            public void onChildAdded(final DataSnapshot dataSnapshot, final String previousChildKey) {
-                final String key = dataSnapshot.getKey();
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildKey) {
+                String key = dataSnapshot.getKey();
 
                 if (!mKeys.contains(key)) {
                     T item = dataSnapshot.getValue(mItemClass);
@@ -48,13 +48,13 @@ public abstract class DirectReferenceAdapter<ViewHolder extends RecyclerView.Vie
             }
 
             @Override
-            public void onChildChanged(final DataSnapshot outerSnapshot, final String previousChildKey) {
-                final String key = outerSnapshot.getKey();
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildKey) {
+                String key = dataSnapshot.getKey();
 
                 if (mKeys.contains(key)) {
                     int index = mKeys.indexOf(key);
                     T oldItem = mItems.get(index);
-                    T newItem = outerSnapshot.getValue(mItemClass);
+                    T newItem = dataSnapshot.getValue(mItemClass);
 
                     mItems.set(index, newItem);
 
@@ -67,7 +67,7 @@ public abstract class DirectReferenceAdapter<ViewHolder extends RecyclerView.Vie
             }
 
             @Override
-            public void onChildRemoved(final DataSnapshot dataSnapshot) {
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String key = dataSnapshot.getKey();
 
                 if (mKeys.contains(key)) {
@@ -86,11 +86,11 @@ public abstract class DirectReferenceAdapter<ViewHolder extends RecyclerView.Vie
             }
 
             @Override
-            public void onChildMoved(final DataSnapshot outerSnapshot, final String previousChildKey) {
-                final String key = outerSnapshot.getKey();
-                final int index = mKeys.indexOf(key);
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildKey) {
+                String key = dataSnapshot.getKey();
+                int index = mKeys.indexOf(key);
 
-                T item = outerSnapshot.getValue(mItemClass);
+                T item = dataSnapshot.getValue(mItemClass);
                 mItems.remove(index);
                 mKeys.remove(index);
                 int newPosition;
@@ -122,7 +122,5 @@ public abstract class DirectReferenceAdapter<ViewHolder extends RecyclerView.Vie
                 Log.e(TAG, firebaseError.getMessage());
             }
         };
-
-        create();
     }
 }

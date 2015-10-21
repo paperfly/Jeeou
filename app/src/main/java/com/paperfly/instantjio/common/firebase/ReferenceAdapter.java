@@ -9,7 +9,7 @@ import com.firebase.client.Query;
 import java.util.ArrayList;
 
 public abstract class ReferenceAdapter<ViewHolder extends RecyclerView.ViewHolder, T> extends RecyclerView.Adapter<ViewHolder> {
-    private final String TAG = ReferenceAdapter.class.getCanonicalName();
+    private static final String TAG = ReferenceAdapter.class.getCanonicalName();
     protected Query mFirstRef;
     protected Query mSecondRef;
     protected Class<T> mItemClass;
@@ -27,8 +27,12 @@ public abstract class ReferenceAdapter<ViewHolder extends RecyclerView.ViewHolde
         mKeys = new ArrayList<>();
     }
 
-    protected void create() {
+    public void enable() {
         mFirstRef.addChildEventListener(mListener);
+    }
+
+    public void disable() {
+        mFirstRef.removeEventListener(mListener);
     }
 
     @Override
@@ -40,10 +44,6 @@ public abstract class ReferenceAdapter<ViewHolder extends RecyclerView.ViewHolde
     @Override
     public int getItemCount() {
         return (mItems != null) ? mItems.size() : 0;
-    }
-
-    public void destroy() {
-        mFirstRef.removeEventListener(mListener);
     }
 
     public ArrayList<T> getItems() {
