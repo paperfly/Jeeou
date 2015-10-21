@@ -68,7 +68,7 @@ public class GroupScrollingActivity extends AppCompatActivity {
         Query groupRef = ref.child("groups").child(mKey).child("members");
         Query userRef = ref.child("users");
         mAdapter = new GroupDetailAdapter(groupRef, userRef);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.group_members);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
         CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(recyclerView, CustomLinearLayoutManager.VERTICAL, false);
         layoutManager.setChildSize(R.attr.listPreferredItemHeightLarge);
         layoutManager.setOverScrollMode(ViewCompat.OVER_SCROLL_IF_CONTENT_SCROLLS);
