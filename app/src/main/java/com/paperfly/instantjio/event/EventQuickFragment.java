@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.firebase.client.Firebase;
+import com.firebase.client.Query;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.DirectReferenceAdapter;
 
@@ -63,7 +64,7 @@ public class EventQuickFragment extends Fragment {
         }
 
         final Firebase ref = new Firebase(getString(R.string.firebase_url));
-        Firebase newRef = ref.child("users").child(ref.getAuth().getUid()).child("templates");
+        Query newRef = ref.child("users").child(ref.getAuth().getUid()).child("templates").limitToLast(3);
         mAdapter = new QuickEventAdapter(newRef, Event.class, null);
     }
 
@@ -88,7 +89,7 @@ public class EventQuickFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.menu_add_template) {
+        if (id == R.id.event_template_add) {
             startActivity(new Intent(getContext(), EventTemplateCreateActivity.class));
             return true;
         }
@@ -97,7 +98,7 @@ public class EventQuickFragment extends Fragment {
     }
 
     protected class QuickEventAdapter extends DirectReferenceAdapter<QuickEventAdapter.QuickEventViewHolder, Event> {
-        public QuickEventAdapter(Firebase ref, Class<Event> itemClass, ItemEventListener<Event> itemListener) {
+        public QuickEventAdapter(Query ref, Class<Event> itemClass, ItemEventListener<Event> itemListener) {
             super(ref, itemClass, itemListener);
         }
 
