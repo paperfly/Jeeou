@@ -210,6 +210,8 @@ public class MainActivity extends AppCompatActivity implements
                     findViewById(R.id.fab).setVisibility(View.GONE);
                     findViewById(R.id.container_login).setVisibility(View.GONE);
                     findViewById(R.id.container_signup).setVisibility(View.GONE);
+
+                    startService(new Intent(getApplicationContext(), NotificationService.class));
                 } else {
                     // user is not logged in
 
