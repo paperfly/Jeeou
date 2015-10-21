@@ -13,31 +13,62 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.firebase.client.Firebase;
+import com.firebase.client.Query;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
+import com.paperfly.instantjio.util.Constants;
 
 public class GroupScrollingActivity extends AppCompatActivity {
-
+    public static final String TAG = GroupScrollingActivity.class.getCanonicalName();
+    // Views
+    private TextView vMemberCount;
+    // Members
     private GroupDetailAdapter mAdapter;
+    private Group mGroup;
+    private String mKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_scrolling);
+
+        GroupParcelable groupParcelable = getIntent().getParcelableExtra(Constants.GROUP_OBJECT);
+        mGroup = groupParcelable.getGroup();
+        mKey = getIntent().getStringExtra(Constants.GROUP_KEY);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Why you bo group?!");
+            getSupportActionBar().setTitle(mGroup.getName());
         }
 
-        Firebase ref = new Firebase(getString(R.string.firebase_url));
-        Firebase groupRef = ref.child("groups").child("-K12x9E326mMVjAFbT6Y").child("members");
-        Firebase userRef = ref.child("users");
-        mAdapter = new GroupDetailAdapter(groupRef, userRef, User.class, null);
+        initViews();
+    }
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initViews() {
+        Firebase ref = new Firebase(getString(R.string.firebase_url));
+
+        vMemberCount = (TextView) findViewById(R.id.group_member_count);
+
+        vMemberCount.setText(String.valueOf(mGroup.getMembers().size()));
+
+        Query groupRef = ref.child("groups").child(mKey).child("members");
+        Query userRef = ref.child("users");
+        mAdapter = new GroupDetailAdapter(groupRef, userRef);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.group_members);
         CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(recyclerView, CustomLinearLayoutManager.VERTICAL, false);
         layoutManager.setChildSize(R.attr.listPreferredItemHeightLarge);
         layoutManager.setOverScrollMode(ViewCompat.OVER_SCROLL_IF_CONTENT_SCROLLS);
@@ -47,8 +78,8 @@ public class GroupScrollingActivity extends AppCompatActivity {
     }
 
     protected class GroupDetailAdapter extends CrossReferenceAdapter<GroupDetailAdapter.GroupDetailViewHolder, User> {
-        public GroupDetailAdapter(Firebase firstRef, Firebase secondRef, Class<User> itemClass, ItemEventListener<User> itemListener) {
-            super(firstRef, secondRef, itemClass, itemListener);
+        public GroupDetailAdapter(Query firstRef, Query secondRef) {
+            super(firstRef, secondRef, User.class, null);
         }
 
         @Override
@@ -76,17 +107,5 @@ public class GroupScrollingActivity extends AppCompatActivity {
                 title.setText(user.getName());
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

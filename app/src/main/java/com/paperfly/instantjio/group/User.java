@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonIgnoreProperties({"templates"})
+@JsonIgnoreProperties({"templates", "newEvents", "newGroups"})
 public class User {
     String name;
     String email;

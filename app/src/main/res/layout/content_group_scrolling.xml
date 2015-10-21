@@ -42,6 +42,7 @@
                     android:textColor="@color/emphasizedTextColor" />
 
                 <TextView
+                    android:id="@+id/group_member_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -56,14 +57,13 @@
             </RelativeLayout>
 
             <View
-                android:id="@+id/hDivider1"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/dividerColor"
                 android:visibility="visible" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/member_list"
+                android:id="@+id/group_members"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
