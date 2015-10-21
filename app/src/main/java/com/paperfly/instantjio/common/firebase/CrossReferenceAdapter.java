@@ -154,5 +154,7 @@ public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.View
                 Log.e(TAG, firebaseError.getMessage());
             }
         };
+
+        enable();
     }
 }

@@ -122,5 +122,7 @@ public abstract class DirectReferenceAdapter<ViewHolder extends RecyclerView.Vie
                 Log.e(TAG, firebaseError.getMessage());
             }
         };
+
+        enable();
     }
 }
