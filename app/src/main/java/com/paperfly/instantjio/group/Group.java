@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Group {
-    String name;
-    String leader;
-    Map<String, Boolean> members;
+    private String name;
+    private String leader;
+    private Map<String, Boolean> members;
 
     public Group() {
     }
