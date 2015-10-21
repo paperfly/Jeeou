@@ -1,11 +1,9 @@
 package com.paperfly.instantjio.group;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -16,8 +14,6 @@ import android.widget.TextView;
 import com.firebase.client.Firebase;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
-import com.paperfly.instantjio.common.firebase.DirectReferenceAdapter;
-import com.paperfly.instantjio.event.Event;
 
 public class GroupScrollingActivity extends AppCompatActivity {
 
@@ -32,14 +28,14 @@ public class GroupScrollingActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Why you bo group?!");
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         Firebase ref = new Firebase(getString(R.string.firebase_url));
         Firebase groupRef = ref.child("groups").child("-K12x9E326mMVjAFbT6Y").child("members");
@@ -47,8 +43,10 @@ public class GroupScrollingActivity extends AppCompatActivity {
         mAdapter = new GroupDetailAdapter(groupRef, userRef, User.class, null);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(recyclerView, CustomLinearLayoutManager.VERTICAL, false);
+        layoutManager.setChildSize(R.attr.listPreferredItemHeightLarge);
+        layoutManager.setOverScrollMode(ViewCompat.OVER_SCROLL_IF_CONTENT_SCROLLS);
+        recyclerView.setLayoutManager(new CustomLinearLayoutManager(this, CustomLinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
     }

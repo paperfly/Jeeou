@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="?android:attr/listPreferredItemHeightLarge"
     android:padding="@dimen/listview_item_padding">
 
     <ImageView
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="marquee"
-            android:gravity="center_vertical"
+            android:gravity="bottom"
             android:text="Name"
             android:textColor="@color/emphasizedTextColor" />
 
