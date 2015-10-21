@@ -7,47 +7,38 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.firebase.client.Firebase;
 import com.paperfly.instantjio.R;
 
+import java.util.Map;
+
 public class EventScrollingActivity extends AppCompatActivity {
-    private final String TAG = EventScrollingActivity.class.getCanonicalName();
+    @SuppressWarnings("unused")
+    public static final String TAG = EventScrollingActivity.class.getCanonicalName();
+    // Views
+    @SuppressWarnings("FieldCanBeLocal")
     private Button eventCancel;
+    // Members
     private Event event;
+    private String key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_scrolling);
+
+        EventParcelable eventParcelable = getIntent().getParcelableExtra(EventsFragment.EVENT_OBJECT);
+        event = eventParcelable.getEvent();
+        key = getIntent().getStringExtra(EventsFragment.EVENT_KEY);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Why you bojio!");
+            getSupportActionBar().setTitle(event.getTitle());
         }
 
-        eventCancel = (Button) findViewById(R.id.event_cancel);
-        eventCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelEvent();
-            }
-        });
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-        EventParcelable eventParcelable = getIntent().getParcelableExtra("EVENT");
-        event = eventParcelable.getEvent();
-    }
-
-    private void cancelEvent() {
-
+        initViews();
     }
 
     @Override
@@ -60,5 +51,42 @@ public class EventScrollingActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initViews() {
+        eventCancel = (Button) findViewById(R.id.event_cancel);
+        eventCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelEvent();
+            }
+        });
+    }
+
+    private void cancelEvent() {
+        Firebase ref = new Firebase(getString(R.string.firebase_url));
+
+        if (event.getInvited() != null) {
+            for (Map.Entry<String, Boolean> entry : event.getInvited().entrySet()) {
+                ref.child("users").child(entry.getKey()).child("events").child(key).removeValue();
+            }
+        }
+
+        if (event.getAttending() != null) {
+            for (Map.Entry<String, Boolean> entry : event.getAttending().entrySet()) {
+                ref.child("users").child(entry.getKey()).child("events").child(key).removeValue();
+            }
+        }
+
+        if (event.getNotAttending() != null) {
+            for (Map.Entry<String, Boolean> entry : event.getNotAttending().entrySet()) {
+                ref.child("users").child(entry.getKey()).child("events").child(key).removeValue();
+            }
+        }
+
+        ref.child("users").child(event.getHost()).child("events").child(key).removeValue();
+
+        ref.child("events").child(key).removeValue();
+        finish();
     }
 }

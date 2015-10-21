@@ -18,8 +18,9 @@ import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
 
 public class EventsFragment extends Fragment {
-    @SuppressWarnings("unused")
-    private static final String TAG = EventsFragment.class.getCanonicalName();
+    public static final String TAG = EventsFragment.class.getCanonicalName();
+    public static final String EVENT_OBJECT = TAG + ".EVENT_OBJECT";
+    public static final String EVENT_KEY = TAG + ".EVENT_KEY";
     private EventViewAdapter mAdapter;
 
     @SuppressWarnings("unused")
@@ -51,14 +52,8 @@ public class EventsFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mAdapter.enable();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
         mAdapter.disable();
     }
 
@@ -105,7 +100,8 @@ public class EventsFragment extends Fragment {
                         Intent intent = new Intent(getContext(), EventScrollingActivity.class);
                         Event event = getItem(getAdapterPosition());
                         EventParcelable eventParcelable = new EventParcelable(event);
-                        intent.putExtra("EVENT", eventParcelable);
+                        intent.putExtra(EVENT_OBJECT, eventParcelable);
+                        intent.putExtra(EVENT_KEY, mKeys.get(getAdapterPosition()));
                         startActivity(intent);
                     }
                 });
