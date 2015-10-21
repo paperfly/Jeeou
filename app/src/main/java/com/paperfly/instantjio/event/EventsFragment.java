@@ -18,9 +18,11 @@ import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
 
 public class EventsFragment extends Fragment {
+    @SuppressWarnings("unused")
     private static final String TAG = EventsFragment.class.getCanonicalName();
     private EventViewAdapter mAdapter;
 
+    @SuppressWarnings("unused")
     public EventsFragment() {
 
     }
@@ -86,9 +88,9 @@ public class EventsFragment extends Fragment {
         }
 
         public class EventViewViewHolder extends RecyclerView.ViewHolder {
-            private TextView mTitle;
-            private TextView mStartDate;
-            private TextView mLocation;
+            private final TextView mTitle;
+            private final TextView mStartDate;
+            private final TextView mLocation;
 
             public EventViewViewHolder(View itemView) {
                 super(itemView);
