@@ -70,7 +70,6 @@ public class GroupScrollingActivity extends AppCompatActivity {
         mAdapter = new GroupDetailAdapter(groupRef, userRef);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
         CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(recyclerView, CustomLinearLayoutManager.VERTICAL, false);
-        layoutManager.setChildSize(R.attr.listPreferredItemHeightLarge);
         layoutManager.setOverScrollMode(ViewCompat.OVER_SCROLL_IF_CONTENT_SCROLLS);
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(this, CustomLinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
