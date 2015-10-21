@@ -1,6 +1,7 @@
 package com.paperfly.instantjio.event;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ public class EventScrollingActivity extends AppCompatActivity {
     private TextView vEndDate;
     private TextView vLocation;
     private TextView vDescription;
+    private FloatingActionButton vFAB;
     // Members
     private Event mEvent;
     private String mKey;
@@ -87,13 +89,29 @@ public class EventScrollingActivity extends AppCompatActivity {
         vEndDate = (TextView) findViewById(R.id.event_end_date);
         vLocation = (TextView) findViewById(R.id.event_location);
         vDescription = (TextView) findViewById(R.id.event_description);
+        vFAB = (FloatingActionButton) findViewById(R.id.fab);
 
-        vActionCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelEvent();
-            }
-        });
+        if (ref.getAuth().getUid().equals(mEvent.getHost())) {
+            vActionCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancelEvent();
+                }
+            });
+            vFAB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        } else {
+            vActionCancel.setVisibility(View.GONE);
+            vActionCancel.setEnabled(false);
+
+            vFAB.setVisibility(View.GONE);
+            vFAB.setEnabled(false);
+        }
+
         vActionAttending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
