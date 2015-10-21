@@ -1,11 +1,14 @@
 package com.paperfly.instantjio.group;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,13 +30,13 @@ import com.paperfly.instantjio.util.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 public class GroupsFragment extends Fragment {
     public static final String TAG = GroupsFragment.class.getCanonicalName();
     private Firebase mRef;
     private GroupViewAdapter mAdapter;
     private boolean mChoosingMode;
-    //    private ArrayList<String> mChosenGroups;
     private ChooserEventListener.ItemInteraction mItemInteraction;
 
     public GroupsFragment() {
@@ -54,9 +57,7 @@ public class GroupsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if (getArguments() != null) {
-            mChoosingMode = getArguments().getBoolean(Constants.CHOOSING_MODE);
-        }
+        mChoosingMode = getArguments() != null && getArguments().getBoolean(Constants.CHOOSING_MODE);
 
         mRef = new Firebase(getString(R.string.firebase_url));
         Query ref1 = mRef.child("users").child(mRef.getAuth().getUid()).child("groups");
@@ -128,42 +129,74 @@ public class GroupsFragment extends Fragment {
         }
 
         public class GroupViewViewHolder extends RecyclerView.ViewHolder {
-            private TextView mName;
-            private TextView mMembers;
+            private TextView vName;
+            private TextView vMembers;
 
             public GroupViewViewHolder(View view) {
                 super(view);
-                mName = (TextView) view.findViewById(R.id.group_name);
-                mMembers = (TextView) view.findViewById(R.id.group_members);
+                vName = (TextView) view.findViewById(R.id.group_name);
+                vMembers = (TextView) view.findViewById(R.id.group_members);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mItemInteraction != null && !mChoosingMode) {
+                        if (mChoosingMode) {
                             mItemInteraction.onItemClick(mKeys.get(getAdapterPosition()));
+                        } else {
+                            Intent intent = new Intent(getContext(), GroupScrollingActivity.class);
+                            Group group = getItem(getAdapterPosition());
+                            GroupParcelable groupParcelable = new GroupParcelable(group);
+                            intent.putExtra(Constants.GROUP_OBJECT, groupParcelable);
+                            intent.putExtra(Constants.GROUP_KEY, mKeys.get(getAdapterPosition()));
+                            startActivity(intent);
                         }
                     }
                 });
             }
 
             public void setView(Group group) {
-                final List<String> memberList = new ArrayList<>();
-                for (Map.Entry<String, Boolean> entry : group.getMembers().entrySet()) {
-                    mRef.child("users").child(entry.getKey()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            memberList.add(dataSnapshot.getValue().toString());
-                        }
+                vName.setText(group.getName());
+                new GetMemberNames().execute(group);
+            }
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+            public class GetMemberNames extends AsyncTask<Group, Void, String> {
+                private String mMembers;
+                private List<String> mMemberList;
 
-                        }
-                    });
+                @Override
+                protected String doInBackground(Group... params) {
+                    mMemberList = new ArrayList<>();
+                    final Semaphore semaphore = new Semaphore(0);
+
+                    for (Map.Entry<String, Boolean> entry : params[0].getMembers().entrySet()) {
+                        mRef.child("users").child(entry.getKey()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                mMemberList.add(dataSnapshot.getValue().toString());
+                                semaphore.release();
+                            }
+
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+
+                            }
+                        });
+                    }
+
+                    try {
+                        semaphore.acquire(params[0].getMembers().size());
+                        mMembers = TextUtils.join(", ", mMemberList);
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+
+                    return mMembers;
                 }
-                String members = TextUtils.join(", ", memberList);
-                mName.setText(group.getName());
-                mMembers.setText(members);
+
+                @Override
+                protected void onPostExecute(String s) {
+                    vMembers.setText(s);
+                }
             }
         }
     }
