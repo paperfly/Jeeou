@@ -96,7 +96,7 @@ public class EventParcelable extends Event implements Parcelable {
 
         Bundle bInvited = new Bundle();
         if (getInvited() != null) {
-            for (HashMap.Entry<String, Boolean> entry : getInvited().entrySet()) {
+            for (Map.Entry<String, Boolean> entry : getInvited().entrySet()) {
                 bInvited.putBoolean(entry.getKey(), entry.getValue());
             }
         }
@@ -104,7 +104,7 @@ public class EventParcelable extends Event implements Parcelable {
 
         Bundle bAttending = new Bundle();
         if (getAttending() != null) {
-            for (HashMap.Entry<String, Boolean> entry : getAttending().entrySet()) {
+            for (Map.Entry<String, Boolean> entry : getAttending().entrySet()) {
                 bAttending.putBoolean(entry.getKey(), entry.getValue());
             }
         }
@@ -112,7 +112,7 @@ public class EventParcelable extends Event implements Parcelable {
 
         Bundle bNotAttending = new Bundle();
         if (getNotAttending() != null) {
-            for (HashMap.Entry<String, Boolean> entry : getNotAttending().entrySet()) {
+            for (Map.Entry<String, Boolean> entry : getNotAttending().entrySet()) {
                 bNotAttending.putBoolean(entry.getKey(), entry.getValue());
             }
         }
