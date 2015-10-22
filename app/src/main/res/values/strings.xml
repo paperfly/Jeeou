@@ -15,4 +15,8 @@
     <string name="title_activity_group_scrolling">Some Group</string>
     <string name="title_activity_view_location">Map</string>
 
+    <string name="title_activity_event_invited_notify">EventInvitedNotifyActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>

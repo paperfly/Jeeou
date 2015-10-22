@@ -84,10 +84,15 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-
         <receiver android:name=".receiver.ReminderReceiver"/>
-
         <receiver android:name=".receiver.ExpiryReceiver"/>
+
+        <activity
+            android:name=".EventInvitedNotifyActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_event_invited_notify"
+            android:theme="@style/FullscreenTheme">
+        </activity>
     </application>
 
 </manifest>

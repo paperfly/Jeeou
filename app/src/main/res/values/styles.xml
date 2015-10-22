@@ -9,20 +9,25 @@
     </style>
     <!--TabLayout theme-->
     <style name="AppTheme.Tab"/>
+
     <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
         <item name="android:background">@color/customTabBackground</item>
         <item name="tabTextAppearance">@style/CustomTabTextAppearance</item>
         <item name="tabSelectedTextColor">@color/customSelectedTabText</item>
     </style>
+
     <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">@color/customTabText</item>
         <item name="textAllCaps">true</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <style name="ContactListView">
@@ -31,6 +36,7 @@
         <!--<item name="android:scrollbarStyle">outsideInset</item>-->
         <item name="android:scrollbars">vertical</item>
     </style>
+
     <style name="searchTextHighlight">
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textStyle">bold</item>
@@ -44,5 +50,17 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 </resources>

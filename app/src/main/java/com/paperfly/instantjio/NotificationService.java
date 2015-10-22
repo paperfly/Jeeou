@@ -139,7 +139,7 @@ public class NotificationService extends Service {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 final Group group = dataSnapshot.getValue(Group.class);
                                 readyNotification(group, dataSnapshot.getKey());
-                                startInvitedActivity();
+//                                startInvitedActivity();
 
                                 // Add the new group to the user's groups' list
                                 ref.child("users").child(uid).child("groups").child(dataSnapshot.getKey()).setValue(true);
@@ -231,6 +231,6 @@ public class NotificationService extends Service {
     }
 
     private void startInvitedActivity() {
-//        startActivity(new Intent(this, EventInvitedActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        startActivity(new Intent(this, EventInvitedNotifyActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 }
