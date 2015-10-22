@@ -216,7 +216,7 @@ public class NotificationService extends Service {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_stat_paperfly_instantjio_white_nobg)
                         .setContentTitle(title)
                         .setContentText(text)
                         .setAutoCancel(true)
