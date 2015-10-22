@@ -29,13 +29,13 @@ public class GroupParcelable extends Group implements Parcelable {
         setName(in.readString());
         setLeader(in.readString());
 
-        Bundle bMembers = in.readBundle();
-        if (!bMembers.isEmpty()) {
-            Map<String, Boolean> mMembers = new HashMap<>();
-            for (String key : mMembers.keySet()) {
-                mMembers.put(key, bMembers.getBoolean(key));
+        Bundle membersBundle = in.readBundle();
+        if (!membersBundle.isEmpty()) {
+            Map<String, Boolean> membersMap = new HashMap<>();
+            for (String key : membersBundle.keySet()) {
+                membersMap.put(key, membersBundle.getBoolean(key));
             }
-            setMembers(mMembers);
+            setMembers(membersMap);
         }
     }
 
@@ -53,12 +53,12 @@ public class GroupParcelable extends Group implements Parcelable {
         out.writeString(getName());
         out.writeString(getLeader());
 
-        Bundle bMembers = new Bundle();
+        Bundle membersBundle = new Bundle();
         if (getMembers() != null) {
             for (Map.Entry<String, Boolean> entry : getMembers().entrySet()) {
-                bMembers.putBoolean(entry.getKey(), entry.getValue());
+                membersBundle.putBoolean(entry.getKey(), entry.getValue());
             }
         }
-        out.writeBundle(bMembers);
+        out.writeBundle(membersBundle);
     }
 }
