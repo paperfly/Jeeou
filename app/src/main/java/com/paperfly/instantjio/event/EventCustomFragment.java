@@ -2,8 +2,10 @@ package com.paperfly.instantjio.event;
 
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,7 +43,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.contact.ContactsChooserActivity;
 import com.paperfly.instantjio.group.GroupsChooserActivity;
+import com.paperfly.instantjio.util.Constants;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -519,6 +523,19 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
         @Override
         protected void onPostExecute(Void aVoid) {
             Log.i(TAG, "Successfully created new event");
+            AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+            Calendar reminder = Calendar.getInstance();
+            Calendar expiry = Calendar.getInstance();
+
+            try {
+                reminder.setTime(Constants.DATE_TIME_FORMATTER.parse(event.getStartDate() + " " + event.getStartTime()));
+                expiry.setTime(Constants.DATE_TIME_FORMATTER.parse(event.getEndDate() + " " + event.getEndTime()));
+
+                EventScheduler.setStartAlarm(getContext(), alarmManager, reminder);
+                EventScheduler.setStopAlarm(getContext(), alarmManager, expiry);
+            } catch (ParseException e) {
+                Log.e(TAG, e.getMessage());
+            }
         }
     }
 }

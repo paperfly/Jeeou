@@ -1,13 +1,16 @@
 package com.paperfly.instantjio;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -17,11 +20,15 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.event.Event;
 import com.paperfly.instantjio.event.EventParcelable;
+import com.paperfly.instantjio.event.EventScheduler;
 import com.paperfly.instantjio.event.EventScrollingActivity;
 import com.paperfly.instantjio.group.Group;
 import com.paperfly.instantjio.group.GroupParcelable;
 import com.paperfly.instantjio.group.GroupScrollingActivity;
 import com.paperfly.instantjio.util.Constants;
+
+import java.text.ParseException;
+import java.util.Calendar;
 
 public class NotificationService extends Service {
     public static final String TAG = NotificationService.class.getCanonicalName();
@@ -65,6 +72,22 @@ public class NotificationService extends Service {
                                 ref.child("users").child(uid).child("events").child(dataSnapshot.getKey()).setValue(true);
                                 // Remove the un-notified event from the list of new events
                                 ref.child("users").child(uid).child("newEvents").child(dataSnapshot.getKey()).removeValue();
+
+                                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                                Calendar reminder = Calendar.getInstance();
+                                Calendar expiry = Calendar.getInstance();
+
+                                try {
+                                    reminder.setTime(Constants.DATE_TIME_FORMATTER.parse(
+                                            event.getStartDate() + " " + event.getStartTime()));
+                                    expiry.setTime(Constants.DATE_TIME_FORMATTER.parse(
+                                            event.getEndDate() + " " + event.getEndTime()));
+
+                                    EventScheduler.setStartAlarm(getApplicationContext(), alarmManager, reminder);
+                                    EventScheduler.setStopAlarm(getApplicationContext(), alarmManager, expiry);
+                                } catch (ParseException e) {
+                                    Log.e(TAG, e.getMessage());
+                                }
                             }
 
                             @Override

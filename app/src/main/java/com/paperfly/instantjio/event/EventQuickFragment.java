@@ -1,11 +1,14 @@
 package com.paperfly.instantjio.event;
 
+import android.app.AlarmManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +25,10 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.DirectReferenceAdapter;
+import com.paperfly.instantjio.util.Constants;
 
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class EventQuickFragment extends Fragment {
@@ -140,6 +146,20 @@ public class EventQuickFragment extends Fragment {
             }
 
             ref.child("users").child(entry.getKey()).child("newEvents").child(eventRef.getKey()).setValue(true);
+        }
+
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Calendar reminder = Calendar.getInstance();
+        Calendar expiry = Calendar.getInstance();
+
+        try {
+            reminder.setTime(Constants.DATE_TIME_FORMATTER.parse(event.getStartDate() + " " + event.getStartTime()));
+            expiry.setTime(Constants.DATE_TIME_FORMATTER.parse(event.getEndDate() + " " + event.getEndTime()));
+
+            EventScheduler.setStartAlarm(getContext(), alarmManager, reminder);
+            EventScheduler.setStopAlarm(getContext(), alarmManager, expiry);
+        } catch (ParseException e) {
+            Log.e(TAG, e.getMessage());
         }
     }
 
