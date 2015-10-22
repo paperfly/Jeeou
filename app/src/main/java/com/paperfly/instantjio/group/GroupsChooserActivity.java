@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.ChooserEventListener;
@@ -52,9 +53,17 @@ public class GroupsChooserActivity extends AppCompatActivity implements ChooserE
 
     @Override
     public void onItemClick(String s) {
+        View view = findViewById(R.id.highlight);
+
         if (mChosenGroups.contains(s)) {
+            if (view.getVisibility() == View.VISIBLE) {
+                view.setVisibility(View.INVISIBLE);
+            }
             mChosenGroups.remove(s);
         } else {
+            if (view.getVisibility() == View.INVISIBLE) {
+                view.setVisibility(View.VISIBLE);
+            }
             mChosenGroups.add(s);
         }
     }

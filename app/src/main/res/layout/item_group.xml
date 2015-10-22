@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    android:id="@+id/item_group_cv"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_group_cv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
@@ -10,70 +9,83 @@
     app:cardElevation="3dp"
     app:cardUseCompatPadding="true">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/group_photo"
-                android:layout_width="@dimen/standard_imagecon_size"
-                android:layout_height="@dimen/standard_imagecon_size"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:contentDescription="Group Photo"
-                android:padding="@dimen/standard_imagecon_padding"
-                android:src="@drawable/instantjio" />
-
-            <TextView
-                android:id="@+id/group_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:gravity="center"
-                android:paddingBottom="@dimen/listview_item_padding"
-                android:paddingLeft="@dimen/listview_item_padding"
-                android:paddingRight="@dimen/listview_item_padding"
-                android:singleLine="true"
-                android:textColor="#000000"
-                android:textSize="15dp" />
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin">
+
+                <ImageView
+                    android:id="@+id/group_photo"
+                    android:layout_width="@dimen/standard_imagecon_size"
+                    android:layout_height="@dimen/standard_imagecon_size"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="Group Photo"
+                    android:padding="@dimen/standard_imagecon_padding"
+                    android:src="@drawable/instantjio" />
+
+                <TextView
+                    android:id="@+id/group_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/listview_item_padding"
+                    android:paddingLeft="@dimen/listview_item_padding"
+                    android:paddingRight="@dimen/listview_item_padding"
+                    android:singleLine="true"
+                    android:textColor="#000000"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#E0E0E0"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/group_members"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
+                    android:text="member 1, member 2, member 3"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
+        <View
+            android:id="@+id/highlight"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
+            android:layout_height="160dp"
+            android:background="#4DDFBE00"
+            android:visibility="invisible" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#E0E0E0"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/group_members"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:gravity="center"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:scrollHorizontally="false"
-                android:singleLine="false"
-                android:text="member 1, member 2, member 3"
-                android:textSize="12dp" />
-        </LinearLayout>
-
-    </LinearLayout>
+    </FrameLayout>
 
 </android.support.v7.widget.CardView>
