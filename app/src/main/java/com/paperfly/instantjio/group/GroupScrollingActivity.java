@@ -1,9 +1,7 @@
 package com.paperfly.instantjio.group;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -88,9 +86,8 @@ public class GroupScrollingActivity extends AppCompatActivity {
         mAdapter = new GroupDetailAdapter(groupRef, userRef);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
         CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(recyclerView, CustomLinearLayoutManager.VERTICAL, false);
-        layoutManager.setOverScrollMode(ViewCompat.OVER_SCROLL_IF_CONTENT_SCROLLS);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setItemAnimator(null);
         recyclerView.setAdapter(mAdapter);
     }
 
