@@ -494,8 +494,6 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
             try {
                 semaphore.acquire(mChosenGroups.size());
 
-                // The host is not a member
-                event.removeInvited(uid);
                 event.setHost(uid);
                 event.setType("custom");
 

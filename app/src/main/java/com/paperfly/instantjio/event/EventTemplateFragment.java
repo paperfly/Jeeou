@@ -451,9 +451,6 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
             try {
                 semaphore.acquire(mChosenGroups.size());
 
-                // The host is not a member
-                template.removeInvited(uid);
-
                 newRef.setValue(template);
             } catch (InterruptedException e) {
                 Log.e(TAG, e.getMessage());
