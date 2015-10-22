@@ -1,5 +1,7 @@
 package com.paperfly.instantjio.event;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -128,7 +130,10 @@ public class EventScrollingActivity extends AppCompatActivity {
         vActionViewLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + vLocation.getText());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
             }
         });
 
