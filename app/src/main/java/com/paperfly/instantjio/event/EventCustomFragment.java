@@ -496,6 +496,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
 
                 event.setHost(uid);
                 event.setType("custom");
+                event.addInvited(uid);
 
                 newRef.setValue(event);
 
