@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,9 +59,9 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+//        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getContext()).setSupportActionBar(toolbar);
+//        ((AppCompatActivity) getContext()).setSupportActionBar(toolbar);
 
         vPhoneNumber = (EditText) view.findViewById(R.id.phone_number);
         vUserName = (EditText) view.findViewById(R.id.user_name);
