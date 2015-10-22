@@ -16,6 +16,7 @@
     <color name="cancelButton">#F44336</color>
     <color name="greyedButton">#EEEEEE</color>
     <color name="loginButton">#FFE135</color>
+    <color name="acceptButton">#3F51B5</color>
 
     <color name="emphasizedTextColor">#000000</color>
     <color name="dividerColor">#E0E0E0</color>
