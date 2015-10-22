@@ -135,6 +135,10 @@ public class EventQuickFragment extends Fragment {
         eventRef.setValue(event);
         ref.child("users").child(event.getHost()).child("events").child(eventRef.getKey()).setValue(true);
         for (HashMap.Entry<String, Boolean> entry : event.getInvited().entrySet()) {
+            if (entry.getKey().equals(ref.getAuth().getUid())) {
+                continue;
+            }
+
             ref.child("users").child(entry.getKey()).child("newEvents").child(eventRef.getKey()).setValue(true);
         }
     }
