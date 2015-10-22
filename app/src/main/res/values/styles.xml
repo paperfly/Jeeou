@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/customColorAccent</item>
     </style>
     <!--TabLayout theme-->
-    <style name="AppTheme.Tab"/>
+    <style name="AppTheme.Tab" />
 
     <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
         <item name="android:background">@color/customTabBackground</item>
@@ -26,9 +26,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="ContactListView">
         <!--<item name="android:verticalScrollbarPosition">right</item>-->

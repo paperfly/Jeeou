@@ -448,6 +448,7 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
             try {
                 semaphore.acquire(mChosenGroups.size());
 
+                template.setHost(uid);
                 template.addInvited(uid);
 
                 newRef.setValue(template);

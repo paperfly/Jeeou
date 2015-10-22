@@ -214,6 +214,18 @@ public class EventQuickFragment extends Fragment {
                         getActivity().finish();
                     }
                 });
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), EventTemplateScrollingActivity.class);
+                        Event event = getItem(getAdapterPosition());
+                        EventParcelable eventParcelable = new EventParcelable(event);
+                        intent.putExtra(Constants.EVENT_OBJECT, eventParcelable);
+                        intent.putExtra(Constants.EVENT_KEY, mKeys.get(getAdapterPosition()));
+                        startActivity(intent);
+                    }
+                });
             }
 
             public void setView(Event event) {
