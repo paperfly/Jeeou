@@ -81,7 +81,11 @@ public class GroupCreateActivity extends AppCompatActivity {
         ref.child("users").child(ref.getAuth().getUid()).child("groups").child(newRef.getKey()).setValue(true);
         // Members need to have the group's index too
         for (HashMap.Entry<String, Boolean> entry : group.getMembers().entrySet()) {
-            ref.child("users").child(entry.getKey()).child("groups").child(newRef.getKey()).setValue(true);
+            if (entry.getKey().equals(ref.getAuth().getUid())) {
+                continue;
+            }
+
+            ref.child("users").child(entry.getKey()).child("newGroups").child(newRef.getKey()).setValue(true);
         }
 
         finish();

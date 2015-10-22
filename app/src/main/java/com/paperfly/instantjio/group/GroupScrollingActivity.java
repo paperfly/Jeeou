@@ -98,9 +98,11 @@ public class GroupScrollingActivity extends AppCompatActivity {
         if (mGroup.getLeader().equals(ref.getAuth().getUid())) {
             // I am the leader of the group
             ref.child("users").child(ref.getAuth().getUid()).child("groups").child(mKey).removeValue();
+            ref.child("users").child(ref.getAuth().getUid()).child("newGroups").child(mKey).removeValue();
 
             for (Map.Entry<String, Boolean> entry : mGroup.getMembers().entrySet()) {
                 ref.child("users").child(entry.getKey()).child("groups").child(mKey).removeValue();
+                ref.child("users").child(entry.getKey()).child("newGroups").child(mKey).removeValue();
             }
 
             ref.child("groups").child(mKey).removeValue();
