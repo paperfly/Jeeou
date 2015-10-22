@@ -405,14 +405,11 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
             final EditText title = (EditText) view.findViewById(R.id.event_template_title);
             final EditText description = (EditText) view.findViewById(R.id.event_template_description);
             final AutoCompleteTextView location = (AutoCompleteTextView) view.findViewById(R.id.event_template_location);
-            final String date = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.getDefault()).format(Calendar.getInstance().getTime());
             final Button startTime = (Button) view.findViewById(R.id.event_template_start_time);
             final Button endTime = (Button) view.findViewById(R.id.event_template_end_time);
             template.setTitle(title.getText().toString());
             template.setDescription(description.getText().toString());
             template.setLocation(location.getText().toString());
-            template.setStartDate(date);
-            template.setEndDate(date);
             template.setStartTime(startTime.getText().toString());
             template.setEndTime(endTime.getText().toString());
         }

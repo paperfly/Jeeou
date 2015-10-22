@@ -440,6 +440,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
 
     private class CreateEventTask extends AsyncTask<Void, Void, Void> {
         private Event event;
+        private String key;
 
         public CreateEventTask(View view) {
             super();
@@ -470,6 +471,7 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
             final Firebase newRef = ref.child("events").push();
             final String uid = ref.getAuth().getUid();
             final Semaphore semaphore = new Semaphore(0);
+            key = newRef.getKey();
 
             // Add invited contacts' indices
             for (HashMap.Entry<String, String> entry : mChosenContacts.entrySet()) {
@@ -531,8 +533,8 @@ public class EventCustomFragment extends Fragment implements View.OnClickListene
                 reminder.setTime(Constants.DATE_TIME_FORMATTER.parse(event.getStartDate() + " " + event.getStartTime()));
                 expiry.setTime(Constants.DATE_TIME_FORMATTER.parse(event.getEndDate() + " " + event.getEndTime()));
 
-                EventScheduler.setStartAlarm(getContext(), alarmManager, reminder);
-                EventScheduler.setStopAlarm(getContext(), alarmManager, expiry);
+                EventScheduler.setStartAlarm(getContext(), key, alarmManager, reminder);
+                EventScheduler.setStopAlarm(getContext(), key, alarmManager, expiry);
             } catch (ParseException e) {
                 Log.e(TAG, e.getMessage());
             }

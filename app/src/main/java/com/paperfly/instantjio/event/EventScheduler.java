@@ -19,10 +19,11 @@ public class EventScheduler {
     private EventScheduler() {
     }
 
-    public static void setStartAlarm(Context context, AlarmManager alarmManager, Calendar startDate) {
+    public static void setStartAlarm(Context context, String key, AlarmManager alarmManager, Calendar startDate) {
         Log.i(TAG, "Start Date: " + Constants.DATE_TIME_FORMATTER.format(startDate.getTime()));
 
         Intent intent = new Intent(context, ReminderReceiver.class);
+        intent.putExtra(Constants.EVENT_KEY, key);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -35,10 +36,11 @@ public class EventScheduler {
         }
     }
 
-    public static void setStopAlarm(Context context, AlarmManager alarmManager, Calendar endDate) {
+    public static void setStopAlarm(Context context, String key, AlarmManager alarmManager, Calendar endDate) {
         Log.i(TAG, "End Date: " + Constants.DATE_TIME_FORMATTER.format(endDate.getTime()));
 
         Intent intent = new Intent(context, ExpiryReceiver.class);
+        intent.putExtra(Constants.EVENT_KEY, key);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
 

@@ -134,30 +134,46 @@ public class EventQuickFragment extends Fragment {
     }
 
     private void createEvent(Event event) {
-        final Firebase ref = new Firebase(getString(R.string.firebase_url));
+        Firebase ref = new Firebase(getString(R.string.firebase_url));
+        Firebase eventRef = ref.child("events").push();
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Calendar now = Calendar.getInstance();
+        Calendar reminder = Calendar.getInstance();
+        Calendar expiry = Calendar.getInstance();
+
         event.setType("quick");
         event.setHost(ref.getAuth().getUid());
-        Firebase eventRef = ref.child("events").push();
+
+        Calendar startTime = Calendar.getInstance();
+        try {
+            startTime.setTime(Constants.DATE_TIME_FORMATTER.parse(
+                            Constants.DATE_FORMATTER.format(now.getTime()) + " " + event.getStartTime())
+            );
+
+            if (now.after(startTime)) {
+                now.add(Calendar.DAY_OF_WEEK, 1);
+            }
+
+            event.setStartDate(Constants.DATE_FORMATTER.format(now.getTime()));
+            event.setEndDate(Constants.DATE_FORMATTER.format(now.getTime()));
+        } catch (ParseException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
         eventRef.setValue(event);
         ref.child("users").child(event.getHost()).child("events").child(eventRef.getKey()).setValue(true);
         for (HashMap.Entry<String, Boolean> entry : event.getInvited().entrySet()) {
-            if (entry.getKey().equals(ref.getAuth().getUid())) {
-                continue;
+            if (!entry.getKey().equals(ref.getAuth().getUid())) {
+                ref.child("users").child(entry.getKey()).child("newEvents").child(eventRef.getKey()).setValue(true);
             }
-
-            ref.child("users").child(entry.getKey()).child("newEvents").child(eventRef.getKey()).setValue(true);
         }
-
-        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        Calendar reminder = Calendar.getInstance();
-        Calendar expiry = Calendar.getInstance();
 
         try {
             reminder.setTime(Constants.DATE_TIME_FORMATTER.parse(event.getStartDate() + " " + event.getStartTime()));
             expiry.setTime(Constants.DATE_TIME_FORMATTER.parse(event.getEndDate() + " " + event.getEndTime()));
 
-            EventScheduler.setStartAlarm(getContext(), alarmManager, reminder);
-            EventScheduler.setStopAlarm(getContext(), alarmManager, expiry);
+            EventScheduler.setStartAlarm(getContext(), eventRef.getKey(), alarmManager, reminder);
+            EventScheduler.setStopAlarm(getContext(), eventRef.getKey(), alarmManager, expiry);
         } catch (ParseException e) {
             Log.e(TAG, e.getMessage());
         }

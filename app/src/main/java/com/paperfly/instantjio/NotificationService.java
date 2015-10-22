@@ -83,8 +83,8 @@ public class NotificationService extends Service {
                                     expiry.setTime(Constants.DATE_TIME_FORMATTER.parse(
                                             event.getEndDate() + " " + event.getEndTime()));
 
-                                    EventScheduler.setStartAlarm(getApplicationContext(), alarmManager, reminder);
-                                    EventScheduler.setStopAlarm(getApplicationContext(), alarmManager, expiry);
+                                    EventScheduler.setStartAlarm(getApplicationContext(), dataSnapshot.getKey(), alarmManager, reminder);
+                                    EventScheduler.setStopAlarm(getApplicationContext(), dataSnapshot.getKey(), alarmManager, expiry);
                                 } catch (ParseException e) {
                                     Log.e(TAG, e.getMessage());
                                 }
