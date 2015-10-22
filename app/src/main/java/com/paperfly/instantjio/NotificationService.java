@@ -37,6 +37,11 @@ public class NotificationService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        Firebase ref = new Firebase(getString(R.string.firebase_url));
+        if (ref.getAuth() == null) {
+            stopSelf();
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -53,7 +58,7 @@ public class NotificationService extends Service {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 final Event event = dataSnapshot.getValue(Event.class);
-                                postNotification(event, dataSnapshot.getKey());
+                                readyNotification(event, dataSnapshot.getKey());
                                 startInvitedActivity();
 
                                 // Add the un-notified event to the user's list of notified events
@@ -110,7 +115,7 @@ public class NotificationService extends Service {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 final Group group = dataSnapshot.getValue(Group.class);
-                                postNotification(group, dataSnapshot.getKey());
+                                readyNotification(group, dataSnapshot.getKey());
                                 startInvitedActivity();
 
                                 // Add the new group to the user's groups' list
@@ -152,7 +157,7 @@ public class NotificationService extends Service {
         }).start();
     }
 
-    private void postNotification(Event event, String key) {
+    private void readyNotification(Event event, String key) {
         Intent resultIntent = new Intent(this, EventScrollingActivity.class);
         EventParcelable eventParcelable = new EventParcelable(event);
         resultIntent.putExtra(Constants.EVENT_OBJECT, eventParcelable);
@@ -163,27 +168,11 @@ public class NotificationService extends Service {
         stackBuilder.addParentStack(EventScrollingActivity.class);
         // Adds the Intent to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
-        // Gets a PendingIntent containing the entire back stack
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("New event!")
-                        .setContentText(event.getTitle())
-                        .setAutoCancel(true)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setContentIntent(resultPendingIntent);
-
-        // Gets an instance of the NotificationManager service
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        // Builds the notification and issues it.
-        mNotifyMgr.notify(sEventNotificationId, mBuilder.build());
+        postNotification(stackBuilder, "New event!", event.getTitle(), sEventNotificationId);
     }
 
-    private void postNotification(Group group, String key) {
+
+    private void readyNotification(Group group, String key) {
         Intent resultIntent = new Intent(this, GroupScrollingActivity.class);
         GroupParcelable groupParcelable = new GroupParcelable(group);
         resultIntent.putExtra(Constants.GROUP_OBJECT, groupParcelable);
@@ -194,6 +183,10 @@ public class NotificationService extends Service {
         stackBuilder.addParentStack(GroupScrollingActivity.class);
         // Adds the Intent to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
+        postNotification(stackBuilder, "You have been invited to join a group!", group.getName(), sGroupNotificationId);
+    }
+
+    private void postNotification(TaskStackBuilder stackBuilder, String title, String text, int id) {
         // Gets a PendingIntent containing the entire back stack
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -201,8 +194,8 @@ public class NotificationService extends Service {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("You have been invited to join a group!")
-                        .setContentText(group.getName())
+                        .setContentTitle(title)
+                        .setContentText(text)
                         .setAutoCancel(true)
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setContentIntent(resultPendingIntent);
@@ -211,7 +204,7 @@ public class NotificationService extends Service {
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
-        mNotifyMgr.notify(sGroupNotificationId, mBuilder.build());
+        mNotifyMgr.notify(id, mBuilder.build());
     }
 
     private void startInvitedActivity() {
