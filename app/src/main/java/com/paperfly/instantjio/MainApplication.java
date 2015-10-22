@@ -2,7 +2,6 @@ package com.paperfly.instantjio;
 
 import android.app.Application;
 
-import com.facebook.FacebookSdk;
 import com.firebase.client.Firebase;
 
 /**
@@ -14,6 +13,5 @@ public class MainApplication extends Application {
         super.onCreate();
         Firebase.setAndroidContext(getApplicationContext());
         Firebase.getDefaultConfig().setPersistenceEnabled(true);
-        FacebookSdk.sdkInitialize(getApplicationContext());
     }
 }
