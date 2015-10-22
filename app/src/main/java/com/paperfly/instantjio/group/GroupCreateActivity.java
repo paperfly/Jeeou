@@ -71,6 +71,9 @@ public class GroupCreateActivity extends AppCompatActivity {
             group.addMember(entry.getValue());
         }
 
+        // The leader is also a member of the group
+        group.addMember(ref.getAuth().getUid());
+
         // Add group to Firebase
         newRef.setValue(group);
 
