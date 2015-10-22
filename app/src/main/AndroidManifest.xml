@@ -77,7 +77,7 @@
         <service android:name=".NotificationService"/>
 
         <receiver
-            android:name=".OnBootReceiver"
+            android:name=".receiver.OnBootReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
