@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.client.Firebase;
@@ -18,10 +19,13 @@ import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
 import com.paperfly.instantjio.util.Constants;
 
+import java.util.Map;
+
 public class GroupScrollingActivity extends AppCompatActivity {
     public static final String TAG = GroupScrollingActivity.class.getCanonicalName();
     // Views
     private TextView vMemberCount;
+    private Button vActionExit;
     // Members
     private GroupDetailAdapter mAdapter;
     private Group mGroup;
@@ -59,11 +63,25 @@ public class GroupScrollingActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        Firebase ref = new Firebase(getString(R.string.firebase_url));
+        final Firebase ref = new Firebase(getString(R.string.firebase_url));
 
         vMemberCount = (TextView) findViewById(R.id.group_member_count);
+        vActionExit = (Button) findViewById(R.id.group_action_exit);
 
         vMemberCount.setText(String.valueOf(mGroup.getMembers().size()));
+        if (mGroup.getLeader().equals(ref.getAuth().getUid())) {
+            // I am the leader of the group
+            vActionExit.setText("Disband Group");
+        } else {
+            // I am just a member of the group
+            vActionExit.setText("Leave Group");
+        }
+        vActionExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitGroup(ref);
+            }
+        });
 
         Query groupRef = ref.child("groups").child(mKey).child("members");
         Query userRef = ref.child("users");
@@ -74,6 +92,25 @@ public class GroupScrollingActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(this, CustomLinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private void exitGroup(Firebase ref) {
+        if (mGroup.getLeader().equals(ref.getAuth().getUid())) {
+            // I am the leader of the group
+            ref.child("users").child(ref.getAuth().getUid()).child("groups").child(mKey).removeValue();
+
+            for (Map.Entry<String, Boolean> entry : mGroup.getMembers().entrySet()) {
+                ref.child("users").child(entry.getKey()).child("groups").child(mKey).removeValue();
+            }
+
+            ref.child("groups").child(mKey).removeValue();
+        } else {
+            // I am just a member of the group
+            ref.child("users").child(ref.getAuth().getUid()).child("groups").child(mKey).removeValue();
+            ref.child("groups").child(mKey).child("members").child(ref.getAuth().getUid()).removeValue();
+        }
+
+        finish();
     }
 
     protected class GroupDetailAdapter extends CrossReferenceAdapter<GroupDetailAdapter.GroupDetailViewHolder, User> {
