@@ -3,6 +3,7 @@ package com.paperfly.instantjio.event;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,6 +26,7 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.DirectReferenceAdapter;
+import com.paperfly.instantjio.common.firebase.ItemEventListener;
 import com.paperfly.instantjio.util.Constants;
 
 import java.text.ParseException;
@@ -41,7 +43,39 @@ public class EventQuickFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private View vRoot;
     private QuickEventAdapter mAdapter;
+    private ItemEventListener<Event> mListener = new ItemEventListener<Event>() {
+        @Override
+        public void itemAdded(Event item, String key, int position) {
+            if (mAdapter.getItemCount() > 0) {
+                vRoot.setBackgroundResource(0);
+            }
+        }
+
+        @Override
+        public void itemChanged(Event oldItem, Event newItem, String key, int position) {
+
+        }
+
+        @Override
+        public void itemRemoved(Event item, String key, int position) {
+            if (mAdapter.getItemCount() == 0) {
+                if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT >= 22) {
+                    vRoot.setBackground(getResources().getDrawable(R.drawable.banana_bg_login, null));
+                } else if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 22) {
+                    vRoot.setBackground(getResources().getDrawable(R.drawable.banana_bg_login));
+                } else {
+                    vRoot.setBackgroundDrawable(getResources().getDrawable(R.drawable.banana_bg_login));
+                }
+            }
+        }
+
+        @Override
+        public void itemMoved(Event item, String key, int oldPosition, int newPosition) {
+
+        }
+    };
 
     public EventQuickFragment() {
         // Required empty public constructor
@@ -77,20 +111,20 @@ public class EventQuickFragment extends Fragment {
 
         final Firebase ref = new Firebase(getString(R.string.firebase_url));
         Query newRef = ref.child("users").child(ref.getAuth().getUid()).child("templates").limitToLast(3);
-        mAdapter = new QuickEventAdapter(newRef, Event.class, null);
+        mAdapter = new QuickEventAdapter(newRef, mListener);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_event_quick, container, false);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.event_quick_recycler_view);
+        vRoot = inflater.inflate(R.layout.fragment_event_quick, container, false);
+        RecyclerView recyclerView = (RecyclerView) vRoot.findViewById(R.id.event_quick_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-        return view;
+        return vRoot;
     }
 
     @Override
@@ -180,8 +214,8 @@ public class EventQuickFragment extends Fragment {
     }
 
     protected class QuickEventAdapter extends DirectReferenceAdapter<QuickEventAdapter.QuickEventViewHolder, Event> {
-        public QuickEventAdapter(Query ref, Class<Event> itemClass, ItemEventListener<Event> itemListener) {
-            super(ref, itemClass, itemListener);
+        public QuickEventAdapter(Query ref, ItemEventListener<Event> itemListener) {
+            super(ref, Event.class, itemListener);
         }
 
         @Override
