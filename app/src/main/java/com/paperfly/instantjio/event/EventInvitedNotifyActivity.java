@@ -1,4 +1,4 @@
-package com.paperfly.instantjio;
+package com.paperfly.instantjio.event;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -7,6 +7,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
+
+import com.firebase.client.Firebase;
+import com.paperfly.instantjio.R;
+import com.paperfly.instantjio.util.Constants;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -18,19 +23,24 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
     private static final boolean AUTO_HIDE = true;
-
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
      * user interaction before hiding the system UI.
      */
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
+    // Views
+    private ImageButton vActionAttending;
+    private ImageButton vActionNotAttending;
+    // Members
+    private Firebase mRef;
+    private Event mEvent;
+    private String mKey;
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -106,6 +116,12 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
 //        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        mRef = new Firebase(getString(R.string.firebase_url));
+        EventParcelable eventParcelable = getIntent().getParcelableExtra(Constants.EVENT_OBJECT);
+        mEvent = eventParcelable.getEvent();
+        mKey = getIntent().getStringExtra(Constants.EVENT_KEY);
+
+        initViews();
     }
 
     @Override
@@ -159,5 +175,37 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    private void initViews() {
+        vActionAttending = (ImageButton) findViewById(R.id.event_action_attending);
+        vActionNotAttending = (ImageButton) findViewById(R.id.event_action_not_attending);
+
+        vActionAttending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionAttending();
+                ;
+            }
+        });
+
+        vActionNotAttending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionNotAttending();
+            }
+        });
+    }
+
+    private void actionAttending() {
+        mRef.child("events").child(mKey).child("attending").child(mRef.getAuth().getUid()).setValue(true);
+        mRef.child("events").child(mKey).child("invited").child(mRef.getAuth().getUid()).removeValue();
+        mRef.child("events").child(mKey).child("notAttending").child(mRef.getAuth().getUid()).removeValue();
+    }
+
+    private void actionNotAttending() {
+        mRef.child("events").child(mKey).child("notAttending").child(mRef.getAuth().getUid()).setValue(true);
+        mRef.child("events").child(mKey).child("attending").child(mRef.getAuth().getUid()).removeValue();
+        mRef.child("events").child(mKey).child("invited").child(mRef.getAuth().getUid()).removeValue();
     }
 }

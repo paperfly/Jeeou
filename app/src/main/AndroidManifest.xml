@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.paperfly.instantjio">
+<manifest
+    package="com.paperfly.instantjio"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -86,7 +87,7 @@
         <receiver android:name=".receiver.ExpiryReceiver" />
 
         <activity
-            android:name=".EventInvitedNotifyActivity"
+            android:name=".event.EventInvitedNotifyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_event_invited_notify"
             android:theme="@style/FullscreenTheme"></activity>

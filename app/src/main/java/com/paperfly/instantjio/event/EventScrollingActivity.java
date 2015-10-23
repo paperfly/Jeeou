@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -42,6 +43,7 @@ public class EventScrollingActivity extends AppCompatActivity {
     // Members
     private Event mEvent;
     private String mKey;
+    private Firebase mRef;
     private String mHost;
     private int mAttendingCount;
     private int mWaitingCount;
@@ -62,7 +64,10 @@ public class EventScrollingActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(mEvent.getTitle());
         }
 
+        mRef = new Firebase(getString(R.string.firebase_url));
+
         initViews();
+        initRealtimeListeners();
     }
 
     @Override
@@ -78,8 +83,6 @@ public class EventScrollingActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        Firebase ref = new Firebase(getString(R.string.firebase_url));
-
         vActionCancel = (Button) findViewById(R.id.event_action_cancel);
         vActionAttending = (Button) findViewById(R.id.event_action_attending);
         vActionNotAttending = (Button) findViewById(R.id.event_action_not_attending);
@@ -94,7 +97,7 @@ public class EventScrollingActivity extends AppCompatActivity {
         vDescription = (TextView) findViewById(R.id.event_description);
         vFAB = (FloatingActionButton) findViewById(R.id.fab);
 
-        if (ref.getAuth().getUid().equals(mEvent.getHost())) {
+        if (mRef.getAuth().getUid().equals(mEvent.getHost())) {
             vActionCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -118,13 +121,13 @@ public class EventScrollingActivity extends AppCompatActivity {
         vActionAttending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                actionAttending();
             }
         });
         vActionNotAttending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                actionNotAttending();
             }
         });
         vActionViewLocation.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +148,7 @@ public class EventScrollingActivity extends AppCompatActivity {
                 .into(vHostPicture);
 
         // Host name
-        ref.child("users").child(mEvent.getHost()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+        mRef.child("users").child(mEvent.getHost()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mHost = dataSnapshot.getValue().toString();
@@ -188,7 +191,110 @@ public class EventScrollingActivity extends AppCompatActivity {
     }
 
     private void initRealtimeListeners() {
+        mRef.child("events").child(mKey).child("attending").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ++mAttendingCount;
+                mEvent.addAttending(dataSnapshot.getKey());
+                vAttendingCount.setText(String.valueOf(mAttendingCount));
+            }
 
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                --mAttendingCount;
+                mEvent.removeAttending(dataSnapshot.getKey());
+                vAttendingCount.setText(String.valueOf(mAttendingCount));
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        mRef.child("events").child(mKey).child("invited").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ++mWaitingCount;
+                mEvent.addInvited(dataSnapshot.getKey());
+                vWaitingCount.setText(String.valueOf(mWaitingCount));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                --mWaitingCount;
+                mEvent.removeInvited(dataSnapshot.getKey());
+                vWaitingCount.setText(String.valueOf(mWaitingCount));
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        mRef.child("events").child(mKey).child("notAttending").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ++mWaitingCount;
+                mEvent.addNotAttending(dataSnapshot.getKey());
+                vWaitingCount.setText(String.valueOf(mWaitingCount));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                --mWaitingCount;
+                mEvent.removeNotAttending(dataSnapshot.getKey());
+                vWaitingCount.setText(String.valueOf(mWaitingCount));
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    private void actionAttending() {
+        mRef.child("events").child(mKey).child("attending").child(mRef.getAuth().getUid()).setValue(true);
+        mRef.child("events").child(mKey).child("invited").child(mRef.getAuth().getUid()).removeValue();
+        mRef.child("events").child(mKey).child("notAttending").child(mRef.getAuth().getUid()).removeValue();
+    }
+
+    private void actionNotAttending() {
+        mRef.child("events").child(mKey).child("notAttending").child(mRef.getAuth().getUid()).setValue(true);
+        mRef.child("events").child(mKey).child("attending").child(mRef.getAuth().getUid()).removeValue();
+        mRef.child("events").child(mKey).child("invited").child(mRef.getAuth().getUid()).removeValue();
     }
 
     private void cancelEvent() {

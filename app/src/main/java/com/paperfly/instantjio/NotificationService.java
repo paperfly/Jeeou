@@ -19,6 +19,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.event.Event;
+import com.paperfly.instantjio.event.EventInvitedNotifyActivity;
 import com.paperfly.instantjio.event.EventParcelable;
 import com.paperfly.instantjio.event.EventScheduler;
 import com.paperfly.instantjio.event.EventScrollingActivity;
@@ -66,7 +67,7 @@ public class NotificationService extends Service {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 final Event event = dataSnapshot.getValue(Event.class);
                                 readyNotification(event, dataSnapshot.getKey());
-                                startInvitedActivity();
+                                startEventInvitedActivity(event, dataSnapshot.getKey());
 
                                 // Add the un-notified event to the user's list of notified events
                                 ref.child("users").child(uid).child("events").child(dataSnapshot.getKey()).setValue(true);
@@ -139,7 +140,6 @@ public class NotificationService extends Service {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 final Group group = dataSnapshot.getValue(Group.class);
                                 readyNotification(group, dataSnapshot.getKey());
-//                                startInvitedActivity();
 
                                 // Add the new group to the user's groups' list
                                 ref.child("users").child(uid).child("groups").child(dataSnapshot.getKey()).setValue(true);
@@ -230,7 +230,12 @@ public class NotificationService extends Service {
         mNotifyMgr.notify(id, mBuilder.build());
     }
 
-    private void startInvitedActivity() {
-        startActivity(new Intent(this, EventInvitedNotifyActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    private void startEventInvitedActivity(Event event, String key) {
+        Intent intent = new Intent(this, EventInvitedNotifyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        EventParcelable eventParcelable = new EventParcelable(event);
+        intent.putExtra(Constants.EVENT_OBJECT, eventParcelable);
+        intent.putExtra(Constants.EVENT_KEY, key);
+        startActivity(intent);
     }
 }

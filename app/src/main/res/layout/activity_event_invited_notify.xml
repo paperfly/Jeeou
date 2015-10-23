@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/customColorPrimary"
-    tools:context="com.paperfly.instantjio.EventInvitedNotifyActivity">
+             tools:context=".event.EventInvitedNotifyActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -20,7 +20,7 @@
         android:textStyle="bold" />
 
     <ImageButton
-        android:id="@+id/acceptButton"
+        android:id="@+id/event_action_attending"
         android:layout_width="@dimen/standard_imagecon_size"
         android:layout_height="@dimen/standard_imagecon_size"
         android:layout_gravity="bottom|start"
@@ -28,7 +28,7 @@
         android:src="@drawable/ic_action_done" />
 
     <ImageButton
-        android:id="@+id/declineButton"
+        android:id="@+id/event_action_not_attending"
         android:layout_width="@dimen/standard_imagecon_size"
         android:layout_height="@dimen/standard_imagecon_size"
         android:layout_gravity="bottom|end"
