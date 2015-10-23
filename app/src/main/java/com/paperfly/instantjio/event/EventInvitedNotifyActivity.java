@@ -3,13 +3,16 @@ package com.paperfly.instantjio.event;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.util.Constants;
 
@@ -34,13 +37,40 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
+    private final Runnable mShowPart2Runnable = new Runnable() {
+        @Override
+        public void run() {
+            // Delayed display of UI elements
+//            ActionBar actionBar = getSupportActionBar();
+//            if (actionBar != null) {
+//                actionBar.show();
+//            }
+//            mControlsView.setVisibility(View.VISIBLE);
+        }
+    };
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
     // Views
     private ImageButton vActionAttending;
     private ImageButton vActionNotAttending;
+    private TextView vEventJioBigMessage;
     // Members
     private Firebase mRef;
     private Event mEvent;
     private String mKey;
+    private String mHost;
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -60,36 +90,11 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
         }
     };
     private View mControlsView;
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            mControlsView.setVisibility(View.VISIBLE);
-        }
-    };
     private boolean mVisible;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
             hide();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
         }
     };
 
@@ -101,7 +106,7 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
 
         mVisible = true;
 //        mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
+        mContentView = findViewById(R.id.event_jio_big_message);
 
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -144,11 +149,11 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
 
     private void hide() {
         // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-        mControlsView.setVisibility(View.GONE);
+//        ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.hide();
+//        }
+//        mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
@@ -159,8 +164,8 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+//        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mVisible = true;
 
         // Schedule a runnable to display UI elements after a delay
@@ -180,6 +185,7 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
     private void initViews() {
         vActionAttending = (ImageButton) findViewById(R.id.event_action_attending);
         vActionNotAttending = (ImageButton) findViewById(R.id.event_action_not_attending);
+        vEventJioBigMessage = (TextView) findViewById(R.id.event_jio_big_message);
 
         vActionAttending.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,17 +201,32 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
                 actionNotAttending();
             }
         });
+
+        mRef.child("users").child(mEvent.getHost()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mHost = dataSnapshot.getValue().toString();
+                vEventJioBigMessage.setText("You've been Jio-ed by " + mHost + "!");
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
     private void actionAttending() {
         mRef.child("events").child(mKey).child("attending").child(mRef.getAuth().getUid()).setValue(true);
         mRef.child("events").child(mKey).child("invited").child(mRef.getAuth().getUid()).removeValue();
         mRef.child("events").child(mKey).child("notAttending").child(mRef.getAuth().getUid()).removeValue();
+        finish();
     }
 
     private void actionNotAttending() {
         mRef.child("events").child(mKey).child("notAttending").child(mRef.getAuth().getUid()).setValue(true);
         mRef.child("events").child(mKey).child("attending").child(mRef.getAuth().getUid()).removeValue();
         mRef.child("events").child(mKey).child("invited").child(mRef.getAuth().getUid()).removeValue();
+        finish();
     }
 }

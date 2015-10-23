@@ -71,7 +71,7 @@
         <activity
             android:name=".group.GroupScrollingActivity"
             android:label="@string/title_activity_group_scrolling"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service android:name=".NotificationService" />
 
@@ -90,11 +90,11 @@
             android:name=".event.EventInvitedNotifyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_event_invited_notify"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme.NoActionBar"/>
         <activity
             android:name=".event.EventTemplateScrollingActivity"
             android:label="@string/title_activity_event_template_scrolling"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
