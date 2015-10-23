@@ -62,11 +62,11 @@ public class EventQuickFragment extends Fragment {
         public void itemRemoved(Event item, String key, int position) {
             if (mAdapter.getItemCount() == 0) {
                 if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT >= 22) {
-                    vRoot.setBackground(getResources().getDrawable(R.drawable.banana_bg_login, null));
+                    vRoot.setBackground(getResources().getDrawable(R.drawable.empty_template_light_bg, null));
                 } else if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 22) {
-                    vRoot.setBackground(getResources().getDrawable(R.drawable.banana_bg_login));
+                    vRoot.setBackground(getResources().getDrawable(R.drawable.empty_template_light_bg));
                 } else {
-                    vRoot.setBackgroundDrawable(getResources().getDrawable(R.drawable.banana_bg_login));
+                    vRoot.setBackgroundDrawable(getResources().getDrawable(R.drawable.empty_template_light_bg));
                 }
             }
         }
@@ -125,6 +125,22 @@ public class EventQuickFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
         return vRoot;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (mAdapter.getItemCount() == 0) {
+            if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT >= 22) {
+                view.setBackground(getResources().getDrawable(R.drawable.empty_template_light_bg, null));
+            } else if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 22) {
+                view.setBackground(getResources().getDrawable(R.drawable.empty_template_light_bg));
+            } else {
+                view.setBackgroundDrawable(getResources().getDrawable(R.drawable.empty_template_light_bg));
+            }
+        } else {
+            view.setBackgroundResource(0);
+        }
     }
 
     @Override

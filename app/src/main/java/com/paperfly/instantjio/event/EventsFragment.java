@@ -90,11 +90,11 @@ public class EventsFragment extends Fragment {
 
         if (mAdapter.getItemCount() == 0) {
             if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT >= 22) {
-                view.setBackground(getResources().getDrawable(R.drawable.banana_bg_login, null));
+                view.setBackground(getResources().getDrawable(R.drawable.empty_event_light_bg, null));
             } else if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 22) {
-                view.setBackground(getResources().getDrawable(R.drawable.banana_bg_login));
+                view.setBackground(getResources().getDrawable(R.drawable.empty_event_light_bg));
             } else {
-                view.setBackgroundDrawable(getResources().getDrawable(R.drawable.banana_bg_login));
+                view.setBackgroundDrawable(getResources().getDrawable(R.drawable.empty_event_light_bg));
             }
         } else {
             view.setBackgroundResource(0);

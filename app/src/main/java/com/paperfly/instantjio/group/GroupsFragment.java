@@ -2,6 +2,7 @@ package com.paperfly.instantjio.group;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,6 +26,7 @@ import com.firebase.client.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.ChooserEventListener;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
+import com.paperfly.instantjio.common.firebase.ItemEventListener;
 import com.paperfly.instantjio.util.Constants;
 
 import java.util.ArrayList;
@@ -34,10 +36,42 @@ import java.util.concurrent.Semaphore;
 
 public class GroupsFragment extends Fragment {
     public static final String TAG = GroupsFragment.class.getCanonicalName();
+    private View vRoot;
     private Firebase mRef;
     private GroupViewAdapter mAdapter;
     private boolean mChoosingMode;
     private ChooserEventListener.ItemInteraction mItemInteraction;
+    private ItemEventListener<Group> mListener = new ItemEventListener<Group>() {
+        @Override
+        public void itemAdded(Group item, String key, int position) {
+            if (mAdapter.getItemCount() > 0) {
+                vRoot.setBackgroundResource(0);
+            }
+        }
+
+        @Override
+        public void itemChanged(Group oldItem, Group newItem, String key, int position) {
+
+        }
+
+        @Override
+        public void itemRemoved(Group item, String key, int position) {
+            if (mAdapter.getItemCount() == 0) {
+                if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT >= 22) {
+                    vRoot.setBackground(getResources().getDrawable(R.drawable.empty_group_light_bg, null));
+                } else if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 22) {
+                    vRoot.setBackground(getResources().getDrawable(R.drawable.empty_group_light_bg));
+                } else {
+                    vRoot.setBackgroundDrawable(getResources().getDrawable(R.drawable.empty_group_light_bg));
+                }
+            }
+        }
+
+        @Override
+        public void itemMoved(Group item, String key, int oldPosition, int newPosition) {
+
+        }
+    };
 
     public GroupsFragment() {
 
@@ -62,7 +96,7 @@ public class GroupsFragment extends Fragment {
         mRef = new Firebase(getString(R.string.firebase_url));
         Query ref1 = mRef.child("users").child(mRef.getAuth().getUid()).child("groups");
         Query ref2 = mRef.child("groups");
-        mAdapter = new GroupViewAdapter(ref1, ref2);
+        mAdapter = new GroupViewAdapter(ref1, ref2, mListener);
 
         if (mChoosingMode) {
             try {
@@ -77,13 +111,29 @@ public class GroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_groups, container, false);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.group_list);
+        vRoot = inflater.inflate(R.layout.fragment_groups, container, false);
+        RecyclerView recyclerView = (RecyclerView) vRoot.findViewById(R.id.group_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-        return view;
+        return vRoot;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (mAdapter.getItemCount() == 0) {
+            if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT >= 22) {
+                view.setBackground(getResources().getDrawable(R.drawable.empty_group_light_bg, null));
+            } else if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 22) {
+                view.setBackground(getResources().getDrawable(R.drawable.empty_group_light_bg));
+            } else {
+                view.setBackgroundDrawable(getResources().getDrawable(R.drawable.empty_group_light_bg));
+            }
+        } else {
+            view.setBackgroundResource(0);
+        }
     }
 
     @Override
@@ -113,8 +163,8 @@ public class GroupsFragment extends Fragment {
     }
 
     public class GroupViewAdapter extends CrossReferenceAdapter<GroupViewAdapter.GroupViewViewHolder, Group> {
-        public GroupViewAdapter(Query firstRef, Query secondRef) {
-            super(firstRef, secondRef, Group.class, null);
+        public GroupViewAdapter(Query firstRef, Query secondRef, ItemEventListener<Group> listener) {
+            super(firstRef, secondRef, Group.class, listener);
         }
 
         @Override
