@@ -2,6 +2,7 @@ package com.paperfly.instantjio;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -62,6 +63,14 @@ public class LoginFragment extends Fragment {
 //        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 //        ((AppCompatActivity) getContext()).setSupportActionBar(toolbar);
+
+        if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT >= 22) {
+            view.setBackground(getResources().getDrawable(R.drawable.banana_bg_login, null));
+        } else if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 22) {
+            view.setBackground(getResources().getDrawable(R.drawable.banana_bg_login));
+        } else {
+            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.banana_bg_login));
+        }
 
         vPhoneNumber = (EditText) view.findViewById(R.id.phone_number);
         vUserName = (EditText) view.findViewById(R.id.user_name);

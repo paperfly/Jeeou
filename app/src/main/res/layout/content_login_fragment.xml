@@ -1,88 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/banana_bg_login"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.choonho.logintest.LoginFragment"
     tools:showIn="@layout/fragment_login">
 
-    <ImageButton
-        android:id="@+id/user_photo"
-        android:layout_width="@dimen/standard_imagecon_size"
-        android:layout_height="@dimen/standard_imagecon_size"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_camera_black" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingBottom="50dp"
-        android:paddingTop="10dp">
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <android.support.design.widget.TextInputLayout
+        <ImageButton
+            android:id="@+id/user_photo"
+            android:layout_width="@dimen/standard_imagecon_size"
+            android:layout_height="@dimen/standard_imagecon_size"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_camera_black"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="#FFFFFF">
+            android:orientation="vertical"
+            android:paddingBottom="50dp"
+            android:paddingTop="10dp">
 
-            <EditText
-                android:id="@+id/user_name"
+            <android.support.design.widget.TextInputLayout
+                style="@style/LoginTextInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#FFFFFF"
-                android:hint="Name"
-                android:textColor="#FFFFFF" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="@dimen/activity_vertical_margin">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Name"
+                    android:textColor="#FFFFFF"
+                    android:theme="@style/LoginEditText"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/LoginTextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
+
+                <EditText
+                    android:id="@+id/region_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="Region Code"
+                    android:textColor="#FFFFFF"
+                    android:theme="@style/LoginEditText"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/LoginTextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
+
+                <EditText
+                    android:id="@+id/phone_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Phone Number"
+                    android:inputType="phone"
+                    android:textColor="#FFFFFF"
+                    android:theme="@style/LoginEditText"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/action_login"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:textColorHint="#FFFFFF">
-
-            <EditText
-                android:id="@+id/region_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#FFFFFF"
-                android:focusable="false"
-                android:hint="Region Code"
-                android:textColor="#FFFFFF" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="#FFFFFF">
-
-            <EditText
-                android:id="@+id/phone_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#FFFFFF"
-                android:hint="Phone Number"
-                android:inputType="phone"
-                android:textColor="#FFFFFF" />
-        </android.support.design.widget.TextInputLayout>
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/login_button"
+            android:text="Login"
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/action_login"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/login_button"
-        android:text="Login"
-        android:textColor="#FFFFFF" />
-
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>

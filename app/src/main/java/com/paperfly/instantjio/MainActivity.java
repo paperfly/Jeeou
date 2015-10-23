@@ -1,9 +1,12 @@
 package com.paperfly.instantjio;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
@@ -106,5 +109,11 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     public void login() {
         changeToTabbed();
         startService(new Intent(this, NotificationService.class));
+        View current = getCurrentFocus();
+        if (current != null) {
+            current.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(current.getWindowToken(), 0);
+        }
     }
 }
