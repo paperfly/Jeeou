@@ -161,25 +161,25 @@ public class EventScrollingActivity extends AppCompatActivity {
             }
         });
 
-        // Attending count
-        if (mEvent.getAttending() != null) {
-            mAttendingCount = mEvent.getAttending().size();
-        } else {
-            mAttendingCount = 0;
-        }
-        vAttendingCount.setText(String.valueOf(mAttendingCount));
-
-        // Waiting count
-        if (mEvent.getInvited() != null) {
-            mWaitingCount += mEvent.getInvited().size();
-        }
-        if (mEvent.getNotAttending() != null) {
-            mWaitingCount += mEvent.getNotAttending().size();
-        }
-        if (mEvent.getInvited() == null && mEvent.getNotAttending() == null) {
-            mWaitingCount = 0;
-        }
-        vWaitingCount.setText(String.valueOf(mWaitingCount));
+//        // Attending count
+//        if (mEvent.getAttending() != null) {
+//            mAttendingCount = mEvent.getAttending().size();
+//        } else {
+//            mAttendingCount = 0;
+//        }
+//        vAttendingCount.setText(String.valueOf(mAttendingCount));
+//
+//        // Waiting count
+//        if (mEvent.getInvited() != null) {
+//            mWaitingCount += mEvent.getInvited().size();
+//        }
+//        if (mEvent.getNotAttending() != null) {
+//            mWaitingCount += mEvent.getNotAttending().size();
+//        }
+//        if (mEvent.getInvited() == null && mEvent.getNotAttending() == null) {
+//            mWaitingCount = 0;
+//        }
+//        vWaitingCount.setText(String.valueOf(mWaitingCount));
 
         // Dates
         vStartDate.setText(mEvent.getStartDate());
