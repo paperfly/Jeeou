@@ -18,11 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.ChooserEventListener;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
@@ -37,7 +40,6 @@ import java.util.concurrent.Semaphore;
 public class GroupsFragment extends Fragment {
     public static final String TAG = GroupsFragment.class.getCanonicalName();
     private View vRoot;
-    private Firebase mRef;
     private GroupViewAdapter mAdapter;
     private boolean mChoosingMode;
     private ChooserEventListener.ItemInteraction mItemInteraction;
@@ -93,10 +95,18 @@ public class GroupsFragment extends Fragment {
 
         mChoosingMode = getArguments() != null && getArguments().getBoolean(Constants.CHOOSING_MODE);
 
-        mRef = new Firebase(getString(R.string.firebase_url));
-        Query ref1 = mRef.child("users").child(mRef.getAuth().getUid()).child("groups");
-        Query ref2 = mRef.child("groups");
-        mAdapter = new GroupViewAdapter(ref1, ref2, mListener);
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+        final DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference("groups");
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = user != null ? user.getUid() : "";
+
+//        mRef = new Firebase(getString(R.string.firebase_url));
+//        Query ref1 = mRef.child("users").child(mRef.getAuth().getUid()).child("groups");
+//        Query ref2 = mRef.child("groups");
+
+        final DatabaseReference usersGroupRef = userRef.child(userId).child("groups");
+
+        mAdapter = new GroupViewAdapter(usersGroupRef, groupRef, mListener);
 
         if (mChoosingMode) {
             try {
@@ -217,9 +227,10 @@ public class GroupsFragment extends Fragment {
                 protected String doInBackground(Group... params) {
                     mMemberList = new ArrayList<>();
                     final Semaphore semaphore = new Semaphore(0);
+                    final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
 
                     for (Map.Entry<String, Boolean> entry : params[0].getMembers().entrySet()) {
-                        mRef.child("users").child(entry.getKey()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                        userRef.child(entry.getKey()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 mMemberList.add(dataSnapshot.getValue().toString());
@@ -227,8 +238,8 @@ public class GroupsFragment extends Fragment {
                             }
 
                             @Override
-                            public void onCancelled(FirebaseError firebaseError) {
-
+                            public void onCancelled(DatabaseError firebaseError) {
+                                Log.e(TAG, firebaseError.getMessage());
                             }
                         });
                     }

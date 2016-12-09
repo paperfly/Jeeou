@@ -1,12 +1,15 @@
 package com.paperfly.instantjio.group;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.HashMap;
 import java.util.Map;
 
 //@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonIgnoreProperties({"templates", "newEvents", "newGroups", "oldEvents"})
+//@JsonIgnoreProperties({"templates", "newEvents", "newGroups", "oldEvents"})
+@IgnoreExtraProperties
 public class User {
     String name;
     String email;
@@ -18,6 +21,7 @@ public class User {
 
     public User() {
     }
+
     public String getName() {
         return name;
     }

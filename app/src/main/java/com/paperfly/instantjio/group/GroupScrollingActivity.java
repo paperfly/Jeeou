@@ -11,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.Query;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
 import com.paperfly.instantjio.util.Constants;
@@ -61,13 +64,16 @@ public class GroupScrollingActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        final Firebase ref = new Firebase(getString(R.string.firebase_url));
+        final DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference("groups");
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = user != null ? user.getUid() : "";
 
         vMemberCount = (TextView) findViewById(R.id.group_member_count);
         vActionExit = (Button) findViewById(R.id.group_action_exit);
 
         vMemberCount.setText(String.valueOf(mGroup.getMembers().size()));
-        if (mGroup.getLeader().equals(ref.getAuth().getUid())) {
+        if (mGroup.getLeader().equals(userId)) {
             // I am the leader of the group
             vActionExit.setText("Disband Group");
         } else {
@@ -77,13 +83,13 @@ public class GroupScrollingActivity extends AppCompatActivity {
         vActionExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exitGroup(ref);
+                exitGroup(groupRef, userRef, userId);
             }
         });
 
-        Query groupRef = ref.child("groups").child(mKey).child("members");
-        Query userRef = ref.child("users");
-        mAdapter = new GroupDetailAdapter(groupRef, userRef);
+        Query groupQuery = groupRef.child(mKey).child("members");
+        Query userQuery = userRef;
+        mAdapter = new GroupDetailAdapter(groupQuery, userQuery);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
         CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(recyclerView, CustomLinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -91,22 +97,22 @@ public class GroupScrollingActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
     }
 
-    private void exitGroup(Firebase ref) {
-        if (mGroup.getLeader().equals(ref.getAuth().getUid())) {
+    private void exitGroup(DatabaseReference groupRef, DatabaseReference userRef, String userId) {
+        if (mGroup.getLeader().equals(userId)) {
             // I am the leader of the group
-            ref.child("users").child(ref.getAuth().getUid()).child("groups").child(mKey).removeValue();
-            ref.child("users").child(ref.getAuth().getUid()).child("newGroups").child(mKey).removeValue();
+            userRef.child(userId).child("groups").child(mKey).removeValue();
+            userRef.child(userId).child("newGroups").child(mKey).removeValue();
 
             for (Map.Entry<String, Boolean> entry : mGroup.getMembers().entrySet()) {
-                ref.child("users").child(entry.getKey()).child("groups").child(mKey).removeValue();
-                ref.child("users").child(entry.getKey()).child("newGroups").child(mKey).removeValue();
+                userRef.child(entry.getKey()).child("groups").child(mKey).removeValue();
+                userRef.child(entry.getKey()).child("newGroups").child(mKey).removeValue();
             }
 
-            ref.child("groups").child(mKey).removeValue();
+            groupRef.child(mKey).removeValue();
         } else {
             // I am just a member of the group
-            ref.child("users").child(ref.getAuth().getUid()).child("groups").child(mKey).removeValue();
-            ref.child("groups").child(mKey).child("members").child(ref.getAuth().getUid()).removeValue();
+            userRef.child(userId).child("groups").child(mKey).removeValue();
+            groupRef.child(mKey).child("members").child(userId).removeValue();
         }
 
         finish();

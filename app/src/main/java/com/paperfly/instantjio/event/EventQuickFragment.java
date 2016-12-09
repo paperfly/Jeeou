@@ -19,11 +19,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.DirectReferenceAdapter;
 import com.paperfly.instantjio.common.firebase.ItemEventListener;
@@ -109,8 +112,11 @@ public class EventQuickFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        final Firebase ref = new Firebase(getString(R.string.firebase_url));
-        Query newRef = ref.child("users").child(ref.getAuth().getUid()).child("templates").limitToLast(3);
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = user != null ? user.getUid() : "";
+//        final Firebase ref = new Firebase(getString(R.string.firebase_url));
+        Query newRef = userRef.child(userId).child("templates").limitToLast(3);
         mAdapter = new QuickEventAdapter(newRef, mListener);
     }
 
@@ -160,39 +166,47 @@ public class EventQuickFragment extends Fragment {
     }
 
     private void createEvent(final String templateId) {
-        final Firebase ref = new Firebase(getString(R.string.firebase_url));
-        ref.child("users").child(ref.getAuth().getUid()).child("templates").child(templateId)
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+        final DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("events");
+//        final Firebase ref = new Firebase(getString(R.string.firebase_url));
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = user != null ? user.getUid() : "";
+        userRef.child(userId).child("templates").child(templateId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Event event = dataSnapshot.getValue(Event.class);
                         event.setType("quick");
-                        event.setHost(ref.getAuth().getUid());
-                        Firebase eventRef = ref.child("events").push();
-                        eventRef.setValue(event);
-                        ref.child("users").child(event.getHost()).child("events").child(eventRef.getKey()).setValue(true);
+                        event.setHost(userId);
+                        DatabaseReference newEventRef = eventRef.push();
+                        newEventRef.setValue(event);
+                        userRef.child(event.getHost()).child("events").child(newEventRef.getKey()).setValue(true);
                         for (HashMap.Entry<String, Boolean> entry : event.getInvited().entrySet()) {
-                            ref.child("users").child(entry.getKey()).child("events").child(eventRef.getKey()).setValue(true);
+                            userRef.child(entry.getKey()).child("events").child(newEventRef.getKey()).setValue(true);
                         }
                     }
 
                     @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+                    public void onCancelled(DatabaseError firebaseError) {
 
                     }
                 });
     }
 
     private void createEvent(Event event) {
-        Firebase ref = new Firebase(getString(R.string.firebase_url));
-        Firebase eventRef = ref.child("events").push();
+//        Firebase ref = new Firebase(getString(R.string.firebase_url));
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+        final DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("events");
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = user != null ? user.getUid() : "";
+        DatabaseReference newEventRef = eventRef.push();
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         Calendar now = Calendar.getInstance();
         Calendar reminder = Calendar.getInstance();
         Calendar expiry = Calendar.getInstance();
 
         event.setType("quick");
-        event.setHost(ref.getAuth().getUid());
+        event.setHost(userId);
 
         Calendar startTime = Calendar.getInstance();
         try {
@@ -210,11 +224,11 @@ public class EventQuickFragment extends Fragment {
             Log.e(TAG, e.getMessage());
         }
 
-        eventRef.setValue(event);
-        ref.child("users").child(event.getHost()).child("events").child(eventRef.getKey()).setValue(true);
+        newEventRef.setValue(event);
+        userRef.child(event.getHost()).child("events").child(newEventRef.getKey()).setValue(true);
         for (HashMap.Entry<String, Boolean> entry : event.getInvited().entrySet()) {
-            if (!entry.getKey().equals(ref.getAuth().getUid())) {
-                ref.child("users").child(entry.getKey()).child("newEvents").child(eventRef.getKey()).setValue(true);
+            if (!entry.getKey().equals(userId)) {
+                userRef.child(entry.getKey()).child("newEvents").child(newEventRef.getKey()).setValue(true);
             }
         }
 
@@ -222,8 +236,8 @@ public class EventQuickFragment extends Fragment {
             reminder.setTime(Constants.DATE_TIME_FORMATTER.parse(event.getStartDate() + " " + event.getStartTime()));
             expiry.setTime(Constants.DATE_TIME_FORMATTER.parse(event.getEndDate() + " " + event.getEndTime()));
 
-            EventScheduler.setStartAlarm(getContext(), eventRef.getKey(), alarmManager, reminder);
-            EventScheduler.setStopAlarm(getContext(), eventRef.getKey(), alarmManager, expiry);
+            EventScheduler.setStartAlarm(getContext(), newEventRef.getKey(), alarmManager, reminder);
+            EventScheduler.setStopAlarm(getContext(), newEventRef.getKey(), alarmManager, expiry);
         } catch (ParseException e) {
             Log.e(TAG, e.getMessage());
         }

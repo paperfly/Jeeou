@@ -1,1 +1,50 @@
-{"project_info":{"project_id":"instantjio","project_number":"963606695976","name":"InstantJio"},"client":[{"client_info":{"mobilesdk_app_id":"1:963606695976:android:42dddc25788e3ac1","client_id":"android:com.paperfly.instantjio","client_type":1,"android_client_info":{"package_name":"com.paperfly.instantjio"}},"oauth_client":[{"client_id":"963606695976-hu18kpo6499h1rg7ush31ldate55o4f1.apps.googleusercontent.com","client_type":1,"android_info":{"package_name":"com.paperfly.instantjio","certificate_hash":"475b318f3f73036c8f8f0f6640d97748296d2cad"}}],"api_key":[],"services":{"analytics_service":{"status":1},"cloud_messaging_service":{"status":2,"apns_config":[]},"appinvite_service":{"status":1,"other_platform_oauth_client":[]},"google_signin_service":{"status":2},"ads_service":{"status":1}}}],"client_info":[],"ARTIFACT_VERSION":"1"}
+{
+  "project_info": {
+    "project_number": "248210077100",
+    "firebase_url": "https://popping-inferno-4928.firebaseio.com",
+    "project_id": "popping-inferno-4928",
+    "storage_bucket": "popping-inferno-4928.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:248210077100:android:42dddc25788e3ac1",
+        "android_client_info": {
+          "package_name": "com.paperfly.instantjio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "248210077100-22p0bk6vpafhib9fbu7bb8o7rj3najsb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.paperfly.instantjio",
+            "certificate_hash": "A174DDC53251B693AA1F8E301ECA0DFCEAC2EBE4"
+          }
+        },
+        {
+          "client_id": "248210077100-ivfrm1ka11i560sf8vo5gdcf5sgmqj99.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGIv6P3_vA2yIu4VOZbWzq8JXBCFWK42A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
