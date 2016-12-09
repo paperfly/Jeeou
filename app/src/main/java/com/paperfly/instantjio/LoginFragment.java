@@ -30,7 +30,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.paperfly.instantjio.group.User;
-import com.paperfly.instantjio.util.TokenGenerator;
 
 import java.io.InputStream;
 import java.security.KeyFactory;
@@ -262,15 +261,15 @@ public class LoginFragment extends Fragment {
         return jwtBuilder.compact();
     }
 
-    private String getToken(String phoneNumber) {
-        // TODO Remove JWT token generator when publishing app
-        // Proper way is to generate a token on our own server and serve it to clients
-        TokenGenerator tokenGenerator = new TokenGenerator("V3JuTN4Ne5siDkvydx1gNJGQWmx1EwtcXMyxQC5O");
-        mAdditionalClaims.put("uid", phoneNumber);
-        mAdditionalClaims.put("regionCode", vRegionCode.getText().toString().substring(0, 2));
-        mAdditionalClaims.put("userName", vUserName.getText().toString());
-        return tokenGenerator.createToken(mAdditionalClaims);
-    }
+//    private String getToken(String phoneNumber) {
+//        // TODO Remove JWT token generator when publishing app
+//        // Proper way is to generate a token on our own server and serve it to clients
+//        TokenGenerator tokenGenerator = new TokenGenerator("V3JuTN4Ne5siDkvydx1gNJGQWmx1EwtcXMyxQC5O");
+//        mAdditionalClaims.put("uid", phoneNumber);
+//        mAdditionalClaims.put("regionCode", vRegionCode.getText().toString().substring(0, 2));
+//        mAdditionalClaims.put("userName", vUserName.getText().toString());
+//        return tokenGenerator.createToken(mAdditionalClaims);
+//    }
 
     private String parsePhoneNumber() {
         String phoneNumberStr = vPhoneNumber.getText().toString();
