@@ -3,8 +3,8 @@ package com.paperfly.instantjio.common.firebase;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.Query;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 

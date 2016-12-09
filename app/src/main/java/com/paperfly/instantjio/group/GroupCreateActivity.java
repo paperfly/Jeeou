@@ -7,7 +7,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.contact.ContactsChooserActivity;
 
@@ -58,34 +61,38 @@ public class GroupCreateActivity extends AppCompatActivity {
     }
 
     public void addGroup() {
-        final Firebase ref = new Firebase(getResources().getString(R.string.firebase_url));
-        final Firebase newRef = ref.child("groups").push();
+        final DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference("groups");
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+//        final Firebase ref = new Firebase(getResources().getString(R.string.firebase_url));
+        final DatabaseReference newGroupRef = groupRef.push();
         final Group group = new Group();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = user != null ? user.getUid() : "";
 
         final EditText groupName = (EditText) findViewById(R.id.group_name);
 
         group.setName(groupName.getText().toString());
-        group.setLeader(ref.getAuth().getUid());
+        group.setLeader(userId);
         // Add group members' indices
         for (HashMap.Entry<String, String> entry : chosenContacts.entrySet()) {
             group.addMember(entry.getValue());
         }
 
         // The leader is also a member of the group
-        group.addMember(ref.getAuth().getUid());
+        group.addMember(userId);
 
         // Add group to Firebase
-        newRef.setValue(group);
+        newGroupRef.setValue(group);
 
         // Leader need to have the group's index
-        ref.child("users").child(ref.getAuth().getUid()).child("groups").child(newRef.getKey()).setValue(true);
+        userRef.child(userId).child("groups").child(newGroupRef.getKey()).setValue(true);
         // Members need to have the group's index too
         for (HashMap.Entry<String, Boolean> entry : group.getMembers().entrySet()) {
-            if (entry.getKey().equals(ref.getAuth().getUid())) {
+            if (entry.getKey().equals(userId)) {
                 continue;
             }
 
-            ref.child("users").child(entry.getKey()).child("newGroups").child(newRef.getKey()).setValue(true);
+            userRef.child(entry.getKey()).child("newGroups").child(newGroupRef.getKey()).setValue(true);
         }
 
         finish();

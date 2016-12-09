@@ -12,12 +12,15 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.paperfly.instantjio.event.Event;
 import com.paperfly.instantjio.event.EventInvitedNotifyActivity;
 import com.paperfly.instantjio.event.EventParcelable;
@@ -45,8 +48,10 @@ public class NotificationService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Firebase ref = new Firebase(getString(R.string.firebase_url));
-        if (ref.getAuth() == null) {
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = user != null ? user.getUid() : "";
+//        Firebase ref = new Firebase(getString(R.string.firebase_url));
+        if (user == null) {
             stopSelf();
         }
 
@@ -55,13 +60,15 @@ public class NotificationService extends Service {
             public void run() {
                 android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 
-                final Firebase ref = new Firebase(getString(R.string.firebase_url));
-                final String uid = ref.getAuth().getUid();
-                final Query newEventsRef = ref.child("users").child(uid).child("newEvents");
+//                final Firebase ref = new Firebase(getString(R.string.firebase_url));
+                final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+                final DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("events");
+//                final String uid = ref.getAuth().getUid();
+                final Query newEventsRef = userRef.child(userId).child("newEvents");
                 final ChildEventListener listener = new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        final Query eventsRef = ref.child("events").child(dataSnapshot.getKey());
+                        final Query eventsRef = eventRef.child(dataSnapshot.getKey());
                         eventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -70,9 +77,9 @@ public class NotificationService extends Service {
                                 startEventInvitedActivity(event, dataSnapshot.getKey());
 
                                 // Add the un-notified event to the user's list of notified events
-                                ref.child("users").child(uid).child("events").child(dataSnapshot.getKey()).setValue(true);
+                                userRef.child(userId).child("events").child(dataSnapshot.getKey()).setValue(true);
                                 // Remove the un-notified event from the list of new events
-                                ref.child("users").child(uid).child("newEvents").child(dataSnapshot.getKey()).removeValue();
+                                userRef.child(userId).child("newEvents").child(dataSnapshot.getKey()).removeValue();
 
                                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                                 Calendar reminder = Calendar.getInstance();
@@ -92,7 +99,7 @@ public class NotificationService extends Service {
                             }
 
                             @Override
-                            public void onCancelled(FirebaseError firebaseError) {
+                            public void onCancelled(DatabaseError firebaseError) {
 
                             }
                         });
@@ -114,7 +121,7 @@ public class NotificationService extends Service {
                     }
 
                     @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+                    public void onCancelled(DatabaseError firebaseError) {
 
                     }
                 };
@@ -128,13 +135,15 @@ public class NotificationService extends Service {
             public void run() {
                 android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 
-                final Firebase ref = new Firebase(getString(R.string.firebase_url));
-                final String uid = ref.getAuth().getUid();
-                final Query newGroupsRef = ref.child("users").child(uid).child("newGroups");
+//                final Firebase ref = new Firebase(getString(R.string.firebase_url));
+                final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+                final DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference("groups");
+//                final String uid = ref.getAuth().getUid();
+                final Query newGroupsRef = userRef.child(userId).child("newGroups");
                 final ChildEventListener listener = new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        final Query groupsRef = ref.child("groups").child(dataSnapshot.getKey());
+                        final Query groupsRef = groupRef.child(dataSnapshot.getKey());
                         groupsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -142,13 +151,13 @@ public class NotificationService extends Service {
                                 readyNotification(group, dataSnapshot.getKey());
 
                                 // Add the new group to the user's groups' list
-                                ref.child("users").child(uid).child("groups").child(dataSnapshot.getKey()).setValue(true);
+                                userRef.child(userId).child("groups").child(dataSnapshot.getKey()).setValue(true);
                                 // Remove the newly added group from the user's "newGroups" tree
-                                ref.child("users").child(uid).child("newGroups").child(dataSnapshot.getKey()).removeValue();
+                                userRef.child(userId).child("newGroups").child(dataSnapshot.getKey()).removeValue();
                             }
 
                             @Override
-                            public void onCancelled(FirebaseError firebaseError) {
+                            public void onCancelled(DatabaseError firebaseError) {
 
                             }
                         });
@@ -170,7 +179,7 @@ public class NotificationService extends Service {
                     }
 
                     @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+                    public void onCancelled(DatabaseError firebaseError) {
 
                     }
                 };

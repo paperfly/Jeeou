@@ -3,11 +3,12 @@ package com.paperfly.instantjio.common.firebase;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 
 public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.ViewHolder, T> extends ReferenceAdapter<ViewHolder, T> {
     private static final String TAG = CrossReferenceAdapter.class.getCanonicalName();
@@ -51,8 +52,8 @@ public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.View
                         }
 
                         @Override
-                        public void onCancelled(FirebaseError firebaseError) {
-                            Log.e(TAG, firebaseError.getMessage());
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e(TAG, databaseError.getMessage());
                         }
                     });
                 }
@@ -81,8 +82,8 @@ public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.View
                         }
 
                         @Override
-                        public void onCancelled(FirebaseError firebaseError) {
-                            Log.e(TAG, firebaseError.getMessage());
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e(TAG, databaseError.getMessage());
                         }
                     });
                 }
@@ -143,15 +144,15 @@ public abstract class CrossReferenceAdapter<ViewHolder extends RecyclerView.View
                     }
 
                     @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-                        Log.e(TAG, firebaseError.getMessage());
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(TAG, databaseError.getMessage());
                     }
                 });
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Log.e(TAG, firebaseError.getMessage());
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, databaseError.getMessage());
             }
         };
 

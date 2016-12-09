@@ -3,10 +3,10 @@ package com.paperfly.instantjio.common.firebase;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 
 public abstract class DirectReferenceAdapter<ViewHolder extends RecyclerView.ViewHolder, T> extends ReferenceAdapter<ViewHolder, T> {
     private static final String TAG = DirectReferenceAdapter.class.getCanonicalName();
@@ -118,8 +118,8 @@ public abstract class DirectReferenceAdapter<ViewHolder extends RecyclerView.Vie
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Log.e(TAG, firebaseError.getMessage());
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, databaseError.getMessage());
             }
         };
 

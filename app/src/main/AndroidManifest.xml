@@ -3,15 +3,14 @@
     package="com.paperfly.instantjio"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
 
     <application
-        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,37 +22,28 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_contacts" />
+                android:resource="@xml/searchable_contacts"/>
         </activity>
-        <activity android:name=".contact.ContactsChooserActivity" />
-        <activity android:name=".group.GroupCreateActivity" />
-        <activity android:name=".group.GroupsChooserActivity" />
+        <activity android:name=".contact.ContactsChooserActivity"/>
+        <activity android:name=".group.GroupCreateActivity"/>
+        <activity android:name=".group.GroupsChooserActivity"/>
         <activity
             android:name=".event.EventCreateActivity"
             android:label="Create new event"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".event.EventTemplateCreateActivity"
-            android:label="Create new template" />
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:label="Create new template"/>
 
         <activity
             android:name=".event.EventScrollingActivity"
@@ -61,30 +51,26 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainActivity"/>
         </activity>
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_api_key" />
 
         <activity
             android:name=".group.GroupScrollingActivity"
             android:label="@string/title_activity_group_scrolling"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <service android:name=".NotificationService" />
+        <service android:name=".NotificationService"/>
 
         <receiver
             android:name=".receiver.OnBootReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.ReminderReceiver" />
-        <receiver android:name=".receiver.ExpiryReceiver" />
+        <receiver android:name=".receiver.ReminderReceiver"/>
+        <receiver android:name=".receiver.ExpiryReceiver"/>
 
         <activity
             android:name=".event.EventInvitedNotifyActivity"

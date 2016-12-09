@@ -13,8 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.Query;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
 import com.paperfly.instantjio.common.firebase.ItemEventListener;
@@ -66,9 +69,11 @@ public class EventsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        Firebase ref = new Firebase(getString(R.string.firebase_url));
-        Query ref1 = ref.child("users").child(ref.getAuth().getUid()).child("events");
-        Query ref2 = ref.child("events");
+//        Firebase ref = new Firebase(getString(R.string.firebase_url));
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = user != null ? user.getUid() : "";
+        DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("users").child(userId).child("events");
+        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("events");
         mAdapter = new EventViewAdapter(ref1, ref2, mListener);
     }
 

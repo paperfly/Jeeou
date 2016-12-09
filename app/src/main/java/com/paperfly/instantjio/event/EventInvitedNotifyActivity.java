@@ -9,10 +9,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.util.Constants;
 
@@ -67,7 +70,10 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
     private ImageButton vActionNotAttending;
     private TextView vEventJioBigMessage;
     // Members
-    private Firebase mRef;
+//    private Firebase mRef;
+    private DatabaseReference mEventRef;
+    private DatabaseReference mUserRef;
+    private String mUserId;
     private Event mEvent;
     private String mKey;
     private String mHost;
@@ -121,7 +127,11 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
 //        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-        mRef = new Firebase(getString(R.string.firebase_url));
+//        mRef = new Firebase(getString(R.string.firebase_url));
+        mEventRef = FirebaseDatabase.getInstance().getReference("events");
+        mUserRef = FirebaseDatabase.getInstance().getReference("users");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        mUserId = user != null ? user.getUid() : "";
         EventParcelable eventParcelable = getIntent().getParcelableExtra(Constants.EVENT_OBJECT);
         mEvent = eventParcelable.getEvent();
         mKey = getIntent().getStringExtra(Constants.EVENT_KEY);
@@ -202,7 +212,7 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
             }
         });
 
-        mRef.child("users").child(mEvent.getHost()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserRef.child(mEvent.getHost()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mHost = dataSnapshot.getValue().toString();
@@ -210,23 +220,23 @@ public class EventInvitedNotifyActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError firebaseError) {
 
             }
         });
     }
 
     private void actionAttending() {
-        mRef.child("events").child(mKey).child("attending").child(mRef.getAuth().getUid()).setValue(true);
-        mRef.child("events").child(mKey).child("invited").child(mRef.getAuth().getUid()).removeValue();
-        mRef.child("events").child(mKey).child("notAttending").child(mRef.getAuth().getUid()).removeValue();
+        mEventRef.child(mKey).child("attending").child(mUserId).setValue(true);
+        mEventRef.child(mKey).child("invited").child(mUserId).removeValue();
+        mEventRef.child(mKey).child("notAttending").child(mUserId).removeValue();
         finish();
     }
 
     private void actionNotAttending() {
-        mRef.child("events").child(mKey).child("notAttending").child(mRef.getAuth().getUid()).setValue(true);
-        mRef.child("events").child(mKey).child("attending").child(mRef.getAuth().getUid()).removeValue();
-        mRef.child("events").child(mKey).child("invited").child(mRef.getAuth().getUid()).removeValue();
+        mEventRef.child(mKey).child("notAttending").child(mUserId).setValue(true);
+        mEventRef.child(mKey).child("attending").child(mUserId).removeValue();
+        mEventRef.child(mKey).child("invited").child(mUserId).removeValue();
         finish();
     }
 }

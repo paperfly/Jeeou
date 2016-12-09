@@ -11,10 +11,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.util.Constants;
 import com.squareup.picasso.Picasso;
@@ -78,7 +81,10 @@ public class EventTemplateScrollingActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        Firebase ref = new Firebase(getString(R.string.firebase_url));
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = user != null ? user.getUid() : "";
+//        Firebase ref = new Firebase(getString(R.string.firebase_url));
 
         vActionDelete = (Button) findViewById(R.id.event_template_action_delete);
         vActionViewLocation = (Button) findViewById(R.id.event_action_view_location);
@@ -90,7 +96,7 @@ public class EventTemplateScrollingActivity extends AppCompatActivity {
         vDescription = (TextView) findViewById(R.id.event_description);
 
 
-        if (ref.getAuth().getUid().equals(mEvent.getHost())) {
+        if (userId.equals(mEvent.getHost())) {
             vActionDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -129,7 +135,7 @@ public class EventTemplateScrollingActivity extends AppCompatActivity {
                 .into(vHostPicture);
 
         // Host name
-        ref.child("users").child(mEvent.getHost()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.child(mEvent.getHost()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mHost = dataSnapshot.getValue().toString();
@@ -137,7 +143,7 @@ public class EventTemplateScrollingActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError firebaseError) {
 
             }
         });
@@ -148,9 +154,9 @@ public class EventTemplateScrollingActivity extends AppCompatActivity {
     }
 
     private void deleteTemplate() {
-        Firebase ref = new Firebase(getString(R.string.firebase_url));
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
 
-        ref.child("users").child(mEvent.getHost()).child("templates").child(mKey).removeValue();
+        userRef.child(mEvent.getHost()).child("templates").child(mKey).removeValue();
 
         finish();
     }

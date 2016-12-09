@@ -23,10 +23,6 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -37,6 +33,13 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.contact.ContactsChooserActivity;
 import com.paperfly.instantjio.group.GroupsChooserActivity;
@@ -416,9 +419,12 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
 
         @Override
         protected Void doInBackground(Void... params) {
-            final Firebase ref = new Firebase(getString(R.string.firebase_url));
-            final String uid = ref.getAuth().getUid();
-            final Firebase newRef = ref.child("users").child(uid).child("templates").push();
+            final DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference("groups");
+            final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+//            final Firebase ref = new Firebase(getString(R.string.firebase_url));
+            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            final String uid = user != null ? user.getUid() : "";
+            final DatabaseReference newRef = userRef.child(uid).child("templates").push();
             final Semaphore semaphore = new Semaphore(0);
 
             // Add invited contacts' indices
@@ -428,7 +434,7 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
 
             // Add invited group members' indices
             for (int i = 0; i < mChosenGroups.size(); ++i) {
-                ref.child("groups").child(mChosenGroups.get(i)).child("members").addListenerForSingleValueEvent(new ValueEventListener() {
+                groupRef.child(mChosenGroups.get(i)).child("members").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
@@ -439,7 +445,7 @@ public class EventTemplateFragment extends Fragment implements View.OnClickListe
                     }
 
                     @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+                    public void onCancelled(DatabaseError firebaseError) {
 
                     }
                 });
