@@ -17,6 +17,7 @@ The idea is a blend of WhatsApp, Eventbrite and Google Calendar, but on a smalle
 1. Fix bugs
    * EventFragment doesn't list upcoming events
    * ContactsFragment doesn't list contacts unless in some odd situations
+   * Properly handle all activity lifecycles
 2. Implement layered architecture to prevent tight coupling
     * Firebase SDK is referenced everywhere in every file, as such, a data layer or DAO is needed to make upgrading the SDK in the future easier
 3. Implement MVVM using data binding library
