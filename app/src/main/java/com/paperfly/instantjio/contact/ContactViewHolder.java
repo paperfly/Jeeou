@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.ChooserEventListener;
+import com.paperfly.instantjiocore.Model.Contact;
 import com.squareup.picasso.Picasso;
 
 /**

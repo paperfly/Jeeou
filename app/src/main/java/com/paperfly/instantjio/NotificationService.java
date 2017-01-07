@@ -21,15 +21,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.paperfly.instantjio.event.Event;
 import com.paperfly.instantjio.event.EventInvitedNotifyActivity;
 import com.paperfly.instantjio.event.EventParcelable;
 import com.paperfly.instantjio.event.EventScheduler;
 import com.paperfly.instantjio.event.EventScrollingActivity;
-import com.paperfly.instantjio.group.Group;
 import com.paperfly.instantjio.group.GroupParcelable;
 import com.paperfly.instantjio.group.GroupScrollingActivity;
 import com.paperfly.instantjio.util.Constants;
+import com.paperfly.instantjiocore.Model.Event;
+import com.paperfly.instantjiocore.Model.Group;
 
 import java.text.ParseException;
 import java.util.Calendar;

@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.util.Constants;
+import com.paperfly.instantjiocore.Model.Event;
 import com.squareup.picasso.Picasso;
 
 public class EventTemplateScrollingActivity extends AppCompatActivity {

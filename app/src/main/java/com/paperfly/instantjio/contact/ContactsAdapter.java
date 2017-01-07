@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.ChooserEventListener;
+import com.paperfly.instantjiocore.Model.Contact;
 
 import java.util.HashMap;
 import java.util.Locale;

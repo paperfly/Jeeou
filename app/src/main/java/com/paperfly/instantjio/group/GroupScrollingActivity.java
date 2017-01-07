@@ -19,6 +19,8 @@ import com.google.firebase.database.Query;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
 import com.paperfly.instantjio.util.Constants;
+import com.paperfly.instantjiocore.Model.Group;
+import com.paperfly.instantjiocore.Model.User;
 
 import java.util.Map;
 

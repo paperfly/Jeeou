@@ -43,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.contact.ContactsChooserActivity;
 import com.paperfly.instantjio.group.GroupsChooserActivity;
+import com.paperfly.instantjiocore.Model.Event;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

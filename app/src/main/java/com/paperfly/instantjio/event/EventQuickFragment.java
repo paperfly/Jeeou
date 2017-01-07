@@ -31,6 +31,7 @@ import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.DirectReferenceAdapter;
 import com.paperfly.instantjio.common.firebase.ItemEventListener;
 import com.paperfly.instantjio.util.Constants;
+import com.paperfly.instantjiocore.Model.Event;
 
 import java.text.ParseException;
 import java.util.Calendar;

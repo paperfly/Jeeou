@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.paperfly.instantjiocore.Model.Group;
+
 import java.util.HashMap;
 import java.util.Map;
 

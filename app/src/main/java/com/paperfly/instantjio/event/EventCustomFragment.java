@@ -47,6 +47,7 @@ import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.contact.ContactsChooserActivity;
 import com.paperfly.instantjio.group.GroupsChooserActivity;
 import com.paperfly.instantjio.util.Constants;
+import com.paperfly.instantjiocore.Model.Event;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

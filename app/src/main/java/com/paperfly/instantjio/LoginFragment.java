@@ -29,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import com.paperfly.instantjio.group.User;
+import com.paperfly.instantjiocore.Model.User;
 
 import java.io.InputStream;
 import java.security.KeyFactory;

@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.contact.ContactsChooserActivity;
+import com.paperfly.instantjiocore.Model.Group;
 
 import java.util.HashMap;
 

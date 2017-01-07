@@ -22,6 +22,7 @@ import com.paperfly.instantjio.R;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
 import com.paperfly.instantjio.common.firebase.ItemEventListener;
 import com.paperfly.instantjio.util.Constants;
+import com.paperfly.instantjiocore.Model.Event;
 
 public class EventsFragment extends Fragment {
     public static final String TAG = EventsFragment.class.getCanonicalName();

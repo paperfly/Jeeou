@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.group;
+package com.paperfly.instantjiocore.Model;
 
 //import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

@@ -1,4 +1,4 @@
-package com.paperfly.instantjio.group;
+package com.paperfly.instantjiocore.Model;
 
 import java.util.HashMap;
 import java.util.Map;

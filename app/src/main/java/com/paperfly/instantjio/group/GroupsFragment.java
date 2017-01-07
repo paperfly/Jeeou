@@ -31,6 +31,7 @@ import com.paperfly.instantjio.common.ChooserEventListener;
 import com.paperfly.instantjio.common.firebase.CrossReferenceAdapter;
 import com.paperfly.instantjio.common.firebase.ItemEventListener;
 import com.paperfly.instantjio.util.Constants;
+import com.paperfly.instantjiocore.Model.Group;
 
 import java.util.ArrayList;
 import java.util.List;
