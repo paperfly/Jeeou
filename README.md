@@ -1,6 +1,11 @@
 # InstantJio
 An easier way to 'jio' (invite) your friends!
 
+## How does it look like?
+<img src="screenshots/Screenshot_Login.png" alt="Login UI" width="25%">
+<img src="screenshots/Screenshot_Groups.png" alt="Groups UI" width="25%">
+<img src="screenshots/Screenshot_Contacts.png" alt="ContactsUI" width="25%">
+
 ## Overview
 This is a side project for us (Paperfly) to get us started to be familiar with Android application development.
 
