@@ -2,9 +2,9 @@
 An easier way to 'jio' (invite) your friends!
 
 ## How does it look like?
-<img src="screenshots/Screenshot_Login.png" alt="Login UI" width="25%">
-<img src="screenshots/Screenshot_Groups.png" alt="Groups UI" width="25%">
-<img src="screenshots/Screenshot_Contacts.png" alt="ContactsUI" width="25%">
+<img src="screenshots/Screenshot_Login.png" alt="Login UI" width="33%">
+<img src="screenshots/Screenshot_Groups.png" alt="Groups UI" width="33%">
+<img src="screenshots/Screenshot_Contacts.png" alt="ContactsUI" width="33%">
 
 ## Overview
 This is a side project for us (Paperfly) to get us started to be familiar with Android application development.
@@ -48,7 +48,7 @@ The idea is a blend of WhatsApp, Eventbrite and Google Calendar, but on a smalle
 6. CircleImageView (https://github.com/hdodenhof/CircleImageView)
 
 ### Design wiki
-TBA
+TBC
 
 ## Disclaimer
 As stated in the overview section, this project is in no way a commercial project, eventhough it will be published on Google Play Store. We don't plan to expand or scale this app in the foreseeable future.
