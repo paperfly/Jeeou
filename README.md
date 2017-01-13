@@ -18,21 +18,6 @@ The idea is a blend of WhatsApp, Eventbrite and Google Calendar, but on a smalle
 
 *Quick events are events that are planned ahead by the user, that is repeatable and reusable, like a template, e.g. basketball night every Friday
 
-## TODOs
-1. Fix bugs
-   * EventFragment doesn't list upcoming events
-   * ContactsFragment doesn't list contacts unless in some odd situations
-   * Properly handle all activity lifecycles
-2. Implement layered architecture to prevent tight coupling
-    * Firebase SDK is referenced everywhere in every file, as such, a data layer or DAO is needed to make upgrading the SDK in the future easier
-3. Implement MVVM using data binding library
-4. Use Butter Knife library
-5. Code refactoring
-    * Naming convention
-    * Conformance to Android coding style
-    * Refactor ugly/spaghetti code
-6. Implement new features in the backlog
-
 ## Backlog
 1. Video invite
 2. Chat support?
