@@ -18,11 +18,6 @@ The idea is a blend of WhatsApp, Eventbrite and Google Calendar, but on a smalle
 
 *Quick events are events that are planned ahead by the user, that is repeatable and reusable, like a template, e.g. basketball night every Friday
 
-## Backlog
-1. Video invite
-2. Chat support?
-3. GPS location support
-
 ## Technical documentation
 ### Dependencies or libaries used
 1. Support library
