@@ -5,9 +5,14 @@ An easier way to 'jio' (invite) your friends!
 
 <table>
     <tr>
-        <td><img src="screenshots/Screenshot_Login.png" alt="Login UI"></td>
-        <td><img src="screenshots/Screenshot_GroupOverview.png" alt="Groups UI"></td>
-        <td><img src="screenshots/Screenshot_Contacts.png" alt="ContactsUI"></td>
+        <td><img src="screenshots/1_Screenshot_Contacts.png" alt="Login UI"></td>
+        <td><img src="screenshots/2_Screenshot_GroupOverview.png" alt="Groups UI"></td>
+        <td><img src="screenshots/3_Screenshot_ListOfGroups.png" alt="ContactsUI"></td>
+    </tr>
+    <tr>
+        <td><img src="screenshots/4_Screenshot_Login.png" alt="Login UI"></td>
+        <td><img src="screenshots/5_Screenshot_NewTemplate.png" alt="Groups UI"></td>
+        <td><img src="screenshots/6_Screenshot_NewEvent.png" alt="ContactsUI"></td>
     </tr>
 </table>
 
