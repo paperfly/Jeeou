@@ -2,9 +2,12 @@
 An easier way to 'jio' (invite) your friends!
 
 ## How does it look like?
-<img src="screenshots/Screenshot_Login.png" alt="Login UI" width="33%">
-<img src="screenshots/Screenshot_Groups.png" alt="Groups UI" width="33%">
-<img src="screenshots/Screenshot_Contacts.png" alt="ContactsUI" width="33%">
+
+<div style="display: flex">
+    <img src="screenshots/Screenshot_Login.png" alt="Login UI" style="flex: 1">
+    <img src="screenshots/Screenshot_GroupOverview.png" alt="Groups UI" style="flex: 1">
+    <img src="screenshots/Screenshot_Contacts.png" alt="ContactsUI" style="flex: 1">
+</div>
 
 ## Overview
 This is a side project for us (Paperfly) to get us started to be familiar with Android application development.
