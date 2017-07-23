@@ -1,4 +1,4 @@
-# InstantJio
+# Jeeou
 An easier way to 'jio' (invite) your friends!
 
 ## How does it look like?
